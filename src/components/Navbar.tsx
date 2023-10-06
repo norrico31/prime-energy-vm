@@ -4,15 +4,19 @@ import Navbars from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import { FiSettings } from 'react-icons/fi'
+import useWindowSize from '../shared/hooks/useWindowResize'
 
 function NavigationBar() {
+    const { width } = useWindowSize()
     return <Navbars expand={false} className="bg-body-tertiary mb-3">
         <Container fluid>
-            <Navbars.Brand href="#" className='logo-width'>
+            {width >= 709 && <Navbars.Brand href="#" className='logo-width'>
                 LOGO
             </Navbars.Brand>
+            }
+
             <Navbars.Toggle aria-controls='offcanvasNavbar-expand-false' />
-            <h4 className='m-0'>
+            <h4 className={`m-0 fs-${width < 709 ? '6' : '3'}`}>
                 Malampaya SWP Vulnerabilities
             </h4>
             <Navbars.Offcanvas

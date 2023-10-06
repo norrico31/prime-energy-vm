@@ -14,7 +14,7 @@
 /* DROPDOWN MENU  */
 .navbar>.container-fluid {
   justify-content: initial;
-  gap: 20px;
+  gap: 10px;
 }
 .dropdown-menu.show {
   left: -133px;
