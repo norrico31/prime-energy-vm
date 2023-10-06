@@ -12,7 +12,6 @@ window.fetch = async (...args: Parameters<typeof originalFetch>) => {
 
 	const response = await originalFetch(resource, {
 		headers: {
-			'Content-type': 'application/json',
 			'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')!)}`,
 			...config?.headers
 		}

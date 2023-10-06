@@ -6,7 +6,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas'
 import { FiSettings } from 'react-icons/fi'
 import useWindowSize from '../shared/hooks/useWindowResize'
 
-function NavigationBar() {
+function Navbar() {
     const { width } = useWindowSize()
     return <Navbars expand={false} className="bg-body-tertiary mb-3">
         <Container fluid>
@@ -16,7 +16,7 @@ function NavigationBar() {
             }
 
             <Navbars.Toggle aria-controls='offcanvasNavbar-expand-false' />
-            <h4 className={`m-0 fs-${width < 709 ? '6' : '3'}`}>
+            <h4 className={`m-0 fs-${width < 709 ? '6' : 'initial'}`}>
                 Malampaya SWP Vulnerabilities
             </h4>
             <Navbars.Offcanvas
@@ -68,4 +68,4 @@ function NavigationBar() {
 }
 
 
-export default NavigationBar;
+export default Navbar;

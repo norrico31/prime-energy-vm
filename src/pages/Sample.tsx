@@ -34,7 +34,7 @@ export default function Sample() {
         {isLoading ? <Spinner animation="border" />
             : <div className='w-100 p-3 text-center'>
                 {/* TODO table dark mode in variant */}
-                <Table responsive="lg" bordered hover size='sm' variant={undefined}>
+                <Table responsive="sm" bordered hover size='sm' variant={undefined}>
                     <thead>
                         <tr>
                             {columns.map((c, idx) => (
@@ -49,7 +49,7 @@ export default function Sample() {
                                 <td >{d.time_keeping_date}</td>
                                 <td >{d.time_keeping_time}</td>
                                 <td >{d.scheduled_time}</td>
-                                <td className='d-flex justify-content-center  gap-1 '>
+                                <td className='d-flex justify-content-center gap-1 '>
                                     <Button variant="info" loading={isLoading} title='View'>
                                         <BsEye />
                                     </Button>
