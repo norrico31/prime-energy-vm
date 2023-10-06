@@ -5,6 +5,7 @@ import BootstrapPagination from 'react-bootstrap/Pagination'
 import Button from '../components/elements/Button'
 import { AiOutlineEdit, AiOutlineDownload } from 'react-icons/ai'
 import { BsTrash, BsEye } from 'react-icons/bs';
+import { Notification } from '../components'
 
 const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 
@@ -68,6 +69,7 @@ export default function Sample() {
                     </tbody>
                 </Table>
                 <Pagination />
+                <Notification />
                 {/* PAGINATION */}
             </div>}
     </div>

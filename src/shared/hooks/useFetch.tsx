@@ -36,7 +36,7 @@ export const useFetch = <T,>({ urls, ...restProps }: Fetch & Partial<ApiParams>)
         }
     }
 
-    const editData = async <T extends Partial<{ id: string }>>(data: T) => {
+    const editData = async <T extends Partial<Common>>(data: T) => {
         try {
             // Add Notif 
             const res = await fetch(urls?.put + `/${data?.id}` ?? '', { method: 'PUT', body: JSON.stringify(data) })
@@ -62,16 +62,14 @@ export const useFetch = <T,>({ urls, ...restProps }: Fetch & Partial<ApiParams>)
     return { createData, editData, deleteData, ...restQueries }
 }
 
-export const useParallelFetch = ({ urls, k }: ParallelFetch) => {
-    return useQueries({
-        queries: urls.map((url) => {
-            return {
-                queryKey: [k, url],
-                queryFn: () => fetchData(url),
-            }
-        }),
-    })
-}
+export const useParallelFetch = ({ urls, k }: ParallelFetch) => useQueries({
+    queries: urls.map((url) => {
+        return {
+            queryKey: [k, url],
+            queryFn: () => fetchData(url),
+        }
+    }),
+})
 
 
 // add parellel queries function here
