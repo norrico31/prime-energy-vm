@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* LOGO */
+.logo-width {
+  width: 200px;
+  text-align: center;
+}
+
+
+/* DROPDOWN MENU  */
+.navbar>.container-fluid {
+  justify-content: initial;
+  gap: 20px;
+}
+.dropdown-menu.show {
+  left: -133px;
+}
+.settings-dropdown {
+  margin-left: auto;
+}
