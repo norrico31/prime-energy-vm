@@ -1,14 +1,14 @@
-import { Suspense, lazy, ReactNode } from "react"
+import { Suspense as ReactSuspense, lazy, ReactNode } from "react"
 import { createBrowserRouter, Navigate } from "react-router-dom"
 import Spinner from 'react-bootstrap/Spinner'
 import { Layout } from "./components"
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 
-function PageWrapper({ children }: { children: ReactNode }) {
-    return <Suspense fallback={<Spinner animation='grow' />}>
+function Suspense({ children }: { children: ReactNode }) {
+    return <ReactSuspense fallback={<Spinner animation='grow' />}>
         {children}
-    </Suspense>
+    </ReactSuspense>
 }
 
 
@@ -23,7 +23,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/',
-                element: <PageWrapper><Dashboard /></PageWrapper>
+                element: <Suspense><Dashboard /></Suspense>
             },
         ]
     },

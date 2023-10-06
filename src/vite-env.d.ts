@@ -21,6 +21,11 @@ type ParallelFetch = {
     urls: string[]
     k: string
 }
+type ApiParams = {
+    search?: string
+    page?: number
+    pageSize?: number
+}
 // ================================
 // ================================
 
