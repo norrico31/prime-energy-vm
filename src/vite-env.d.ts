@@ -8,6 +8,21 @@ declare global {
 // ================================
 // ================================
 //* Fetch API
+type FetchResponse<T> = {
+    current_page: number
+    data: T
+    first_page_url: string
+    from: number
+    last_page: 6
+    last_page_url: string
+    links: { url: string; label: string; active: boolean }
+    next_page_url: string
+    path: string
+    per_page: number
+    prev_page_url: string | null
+    to: number
+    total: number
+} | undefined;
 type Fetch = {
     urls: {
         get: string
@@ -46,6 +61,13 @@ type ToastNotification = {
     type: 'success' | 'update' | 'delete' | 'info' | 'download' | null
     title: string
     msg: string;
+}
+type PageProps = {
+    active: number;
+    total: number;
+    perPage: number;
+    lastPage: number;
+    setPage: React.Dispatch<React.SetStateAction<number>>
 }
 // ================================
 // ================================

@@ -12,7 +12,7 @@
 
 
 /* DROPDOWN MENU  */
-.navbar>.container-fluid {
+.navbar > .container-fluid {
   justify-content: initial;
   gap: 10px;
 }

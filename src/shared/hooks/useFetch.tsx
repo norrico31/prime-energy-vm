@@ -11,51 +11,45 @@ async function fetchData<T>(reqUrl: string, params?: ApiParams): Promise<T> {
     try {
         const res = await fetch(url.toString(), { method: 'GET' })
         const data = await res.json()
-        return Promise.resolve(data.data.data ?? data.data satisfies T)
+        return Promise.resolve(data.data ?? data satisfies T)
     } catch (error) {
         return Promise.reject(error)
     }
 }
 
 export const useFetch = <T,>({ urls, ...restProps }: Fetch & Partial<ApiParams>) => {
-    const { refetch, ...restQueries } = useQuery<Return<T>>({ queryKey: [urls.get], queryFn: () => fetchData(urls.get, restProps) })
+    const { refetch, ...restQueries } = useQuery<Return<T>>({ queryKey: [urls.get, restProps], queryFn: () => fetchData(urls.get, restProps) })
     const { setType } = useNotifCtx()
 
     const createData = async <T extends FormData & Partial<{ '_method': 'PUT' }>>(data: T) => {
         try {
             const res = await fetch(urls?.post ?? '', { method: 'POST', body: JSON.stringify(data) })
-            // Add Notif 
-            setType({ type: 'success', title: '', message: '' })
+            refetch()
+            setType({ type: 'success', title: '', msg: '' })
             return await res.json()
         } catch (error) {
             return error
-        } finally {
-            refetch()
         }
     }
 
     const editData = async <T extends Partial<Common>>(data: T) => {
         try {
-            // Add Notif 
             const res = await fetch(urls?.put + `/${data?.id}` ?? '', { method: 'PUT', body: JSON.stringify(data) })
-            setType({ type: 'update', title: '', message: '' })
+            setType({ type: 'update', title: '', msg: '' })
+            refetch()
             return await res.json()
         } catch (error) {
             return error
-        } finally {
-            refetch()
         }
     }
 
     const deleteData = async (id: string) => {
         try {
-            // Add Notif 
-            setType({ type: 'delete', title: '', message: '' })
+            setType({ type: 'delete', title: '', msg: '' })
+            refetch()
             return await fetch(urls?.delete ?? '', { method: 'DELETE', body: JSON.stringify(id) })
         } catch (error) {
             return error
-        } finally {
-            refetch()
         }
     }
 
