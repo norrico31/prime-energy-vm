@@ -43,9 +43,9 @@ type TableColHead = {
 // ================================
 //* Components
 type ToastNotification = {
-    type: 'success' | 'update' | 'delete' | 'error' | 'default'
+    type: 'success' | 'update' | 'delete' | 'info' | 'download' | null
     title: string
-    message: string;
+    msg: string;
 }
 // ================================
 // ================================
