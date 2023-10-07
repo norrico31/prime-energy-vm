@@ -38,7 +38,7 @@ type ParallelFetch = {
 type ApiParams = {
     search?: string
     page?: number
-    pageSize?: number
+    limit?: number
 }
 // ================================
 // ================================
@@ -67,7 +67,7 @@ type PageProps = {
     total: number;
     perPage: number;
     lastPage: number;
-    setPage: React.Dispatch<React.SetStateAction<number>>
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>
 }
 // ================================
 // ================================
