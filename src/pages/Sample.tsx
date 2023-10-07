@@ -30,7 +30,7 @@ const columns: TableColHead = [
 
 export default function Sample() {
     const { data, isLoading, error } = useFetch<WhosInOut[]>({ urls: { get: url } })
-
+    console.log('render')
     return <div className='d-flex justify-content-center align-items-center '>
         {isLoading ? <Spinner animation="border" />
             : <div className='w-100 p-3 text-center'>
@@ -75,11 +75,13 @@ export default function Sample() {
     </div>
 }
 
+// TODO: functionality
 function Pagination() {
+    const total = 1
     return <div className="d-flex flex-column">
         <p>Total: <b>{1}</b></p>
         <BootstrapPagination className='m-auto'>
-            <BootstrapPagination.Prev />
+            <BootstrapPagination.Prev disabled={total === 1} />
             <BootstrapPagination.Item active>{1}</BootstrapPagination.Item>
             <BootstrapPagination.Item>{2}</BootstrapPagination.Item>
             <BootstrapPagination.Item>{3}</BootstrapPagination.Item>

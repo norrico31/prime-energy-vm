@@ -1,13 +1,13 @@
-import { useState } from 'react'
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import { useNotifCtx } from '../shared/contexts/Notification'
 
 // TODO: MODIFIED COLORS
 
 function Notification() {
-    const [show, setShow] = useState(true);
+    const { type: { type }, setType } = useNotifCtx()
     return <ToastContainer position="top-center" className="p-3" style={{ zIndex: 1 }}>
-        <Toast show={show} onClose={() => setShow(!show)} autohide>
+        <Toast show={type !== 'default'} onClose={() => setType({ type: 'default', message: '', title: '' })} autohide>
             <Toast.Header>
                 <img
                     src="holder.js/20x20?text=%20"
