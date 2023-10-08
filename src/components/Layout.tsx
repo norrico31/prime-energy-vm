@@ -15,7 +15,7 @@ export default function Layout() {
     )
 }
 
-const Icon = ({ type }: { type: string }) => {
+const Icon = ({ type }: { type: string | null }) => {
     if (!type) return null
     const icons: Record<string, JSX.Element> = {
         'success': <AiOutlineCheckCircle className='notification-icon' />,
@@ -36,7 +36,7 @@ function Notification() {
             autohide
         >
             <Toast.Header className={`notification-title-${type}`}>
-                <Icon type={type != null ? type : ''} />
+                <Icon type={type} />
                 <strong className="me-auto ">{title}</strong>
             </Toast.Header>
             <Toast.Body className={`notification-text-${type}`}>{msg}</Toast.Body>

@@ -6,7 +6,7 @@ type Return<D> = Awaited<ReturnType<typeof fetchData<D>>>
 async function fetchData<T>(reqUrl: string, params?: ApiParams): Promise<T> {
     const url = new URL(reqUrl)
     params && Object.entries(params).forEach(([k, v]) => {
-        return k != undefined && v != undefined && url.searchParams.append(k, v + '')
+        k != undefined && v != undefined && url.searchParams.append(k, v + '')
     })
     try {
         const res = await fetch(url.toString(), { method: 'GET' })
@@ -64,5 +64,3 @@ export const useParallelFetch = ({ urls, k }: ParallelFetch) => useQueries({
         }
     }),
 })
-
-// add parellel queries function here

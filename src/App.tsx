@@ -6,7 +6,7 @@ import { Notification } from './shared/contexts/index'
 export default function App() {
 	localStorage.setItem('token', JSON.stringify("1883|heZ3CDL5H16ptVawLSE2726VZE410HGFhfQcC42t"))
 	return (
-		<div>
+		<div className='w-100 h-100'>
 			<Notification>
 				<RouterProvider router={routes} />
 			</Notification>

@@ -69,6 +69,17 @@ type PageProps = {
     lastPage: number;
     setCurrentPage: React.Dispatch<React.SetStateAction<number>>
 }
+type CardList = {
+    data: {
+        title: string
+        data: CardItem[] | []
+    }[]
+}
+type CardItem = {
+    statusAvailability: 'avail' | 'affected' | 'unavail'
+    statusIntegrity: 'avail' | 'affected' | 'unavail'
+    text: string
+}
 // ================================
 // ================================
 
@@ -86,7 +97,7 @@ type Common = {
     user: User;
 }
 
-type WhosInOut = {
+type WhosInOut = Common & {
     type: string;
     time_keeping_date: string;
     time_keeping_time: string;
@@ -99,16 +110,16 @@ type WhosInOut = {
     is_client_site: number;
     overtime_date: string;
     schedule: Schedule;
-} & Common
+}
 
-type Schedule = {
+type Schedule = Common & {
     name: string;
     time_in: string;
     time_out: string;
     is_active: string;
     description: string;
     full_sched: string;
-} & Common
+}
 
 type User = {
     first_name: string;
@@ -141,11 +152,11 @@ type Department = {
     description: string;
 } & Common
 
-type Role = {
+type Role = Common & {
     name: string;
     description: string;
     can_approve: number;
     position_type_id?: string;
-} & Common
+}
 // ================================
 // ================================

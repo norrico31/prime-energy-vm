@@ -16,7 +16,7 @@ function Navbar() {
             }
 
             <Navbars.Toggle aria-controls='offcanvasNavbar-expand-false' />
-            <h4 className={`m-0 fs-${width < 709 ? '6' : 'initial'}`}>
+            <h4 className={`m-0 fs-${width < 709 ? '6' : 'initial'} text-color-gray`}>
                 Malampaya SWP Vulnerabilities
             </h4>
             <Navbars.Offcanvas
