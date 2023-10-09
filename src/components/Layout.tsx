@@ -71,20 +71,22 @@ function Navbar() {
                     </Nav>
                 </Offcanvas.Body>
             </Navbars.Offcanvas>
-            <NavDropdown
-                title={<FiSettings />}
-                id='offcanvasNavbarDropdown-expand-false'
-                className='settings-dropdown'
-            >
-                <NavDropdown.Item href="#action3">Profile</NavDropdown.Item>
-                {/* <NavDropdown.Item href="#action4">
+            <div className='settings-dropdown d-flex gap-4'>
+                <h5 className='ml-auto'>ADMINISTRATOR</h5>
+                <NavDropdown
+                    title={<FiSettings />}
+                    id='offcanvasNavbarDropdown-expand-false'
+                >
+                    <NavDropdown.Item href="#action3">Profile</NavDropdown.Item>
+                    {/* <NavDropdown.Item href="#action4">
                             Another action
                         </NavDropdown.Item> */}
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action5">
-                    Logout
-                </NavDropdown.Item>
-            </NavDropdown>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item href="#action5">
+                        Logout
+                    </NavDropdown.Item>
+                </NavDropdown>
+            </div>
         </Container>
     </Navbars>
 }
