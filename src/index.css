@@ -175,3 +175,30 @@ body {
 .circle.unavail {
   background: red;
 }
+
+
+/* TABLES */
+.table-headings-bg * {
+  vertical-align: middle;
+  text-align: center;
+  padding: 12px !important;
+  border: 1px solid #fff;
+}
+.table-headings-bg th {
+  background: #CBE5FB;
+}
+td.bg-light-blue {
+  background: #CBE5FB;
+}
+td.bg-blue {
+  background: #3C92DA;
+}
+td.bg-yellow {
+  background: #E9EB7A;
+}
+td.bg-red {
+  background: #EB6868;
+}
+.table-td-text-sm {
+  font-size: 12px;
+}
