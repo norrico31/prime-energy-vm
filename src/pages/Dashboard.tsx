@@ -1,4 +1,3 @@
-import { Container, Row } from 'react-bootstrap'
 import { CardList } from '../components'
 
 export default function Dashboard() {
