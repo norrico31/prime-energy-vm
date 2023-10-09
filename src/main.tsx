@@ -17,11 +17,11 @@ window.fetch = async (...args: Parameters<typeof originalFetch>) => {
 		}
 	})
 
-	const data = async () => await response.clone().json()
+	const data = await response.clone().json()
 
-	if (!(response.status >= 200 && response.status <= 205)) return Promise.reject(response)
+	if (!(response.status >= 200 && response.status <= 205)) Promise.reject(data)
 
-	response.json = data
+	response.json = () => data
 	return Promise.resolve(response);
 }
 

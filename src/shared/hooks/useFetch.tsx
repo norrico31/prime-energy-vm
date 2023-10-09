@@ -8,17 +8,16 @@ async function fetchData<T>(reqUrl: string, params?: ApiParams): Promise<T> {
     params && Object.entries(params).forEach(([k, v]) => {
         k != undefined && v != undefined && url.searchParams.append(k, v + '')
     })
-    try {
-        const res = await fetch(url.toString(), { method: 'GET' })
-        const data = await res.json()
-        return Promise.resolve(data.data ?? data satisfies T)
-    } catch (error) {
-        return Promise.reject(error)
-    }
+    const res = await fetch(url.toString(), { method: 'GET' })
+    const data = await res.json()
+    if (res.ok) return Promise.resolve(data)
+    return Promise.reject(data)
 }
 
 export const useFetch = <T,>({ urls, ...restProps }: Fetch & Partial<ApiParams>) => {
-    const { refetch, ...restQueries } = useQuery<Return<T>>({ queryKey: [urls.get, restProps], queryFn: () => fetchData(urls.get, restProps) })
+    const { refetch, ...restQueries } = useQuery<Return<T>>({
+        queryKey: [urls.get, restProps], queryFn: (): Promise<Return<T>> => fetchData(urls.get, restProps),
+    })
     const { setType } = useNotifCtx()
 
     const createData = async <T extends FormData & Partial<{ '_method': 'PUT' }>>(data: T) => {

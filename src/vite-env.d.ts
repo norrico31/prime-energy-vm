@@ -8,7 +8,16 @@ declare global {
 // ================================
 // ================================
 //* Fetch API
-type FetchResponse<T> = {
+type ApiResponse<D> = {
+    message: string
+} & (ApiSuccess<D> | ApiData<D>) & ApiError;
+type ApiSuccess<R> = {
+    data: ApiData<R>
+}
+type ApiError = {
+    errors: Record<string, string | string[]>
+}
+type ApiData<T> = {
     current_page: number
     data: T
     first_page_url: string
@@ -22,7 +31,7 @@ type FetchResponse<T> = {
     prev_page_url: string | null
     to: number
     total: number
-} | undefined;
+}
 type Fetch = {
     urls: {
         get: string
@@ -70,14 +79,11 @@ type PageProps = {
     setCurrentPage: React.Dispatch<React.SetStateAction<number>>
 }
 type CardList = {
-    data: {
-        title: string
-        data: CardItem[] | []
-    }[]
+    data: { title: string; lists: CardItem[] }[]
 }
 type CardItem = {
-    statusAvailability: 'avail' | 'affected' | 'unavail'
-    statusIntegrity: 'avail' | 'affected' | 'unavail'
+    statusAvailability: string
+    statusIntegrity: string
     text: string
 }
 // ================================

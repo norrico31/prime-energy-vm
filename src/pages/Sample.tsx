@@ -33,18 +33,16 @@ export default function Sample() {
     const [search, searchVal, onChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const { data, isLoading, error } = useFetch<FetchResponse<WhosInOut[]>>({ urls: { get: url }, search, page: currentPage, limit: pageSize })
+    const { data, isLoading } = useFetch<ApiSuccess<WhosInOut[]>>({ urls: { get: url }, search, page: currentPage, limit: pageSize })
 
     const paginationProps: PageProps = {
-        active: data?.current_page ?? 0,
-        total: data?.total ?? 0,
-        perPage: data?.per_page ?? 0,
-        lastPage: data?.last_page ?? 0,
+        active: data?.data?.current_page ?? 0,
+        total: data?.data?.total ?? 0,
+        perPage: data?.data?.per_page ?? 0,
+        lastPage: data?.data?.last_page ?? 0,
         setCurrentPage
     }
-
     return <div className='d-flex justify-content-center align-items-center '>
-
         <Form.Select aria-label="Default select example" onChange={(v) => {
             setCurrentPage(1)
             setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
@@ -69,7 +67,7 @@ export default function Sample() {
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.data.map(d => {
+                        {data?.data.data.map(d => {
                             return <tr key={d.id}>
                                 <td >{d.user.full_name}</td>
                                 <td >{d.time_keeping_date}</td>
@@ -87,7 +85,6 @@ export default function Sample() {
     </div>
 }
 
-// TODO: functionality
 function Pagination({ active, lastPage, perPage, total, setCurrentPage }: PageProps) {
     const items: JSX.Element[] = []
     for (let i = 1; i <= lastPage; i++) {

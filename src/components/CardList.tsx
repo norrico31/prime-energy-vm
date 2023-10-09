@@ -1,24 +1,32 @@
 export default function CardList({ data }: CardList) {
     return (
         <div className="card-list px-4 ">
-            <div className="card-item">
-                <div className="card-head text-color-white">
-                    <div className='d-flex w-100 align-items-center'>
-                        <div className="d-flex w-25 m-lg-4 justify-content-around">
-                            <h5>A</h5>
-                            <h5>I</h5>
+            {data?.map((d, i) => {
+                return (
+                    <div className="card-item" key={i}>
+                        <div className="card-head text-color-white">
+                            <div className='d-flex w-100 align-items-center'>
+                                <div className="d-flex w-25 m-lg-4 justify-content-around">
+                                    <h5>A</h5>
+                                    <h5>I</h5>
+                                </div>
+                                <div className="row-col-2">
+                                    <h5 className='ml-auto'>{d.title}</h5>
+                                </div>
+                            </div>
                         </div>
-                        <div className="row-col-2">
-                            <h5 className='ml-auto'>{data.title}</h5>
+                        <div className="card-body">
+                            {d?.lists.map((l, idx) => {
+                                console.log(l)
+                                return (
+                                    <CardItem key={idx} {...l} />
+                                )
+                            })}
                         </div>
                     </div>
-                </div>
-                <div className="card-body">
-                    {data.map((d) => (
-                        <CardItem key={d.text} statusAvailability='avail' statusIntegrity='unavail' text='tulala again' />
-                    ))}
-                </div>
-            </div>
+
+                )
+            })}
         </div>
     )
 }
