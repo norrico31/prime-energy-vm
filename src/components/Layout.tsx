@@ -107,18 +107,32 @@ function Icon({ type }: { type: string | null }) {
 }
 
 export default function Layout() {
-    let { pathname } = useLocation()
-    pathname = firstLetterCapitalize(pathname.slice(1))
+
     return <>
         <Notification />
         <Navbar />
-        <Container fluid className='px-5'>
+        <Container fluid className='px-5 py-3'>
             <Row className='mb-4'>
-                <h2 className='text-color-gray'>{!pathname ? 'Dashboard' : pathname}</h2>
+                <Title />
             </Row>
             {<Outlet />}
         </Container>
     </>
+}
+
+function Title() {
+    let { pathname } = useLocation()
+    pathname = pathname.slice(1)
+    const titleHead: Record<string, string> = {
+        '': 'Dashboard',
+        'print-report': 'Print Report',
+        'swp': 'SWP',
+        'ogp': 'OGP',
+        'pipelines': 'Pipelines',
+        'vulnerabilities': 'Vulnerabilities'
+    }
+    console.log(titleHead[pathname])
+    return <h2 className='text-color-gray'>{titleHead[pathname]}</h2>
 }
 
 const firstLetterCapitalize = (str: string) => str ? str[0].toUpperCase() + str.slice(1) : ''
