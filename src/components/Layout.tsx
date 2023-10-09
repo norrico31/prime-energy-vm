@@ -1,27 +1,35 @@
 import { useState } from 'react';
-import { Outlet, Link, useLocation } from "react-router-dom"
+import { Outlet, NavLink, useLocation } from "react-router-dom"
 import { useNotifCtx } from '../shared/contexts/Notification'
 import useWindowSize from '../shared/hooks/useWindowResize'
 import Container from 'react-bootstrap/Container'
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
-import { AiOutlineCheckCircle, AiOutlineDownload, AiOutlineEdit, AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai'
+import { AiOutlineCheckCircle, AiOutlineDownload, AiOutlineEdit, AiOutlineDelete, AiOutlineInfoCircle, AiOutlineHome, AiOutlinePrinter, AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart, AiFillUnlock } from 'react-icons/ai'
 import { Row } from 'react-bootstrap'
 import Nav from 'react-bootstrap/Nav'
 import Navbars from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import { FiSettings } from 'react-icons/fi'
+import Logo from '../shared/assets/logo_horizontal.svg'
 
-const links: string[] = ['dashboard', 'print-report', 'swp', 'ogp', 'pipelines', 'vulnerabilities']
+const links: { icon: JSX.Element; name: string; to: string }[] = [
+    { icon: <AiOutlineHome className='fs-4' />, name: 'Dashboard', to: '/' },
+    { icon: <AiOutlinePrinter className='fs-4' />, name: 'Print Report', to: '/print-report' },
+    { icon: <AiOutlineFolder className='fs-4' />, name: 'Swp', to: '/swp' },
+    { icon: <AiOutlineFileText className='fs-4' />, name: 'Ogp', to: '/ogp' },
+    { icon: <AiOutlineLineChart className='fs-4' />, name: 'Pipelines', to: '/pipelines' },
+    { icon: <AiFillUnlock className='fs-4' />, name: 'Vulnerabilities', to: '/vulnerabilities' }
+]
 
 function Navbar() {
     const { width } = useWindowSize()
     const [expand, setExpand] = useState(false);
     return <Navbars expand={false} className="bg-body-tertiary mb-3">
         <Container fluid>
-            {width >= 709 && <Navbars.Brand href="#" className='logo-width'>
-                LOGO
+            {width >= 709 && <Navbars.Brand className='logo-width p-0'>
+                <img src={Logo} alt="logo" className='main-logo' />
             </Navbars.Brand>
             }
 
@@ -35,13 +43,14 @@ function Navbar() {
                 placement="start"
                 show={expand}
                 onHide={() => setExpand(false)}
+                className='w-25'
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title id='offcanvasNavbarLabel-expand-false'>
-                        LOGO
+                        <img src={Logo} alt="logo" className='main-logo inverted' />
                     </Offcanvas.Title>
                 </Offcanvas.Header>
-                <Offcanvas.Body>
+                <Offcanvas.Body className='p-0'>
                     {/* <Form className="d-flex">
                     <Form.Control
                         type="search"
@@ -51,10 +60,13 @@ function Navbar() {
                     />
                     <Button variant="outline-success">Search</Button>
                 </Form> */}
-                    <Nav className="justify-content-end flex-grow-1 pe-3">
-                        {links.map((link) => {
+                    <Nav className="mt-3">
+                        {links.map((link, idx) => {
                             // guard clause for permissions
-                            return <Link className='nav-link' key={link} to={'/' + link} onClick={() => setExpand(false)}>{firstLetterCapitalize(link)}</Link>
+                            return <NavLink key={idx} className={({ isActive }) => `nav-link d-flex align-items-center gap-3 fs-5 ${isActive ? 'active' : ''}`} to={link.to} onClick={() => setExpand(false)}>
+                                {link.icon}
+                                {link.name}
+                            </NavLink>
                         })}
                     </Nav>
                 </Offcanvas.Body>
@@ -134,5 +146,3 @@ function Title() {
     console.log(titleHead[pathname])
     return <h2 className='text-color-gray'>{titleHead[pathname]}</h2>
 }
-
-const firstLetterCapitalize = (str: string) => str ? str[0].toUpperCase() + str.slice(1) : ''

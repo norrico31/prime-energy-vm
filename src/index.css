@@ -37,7 +37,36 @@ body {
   width: 200px;
   text-align: center;
 }
+.main-logo {
+  height: 45px;
+}
+.main-logo.inverted {
+  filter: invert(100%);
+}
+.offcanvas-title .main-logo {
+  width: 200px;
+  height: 50px;
+}
 
+/* NAV LINK */
+.offcanvas.show:not(.hiding), .offcanvas.showing {
+  background: #003765;
+}
+.offcanvas-header .btn-close {
+  filter: invert(100%);
+}
+.nav-link {
+  padding-left: 15px;
+  color: #c0c0c0;
+}
+.nav-link.active {
+  color: #000;
+  background: #fff;
+} 
+.nav-link:hover {
+  color: #000;
+  background: #bababa;
+}
 
 /* COMPONENTS */
 
