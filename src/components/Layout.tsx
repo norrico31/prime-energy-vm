@@ -34,6 +34,7 @@ function Navbar() {
                 aria-labelledby='offcanvasNavbarLabel-expand-false'
                 placement="start"
                 show={expand}
+                onHide={() => setExpand(false)}
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title id='offcanvasNavbarLabel-expand-false'>
