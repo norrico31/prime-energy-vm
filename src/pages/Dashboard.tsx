@@ -34,12 +34,7 @@ export default function Dashboard() {
             ]
         },
     ]
-    return <Container fluid className='px-5' >
-        <Row className='mb-4'>
-            <h2 className='text-color-gray'>Dashboard</h2>
-        </Row>
-        <CardList
-            data={data}
-        />
-    </Container>
+    return <CardList
+        data={data}
+    />
 }
