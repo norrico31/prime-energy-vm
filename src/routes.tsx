@@ -4,6 +4,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import { Layout } from "./components"
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Pipelines = lazy(() => import('./pages/Pipelines'))
 
 function Suspense({ children }: { children: ReactNode }) {
     return <ReactSuspense fallback={<Spinner animation='grow' />}>
@@ -24,6 +25,10 @@ export const routes = createBrowserRouter([
             {
                 path: '/',
                 element: <Suspense><Dashboard /></Suspense>
+            },
+            {
+                path: '/pipelines',
+                element: <Suspense><Pipelines /></Suspense>
             },
         ]
     },

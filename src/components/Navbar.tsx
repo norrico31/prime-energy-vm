@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbars from 'react-bootstrap/Navbar'
@@ -6,8 +8,11 @@ import Offcanvas from 'react-bootstrap/Offcanvas'
 import { FiSettings } from 'react-icons/fi'
 import useWindowSize from '../shared/hooks/useWindowResize'
 
+const links = ['dashboard', 'print-report', 'swp', 'ogp', 'pipelines', 'vulnerabilities']
+
 function Navbar() {
     const { width } = useWindowSize()
+    const [expand, setExpand] = useState(false);
     return <Navbars expand={false} className="bg-body-tertiary mb-3">
         <Container fluid>
             {width >= 709 && <Navbars.Brand href="#" className='logo-width'>
@@ -15,7 +20,7 @@ function Navbar() {
             </Navbars.Brand>
             }
 
-            <Navbars.Toggle aria-controls='offcanvasNavbar-expand-false' />
+            <Navbars.Toggle aria-controls='offcanvasNavbar-expand-false' onClick={() => setExpand(true)} />
             <h4 className={`m-0 fs-${width < 709 ? '6' : 'initial'} text-color-gray`}>
                 Malampaya SWP Vulnerabilities
             </h4>
@@ -23,6 +28,7 @@ function Navbar() {
                 id='offcanvasNavbar-expand-false'
                 aria-labelledby='offcanvasNavbarLabel-expand-false'
                 placement="start"
+                show={expand}
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title id='offcanvasNavbarLabel-expand-false'>
@@ -40,12 +46,10 @@ function Navbar() {
                     <Button variant="outline-success">Search</Button>
                 </Form> */}
                     <Nav className="justify-content-end flex-grow-1 pe-3">
-                        <Nav.Link href="/">Dashboard</Nav.Link>
-                        <Nav.Link href="/print-report">Print Report</Nav.Link>
-                        <Nav.Link href="/swp">SWP</Nav.Link>
-                        <Nav.Link href="/ogp">OGP</Nav.Link>
-                        <Nav.Link href="/pipelines">Pipelines</Nav.Link>
-                        <Nav.Link href="/vulnerabilities">Vulnerabilities</Nav.Link>
+                        {links.map((link) => {
+                            // guard clause for permissions
+                            return <Link className='nav-link' key={link} to={'/' + link} onClick={() => setExpand(false)}>{link ? link[0].toUpperCase() + link.slice(1) : ''}</Link>
+                        })}
                     </Nav>
                 </Offcanvas.Body>
             </Navbars.Offcanvas>

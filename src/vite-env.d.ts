@@ -10,7 +10,7 @@ declare global {
 //* Fetch API
 type ApiResponse<D> = {
     message: string
-} & (ApiSuccess<D> | ApiData<D>) & ApiError;
+} & ApiSuccess<D> & ApiError;
 type ApiSuccess<R> = {
     data: ApiData<R>
 }

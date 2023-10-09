@@ -63,3 +63,4 @@ export const useParallelFetch = ({ urls, k }: ParallelFetch) => useQueries({
         }
     }),
 })
+
