@@ -17,7 +17,7 @@ export const useFetch = <T, R>({ queryKey, urls, ...restProps }: Fetch & Partial
         queryFn: (): Promise<Return<T>> => crudApi(urls.get, { ...restProps, method: 'GET' }),
     })
 
-    const { mutate, error, isLoading: updateLoading, isError } = useMutation(async (data: R) => await crudApi(urls?.post ?? '', { method: 'POST', body: JSON.stringify(data) }), {
+    const { mutate, error, isLoading: updateLoading } = useMutation(async (data: R) => await crudApi(urls?.post ?? '', { method: 'POST', body: JSON.stringify(data) }), {
         onMutate: async () => {
             await queryClient.cancelQueries([queryKey])
             const prevData = queryClient.getQueryData([queryKey])
@@ -28,7 +28,6 @@ export const useFetch = <T, R>({ queryKey, urls, ...restProps }: Fetch & Partial
         onSuccess: () => queryClient.invalidateQueries([queryKey])
     })
 
-    console.log('mutation error: ', error, isError)
     const { setType } = useNotifCtx()
 
     const createData = async (data: R) => {

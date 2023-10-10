@@ -9,6 +9,7 @@ const Swp = lazy(() => import('./pages/Swp'))
 const Ogp = lazy(() => import('./pages/Ogp'))
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
 const Pipelines = lazy(() => import('./pages/Pipelines'))
+const Form = lazy(() => import('./pages/Form'))
 
 function Suspense({ children }: { children: ReactNode }) {
     return <ReactSuspense fallback={<Spinner animation='grow' />}>
@@ -49,6 +50,10 @@ export const routes = createBrowserRouter([
             {
                 path: '/vulnerabilities',
                 element: <Suspense><Vulnerabilities /></Suspense>
+            },
+            {
+                path: '/form',
+                element: <Suspense><Form /></Suspense>
             },
         ]
     },

@@ -42,8 +42,6 @@ export default function Sample() {
     const [pageSize, setPageSize] = useState(10);
     const { data, createData, isLoading, error } = useFetch<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
 
-    console.log('error from useFetch: ', error)
-
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
         total: data?.data?.total ?? 0,
