@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useFetch } from '../shared/hooks/useFetch'
 import { useDebounceSearch } from '../shared/hooks/useDebounceSearch'
 import Table from 'react-bootstrap/Table'
@@ -10,6 +10,7 @@ import Form from 'react-bootstrap/Form';
 import Button from '../components/elements/Button'
 
 const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
+const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 
 const columns: TableColHead = [
     {
@@ -29,11 +30,19 @@ const columns: TableColHead = [
     },
 ]
 
+type Payload = {
+    age: number
+    name: string
+    gender: string
+}
+
 export default function Sample() {
     const [search, searchVal, onChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const { data, isLoading } = useFetch<ApiSuccess<WhosInOut[]>>({ urls: { get: url }, search, page: currentPage, limit: pageSize })
+    const { data, createData, isLoading, error } = useFetch<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+
+    console.log('error from useFetch: ', error)
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -42,6 +51,7 @@ export default function Sample() {
         lastPage: data?.data?.last_page ?? 0,
         setCurrentPage
     }
+
     return <div className='d-flex justify-content-center align-items-center '>
         <Form.Select aria-label="Default select example" onChange={(v) => {
             setCurrentPage(1)
@@ -74,7 +84,8 @@ export default function Sample() {
                                 <td >{d.time_keeping_time}</td>
                                 <td >{d.scheduled_time}</td>
                                 <ButtonActions
-                                    isLoading={isLoading}
+                                    loading={isLoading}
+                                    editData={() => createData({ age: 31, name: 'gerald', gender: 'male' })}
                                 />
                             </tr>
                         })}
@@ -103,18 +114,18 @@ function Pagination({ active, lastPage, perPage, total, setCurrentPage }: PagePr
     </div>
 }
 
-function ButtonActions({ isLoading }: { isLoading: boolean }) {
+function ButtonActions({ loading, editData }: ButtonActionProps) {
     return <td className='d-flex justify-content-center gap-1 '>
-        <Button variant="info" loading={isLoading} title='View'>
+        <Button variant="info" loading={loading} title='View'>
             <BsEye />
         </Button>
-        <Button variant="primary" loading={isLoading} title='Edit'>
+        <Button variant="primary" loading={loading} title='Edit' onClick={editData}>
             <AiOutlineEdit />
         </Button>
-        <Button variant="danger" loading={isLoading} title='Delete'>
+        <Button variant="danger" loading={loading} title='Delete'>
             <BsTrash />
         </Button>
-        <Button variant="success" loading={isLoading} title='Download'>
+        <Button variant="success" loading={loading} title='Download'>
             <AiOutlineDownload />
         </Button>
     </td>

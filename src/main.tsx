@@ -7,10 +7,9 @@ import './index.css'
 const queryClient = new QueryClient()
 
 const { fetch: originalFetch } = window;
-window.fetch = async (...args: Parameters<typeof originalFetch>) => {
-	const [resource, config] = args
-
+window.fetch = async (...[resource, config]: Parameters<typeof originalFetch>) => {
 	const response = await originalFetch(resource, {
+		...config,
 		headers: {
 			'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')!)}`,
 			...config?.headers

@@ -1,4 +1,5 @@
 import { CardList } from '../components'
+import Sample from './Sample'
 
 export default function Dashboard() {
     const data = [
@@ -33,7 +34,8 @@ export default function Dashboard() {
             ]
         },
     ]
-    return <CardList
-        data={data}
-    />
+    // return <CardList
+    //     data={data}
+    // />
+    return <Sample />
 }

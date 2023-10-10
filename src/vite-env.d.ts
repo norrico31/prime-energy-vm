@@ -10,11 +10,12 @@ declare global {
 //* Fetch API
 type ApiResponse<D> = {
     message: string
-} & ApiSuccess<D> & ApiError;
+} & ApiSuccess<D>;
 type ApiSuccess<R> = {
     data: ApiData<R>
 }
 type ApiError = {
+    message: string
     errors: Record<string, string | string[]>
 }
 type ApiData<T> = {
@@ -33,6 +34,7 @@ type ApiData<T> = {
     total: number
 }
 type Fetch = {
+    queryKey: string
     urls: {
         get: string
         post?: string
@@ -45,10 +47,13 @@ type ParallelFetch = {
     k: string
 }
 type ApiParams = {
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE'
+    body?: string | FormData
     search?: string
     page?: number
     limit?: number
 }
+type RequestBody<T> = Record<string | number, string | number> & Partial<T>
 // ================================
 // ================================
 
@@ -85,6 +90,13 @@ type CardItem = {
     statusAvailability: string
     statusIntegrity: string
     text: string
+}
+type ButtonActionProps = {
+    loading: boolean
+    editData?: () => void
+    viewData?: () => void
+    deleteData?: () => void
+    download?: () => void
 }
 // ================================
 // ================================
