@@ -11,7 +11,7 @@ type Table = {
 
 export default function Table({ loading, columns, pageProps, children }: PropsWithChildren<Table>) {
     return loading ? <Spinner animation="border" />
-        : <div className='w-100 p-3 text-center'>
+        : <div className='p-3 text-center'>
             <BootstrapTable responsive="sm" bordered size='sm' variant={undefined}>
                 <thead>
                     <tr>

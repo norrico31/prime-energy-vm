@@ -14,7 +14,7 @@ type Props = {
 }
 
 function Button({ children, onClick, loading, variant = 'primary', size = 'sm', title, type = undefined }: PropsWithChildren<Props>) {
-    return <OverlayTrigger offset={[0, 10]} overlay={<Tooltip id={title}>{title}</Tooltip>} trigger={['hover', 'focus']}>
+    return <OverlayTrigger offset={[0, 10]} overlay={<Tooltip id={title} className='position-fixed'>{title}</Tooltip>} trigger={['hover', 'focus']}>
         <BootstrapButton
             type={type}
             variant={variant}

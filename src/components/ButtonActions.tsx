@@ -5,7 +5,7 @@ import { AiOutlineEdit, AiOutlineDownload } from 'react-icons/ai'
 export default function ButtonActions({ loading, editData, viewData, deleteData, download }: ButtonActionProps) {
     return <>
         {viewData && (
-            <Button variant="info" loading={loading} title='View'>
+            <Button variant="info" loading={loading} title='View' onClick={editData}>
                 <BsEye />
             </Button>
         )}
@@ -16,12 +16,12 @@ export default function ButtonActions({ loading, editData, viewData, deleteData,
         )}
         {deleteData && (
 
-            <Button variant="danger" loading={loading} title='Delete'>
+            <Button variant="danger" loading={loading} title='Delete' onClick={deleteData}>
                 <BsTrash />
             </Button>
         )}
         {download && (
-            <Button variant="success" loading={loading} title='Download'>
+            <Button variant="success" loading={loading} title='Download' onClick={download}>
                 <AiOutlineDownload />
             </Button>
         )}

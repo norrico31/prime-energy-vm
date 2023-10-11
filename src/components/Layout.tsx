@@ -34,7 +34,6 @@ function Navbar() {
                 <img src={Logo} alt="logo" className='main-logo' />
             </Navbars.Brand>
             }
-
             <Navbars.Toggle aria-controls='offcanvasNavbar-expand-false' onClick={() => setExpand(true)} />
             <h4 className={`m-0 fs-${width < 709 ? '6' : 'initial'} text-color-gray`}>
                 Malampaya SWP Vulnerabilities
@@ -45,7 +44,7 @@ function Navbar() {
                 placement="start"
                 show={expand}
                 onHide={() => setExpand(false)}
-                className='w-25'
+                className='navbar-offcanvas'
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title id='offcanvasNavbarLabel-expand-false'>
@@ -146,6 +145,5 @@ function Title() {
         'pipelines': 'Pipelines',
         'vulnerabilities': 'Vulnerabilities'
     }
-    console.log(titleHead[pathname])
     return <h2 className='text-color-gray'>{titleHead[pathname]}</h2>
 }

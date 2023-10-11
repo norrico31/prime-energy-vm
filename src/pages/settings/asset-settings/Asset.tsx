@@ -48,7 +48,8 @@ export default function Asset() {
     console.log('asset')
 
     return (
-        <div className='w-75'>
+        <>
+            <input type='text' placeholder='Search' value={searchVal} onChange={onChange} />
             <Table
                 loading={false}
                 pageProps={paginationProps}
@@ -64,11 +65,12 @@ export default function Asset() {
                             <ButtonActions
                                 loading={isLoading}
                                 editData={() => createData({ age: 31, name: 'gerald', gender: 'male' })}
+                                deleteData={() => alert('aha')}
                             />
                         </td>
                     </tr>
                 })}
             </Table>
-        </div>
+        </>
     )
 }

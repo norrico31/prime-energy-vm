@@ -17,7 +17,6 @@ export default function CardList({ data }: CardList) {
                         </div>
                         <div className="card-body">
                             {d?.lists.map((l, idx) => {
-                                console.log(l)
                                 return (
                                     <CardItem key={idx} {...l} />
                                 )

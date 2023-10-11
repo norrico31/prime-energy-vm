@@ -8,6 +8,7 @@ export const useDebounceSearch = () => {
     const [debounceSearch, setDebounceSearch] = useState(search);
 
     useEffect(() => {
+        if (search === debounceSearch) return
         const t = setTimeout(() => {
             setDebounceSearch(searchParams.get('search'))
         }, 500)

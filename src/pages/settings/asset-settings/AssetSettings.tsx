@@ -28,7 +28,7 @@ export default function AssetSettings() {
                 onSelect={navigate as () => void}
             >
                 {assetTabs.map((asset, idx) => (
-                    <Tab key={idx} eventKey={asset.key} title={asset.title}>
+                    <Tab key={idx} eventKey={asset.key} title={asset.title} className='w-100'>
                         <Outlet />
                     </Tab>
                 ))}
