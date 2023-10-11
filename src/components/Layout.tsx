@@ -12,6 +12,7 @@ import Navbars from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import { FiSettings } from 'react-icons/fi'
+import { TbSettingsDollar } from 'react-icons/tb'
 import Logo from '../shared/assets/logo_horizontal.svg'
 
 const links: { icon: JSX.Element; name: string; to: string }[] = [
@@ -20,7 +21,8 @@ const links: { icon: JSX.Element; name: string; to: string }[] = [
     { icon: <AiOutlineFolder className='fs-4' />, name: 'Swp', to: '/swp' },
     { icon: <AiOutlineFileText className='fs-4' />, name: 'Ogp', to: '/ogp' },
     { icon: <AiOutlineLineChart className='fs-4' />, name: 'Pipelines', to: '/pipelines' },
-    { icon: <AiFillUnlock className='fs-4' />, name: 'Vulnerabilities', to: '/vulnerabilities' }
+    { icon: <TbSettingsDollar className='fs-4' />, name: 'Asset Settings', to: '/asset-settings/asset' },
+    { icon: <AiFillUnlock className='fs-4' />, name: 'Vulnerabilities', to: '/vulnerabilities' },
 ]
 
 function Navbar() {
@@ -108,7 +110,7 @@ function Notification() {
     </ToastContainer>
 }
 
-function Icon({ type }: { type: string | null }) {
+export function Icon({ type }: { type: string | null }) {
     if (!type) return null
     const icons: Record<string, JSX.Element> = {
         'success': <AiOutlineCheckCircle className='notification-icon' />,
@@ -121,12 +123,11 @@ function Icon({ type }: { type: string | null }) {
 }
 
 export default function Layout() {
-
     return <>
         <Notification />
         <Navbar />
         <Container fluid className='px-5 py-3'>
-            <Row className='mb-4'>
+            <Row>
                 <Title />
             </Row>
             {<Outlet />}

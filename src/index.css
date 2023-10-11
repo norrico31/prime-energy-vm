@@ -3,9 +3,9 @@
   padding: 0;
   box-sizing: border-box;
 }
-body {
+body, #root {
   min-height: 100vh;
-  background: #f4f4f4;
+  background: rgb(240, 240, 240);
 }
 
 :root {
@@ -48,6 +48,11 @@ body {
   height: 50px;
 }
 
+/* BREADCRUMBS */
+.breadcrumb {
+  font-size: 12px;
+}
+
 /* NAV LINK */
 .offcanvas.show:not(.hiding), .offcanvas.showing {
   background: #003765;
@@ -69,6 +74,11 @@ body {
 }
 
 /* COMPONENTS */
+.login-container {
+  height: 80vh;
+  display: grid;
+  place-items: center;
+}
 
 /* DROPDOWN MENU  */
 .navbar > .container-fluid {
