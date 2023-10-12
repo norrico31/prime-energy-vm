@@ -97,6 +97,7 @@ type ButtonActionProps = {
     viewData?: () => void
     deleteData?: () => void
     download?: () => void
+    disabled?: () => void
 }
 // ================================
 // ================================

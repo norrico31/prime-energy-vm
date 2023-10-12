@@ -15,19 +15,13 @@ const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time
 
 const columns: TableColHead = [
     {
-        colHead: 'Name',
+        colHead: 'Asset Name',
     },
     {
-        colHead: 'Time Keeping Date',
+        colHead: 'Description',
     },
     {
-        colHead: 'Time Keeping Time',
-    },
-    {
-        colHead: 'Schedule Time',
-    },
-    {
-        colHead: 'Actions',
+        colHead: 'Action',
     },
 ]
 
@@ -44,9 +38,7 @@ export default function Asset() {
         lastPage: data?.data?.last_page ?? 0,
         setCurrentPage
     }
-
-    console.log('asset')
-
+    console.log('run')
     return (
         <>
             <input type='text' placeholder='Search' value={searchVal} onChange={onChange} />
@@ -59,15 +51,15 @@ export default function Asset() {
                     return <tr key={d.id}>
                         <td >{d.user.full_name}</td>
                         <td >{d.time_keeping_date}</td>
-                        <td >{d.time_keeping_time}</td>
-                        <td >{d.scheduled_time}</td>
                         <td className='d-flex justify-content-center gap-1'>
                             <ButtonActions
                                 loading={isLoading}
                                 editData={() => createData({ age: 31, name: 'gerald', gender: 'male' })}
-                                deleteData={() => alert('aha')}
+                                disabled={() => alert('aha')}
                             />
                         </td>
+                        {/* <td >{d.time_keeping_time}</td>
+                        <td >{d.scheduled_time}</td> */}
                     </tr>
                 })}
             </Table>
