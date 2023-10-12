@@ -41,7 +41,7 @@ export default function Asset() {
         lastPage: data?.data?.last_page ?? 0,
         setCurrentPage
     }
-
+    console.log('assset')
     const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
         setCurrentPage(1)
         setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))

@@ -12,7 +12,7 @@ type Table = {
 export default function Table({ loading, columns, pageProps, children }: PropsWithChildren<Table>) {
     return loading ? <Spinner animation="border" />
         : <div className='p-3 text-center'>
-            <BootstrapTable responsive="sm" bordered size='sm' variant={undefined}>
+            <BootstrapTable responsive="sm" bordered size='sm' variant={undefined} className='table-component-bg'>
                 <thead>
                     <tr>
                         {columns.map((c, idx) => (

@@ -49,7 +49,7 @@ function Tabs() {
     return (
         <Tab.Container id="left-tabs-example" activeKey={pathname} >
             <Row className='justify-content-between'>
-                <Col xs={2} sm={2} md={2} lg={2} xl={2}  >
+                <Col xs={1} sm={1} md={1} lg={2} xl={2}  >
                     <Nav variant="pills" className="flex-column" onSelect={navigate as () => void}>
                         {systemTabs.map((system, idx) => (
                             <Nav.Item key={idx} >
@@ -58,7 +58,7 @@ function Tabs() {
                         ))}
                     </Nav>
                 </Col>
-                <Col xs={8} sm={9} md={10} lg={10} xl={10}>
+                <Col xs={8} sm={8} md={9} lg={10} xl={10}>
                     <Tab.Content>
                         <Outlet />
                     </Tab.Content>

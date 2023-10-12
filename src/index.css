@@ -31,6 +31,15 @@ body, #root {
 .text-color-gray {
   color: var(--color-gray);
 }
+.bg-color-white {
+  background: var(--color-white);
+}
+.bg-color-primary {
+  background: var(--color-primary);
+}
+.bg-color-gray {
+  background: var(--color-gray);
+}
 
 /* LOGO */
 .logo-width {
@@ -98,6 +107,9 @@ body, #root {
   height: 80vh;
   display: grid;
   place-items: center;
+}
+.active>.page-link, .page-link.active {
+  background: var(--color-primary);
 }
 
 /* DROPDOWN MENU  */
@@ -232,4 +244,8 @@ td.bg-red {
 }
 .table-td-text-sm {
   font-size: 12px;
+}
+.table-component-bg th {
+  background: #003765;
+  color: #fff;
 }
