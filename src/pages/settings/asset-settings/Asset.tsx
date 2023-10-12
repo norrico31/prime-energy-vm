@@ -1,7 +1,8 @@
 import { useState } from 'react'
+import { Col, Row, Form } from 'react-bootstrap';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
-import { Table, ButtonActions } from '../../../components';
+import { Table, ButtonActions, PageSize, Button } from '../../../components';
 
 type Payload = {
     name: string
@@ -28,6 +29,7 @@ export default function Asset() {
     const [search, searchVal, onChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+
     const { data, createData, isLoading, error } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
 
     const paginationProps: PageProps = {
@@ -38,9 +40,23 @@ export default function Asset() {
         setCurrentPage
     }
 
+    const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
+        setCurrentPage(1)
+        setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
+    }
+
     return (
         <>
-            <input type='text' placeholder='Search' value={searchVal} onChange={onChange} />
+            <Row>
+                <Col >
+                    <PageSize value={pageSize} onChange={pageSizeChange} />
+                </Col>
+                <Col className='d-flex justify-content-end align-items-center gap-2'>
+                    {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
+                    <Form.Control required type="text" placeholder="Search..." className='w-50' />
+                    <Button variant='success' title='Create'>Create</Button>
+                </Col>
+            </Row>
             <Table
                 loading={false}
                 pageProps={paginationProps}

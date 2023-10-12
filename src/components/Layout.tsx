@@ -31,14 +31,18 @@ function Navbar() {
     const [expand, setExpand] = useState(false);
     return <Navbars expand={false} className="bg-body-tertiary mb-3">
         <Container fluid>
-            {width >= 709 && <Navbars.Brand className='logo-width p-0'>
-                <img src={Logo} alt="logo" className='main-logo' />
-            </Navbars.Brand>
+            {width >= 860 &&
+                <Navbars.Brand className='logo-width p-0'>
+                    <img src={Logo} alt="logo" className='main-logo' />
+                </Navbars.Brand>
             }
             <Navbars.Toggle aria-controls='offcanvasNavbar-expand-false' onClick={() => setExpand(true)} />
-            <h4 className={`m-0 fs-${width < 709 ? '6' : 'initial'} text-color-gray`}>
-                Malampaya SWP Vulnerabilities
-            </h4>
+            {width > 640 && (
+                <h4 className={`m-0 fs-6`}>
+                    Malampaya SWP Vulnerabilities
+                </h4>
+
+            )}
             <Navbars.Offcanvas
                 id='offcanvasNavbar-expand-false'
                 aria-labelledby='offcanvasNavbarLabel-expand-false'
@@ -74,7 +78,7 @@ function Navbar() {
                     </Nav>
                 </Offcanvas.Body>
             </Navbars.Offcanvas>
-            <div className='settings-dropdown d-flex gap-4'>
+            <div className='settings-dropdown d-flex align-items-center gap-4'>
                 <h5 className='ml-auto'>ADMINISTRATOR</h5>
                 <NavDropdown
                     title={<FiSettings />}
