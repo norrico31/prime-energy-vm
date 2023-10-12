@@ -15,7 +15,7 @@ const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time
 
 const columns: TableColHead = [
     {
-        colHead: 'Asset Name',
+        colHead: 'Asset',
     },
     {
         colHead: 'Description',
@@ -38,7 +38,7 @@ export default function Asset() {
         lastPage: data?.data?.last_page ?? 0,
         setCurrentPage
     }
-    console.log('run')
+
     return (
         <>
             <input type='text' placeholder='Search' value={searchVal} onChange={onChange} />
