@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams } from "react-router-dom";
 
 
@@ -7,17 +7,22 @@ export const useDebounceSearch = () => {
     const search = searchParams.get('search')
     const [searchQuery, setSearchQuery] = useState(search);
 
+    useEffect(() => {
+        if (search === searchQuery) return
+        const timeout = setTimeout(() => {
+            setSearchQuery(searchParams.get('search'))
+        }, 500)
+        return () => clearTimeout(timeout)
+    }, [searchParams])
+
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value
-        setSearchQuery(query)
-        setTimeout(() => {
-            setSearchParams(prev => {
-                if (query === prev.get('search')) prev
-                prev.set('search', query)
-                return prev
-            })
-        }, 500)
+        setSearchParams(prev => {
+            if (query === prev.get('search')) prev
+            prev.set('search', query)
+            return prev
+        })
     }
 
-    return [searchParams.get('search') as string, searchQuery!, onChange] as const
+    return [searchQuery!, searchParams.get('search') as string, onChange] as const
 }

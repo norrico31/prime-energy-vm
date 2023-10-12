@@ -78,7 +78,7 @@ export default function Asset() {
                         <td className='d-flex justify-content-center gap-1'>
                             <ButtonActions
                                 loading={isLoading}
-                                editData={() => alert('edit')}
+                                editData={() => createData({ name: 'gerald' })}
                                 disabled={() => setShowModalDelete(true)}
                             />
                         </td>
@@ -123,10 +123,9 @@ function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
 
 function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal
-        size="sm"
+        // size="sm"
         show={show}
         onHide={onHide}
-        aria-labelledby="example-modal-sizes-title-sm"
         centered
     >
         <BootstrapModal.Header closeButton>
@@ -134,7 +133,7 @@ function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
                 Delete Asset
             </BootstrapModal.Title>
         </BootstrapModal.Header>
-        <BootstrapModal.Body>Remove Selected Modal</BootstrapModal.Body>
+        <BootstrapModal.Body>Remove Selected Asset</BootstrapModal.Body>
         <BootstrapModal.Footer>
             <Button variant="secondary" onClick={onHide} title='Cancel'>
                 Cancel

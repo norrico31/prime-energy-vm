@@ -27,8 +27,7 @@ function Button({ children, onClick, loading, variant = 'primary', size = 'sm', 
                 onClick?.(e)
             }}
         >
-            {/* {loading && <Spinner animation="border" />} */}
-            {children}
+            {loading ? <Spinner animation="border" size='sm' /> : children}
         </BootstrapButton>
     </OverlayTrigger>
 }

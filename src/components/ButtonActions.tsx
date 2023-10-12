@@ -15,7 +15,6 @@ export default function ButtonActions({ loading, editData, viewData, deleteData,
             </Button>
         )}
         {deleteData && (
-
             <Button variant="danger" loading={loading} title='Delete' onClick={deleteData}>
                 <BsTrash />
             </Button>
