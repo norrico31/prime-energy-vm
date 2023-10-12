@@ -33,7 +33,7 @@ type ApiData<T> = {
     to: number
     total: number
 }
-type Fetch = {
+type Queries = {
     queryKey: string
     urls: {
         get: string

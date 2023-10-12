@@ -1,12 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
-import { useFetch } from '../../../shared/hooks/useFetch';
-import Form from 'react-bootstrap/Form';
-import Spinner from 'react-bootstrap/Spinner'
-import { Table, ButtonActions, Button } from '../../../components';
-
-import { BsTrash, BsEye } from 'react-icons/bs';
-import { AiOutlineEdit, AiOutlineDownload } from 'react-icons/ai'
+import { useDataResource } from '../../../shared/hooks/useDataResource';
+import { Table, ButtonActions } from '../../../components';
 
 type Payload = {}
 
@@ -29,7 +24,7 @@ export default function AssetClassification() {
     const [search, searchVal, onChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const { data, createData, isLoading, error } = useFetch<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, createData, isLoading, error } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,

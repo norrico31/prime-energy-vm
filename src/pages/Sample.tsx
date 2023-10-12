@@ -1,13 +1,10 @@
-import { useState, useEffect } from 'react'
-import { useFetch } from '../shared/hooks/useFetch'
+import { useState } from 'react'
+import { useDataResource } from '../shared/hooks/useDataResource'
 import { useDebounceSearch } from '../shared/hooks/useDebounceSearch'
 import Table from 'react-bootstrap/Table'
 import Spinner from 'react-bootstrap/Spinner'
-import BootstrapPagination from 'react-bootstrap/Pagination'
-import { BsTrash, BsEye } from 'react-icons/bs';
-import { AiOutlineEdit, AiOutlineDownload } from 'react-icons/ai'
 import Form from 'react-bootstrap/Form';
-import Button from '../components/elements/Button'
+import { ButtonActions, Pagination } from '../components'
 
 const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
@@ -40,7 +37,7 @@ export default function Sample() {
     const [search, searchVal, onChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const { data, createData, isLoading, error } = useFetch<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, createData, isLoading, error } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,

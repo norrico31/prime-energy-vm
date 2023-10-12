@@ -9,19 +9,19 @@ async function crudApi<T>(reqUrl: string, params?: ApiParams): Promise<T> {
     return Promise.resolve(res.json())
 }
 
-export const useFetch = <T, R>({ queryKey, urls, ...restProps }: Fetch & Partial<ApiParams>) => {
+export const useDataResource = <T, P>({ queryKey, urls, ...restProps }: Queries & Partial<ApiParams>) => {
     const { data, isLoading, ...restQueries } = useQuery<Return<T>>({
         queryKey: [queryKey, restProps],
         queryFn: (): Promise<Return<T>> => crudApi(urls.get, { ...restProps, method: 'GET' }),
     })
 
-    const { mutate: createData, error: errorCreate, isLoading: loadingCreate } = useMutation<Common & Partial<{ '_method': 'PUT' }>>({
+    const { mutate: createData, error: errorCreate, isLoading: loadingCreate } = useMutation<P | Partial<{ '_method': 'PUT' }>>({
         queryKey,
         mutationFn: async (data) => await crudApi(urls?.post ?? '', { method: 'POST', body: JSON.stringify(data) })
     })
-    const { mutate: editData, error: errorEdit, isLoading: loadingEdit } = useMutation<R & Common>({
+    const { mutate: editData, error: errorEdit, isLoading: loadingEdit } = useMutation<P & Partial<{ id: string }>>({
         queryKey,
-        mutationFn: async (data: R & Common) => await crudApi(urls?.put + `/${data?.id}` ?? '', { method: 'POST', body: JSON.stringify(data) })
+        mutationFn: async (data: P & Partial<{ id: string }>) => await crudApi(urls?.put + `/${data?.id}` ?? '', { method: 'POST', body: JSON.stringify(data) })
     })
     const { mutate: removeData, error: errorRemove, isLoading: loadingRemove } = useMutation<string>({
         queryKey,
