@@ -36,4 +36,3 @@ export default function AssetSettings() {
         </div >
     )
 }
-// {firstLetterCapitalize(pathname.split('/')[2].split('-').join(' '))}

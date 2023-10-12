@@ -22,6 +22,7 @@ const links: { icon: JSX.Element; name: string; to: string }[] = [
     { icon: <AiOutlineFileText className='fs-4' />, name: 'Ogp', to: '/ogp' },
     { icon: <AiOutlineLineChart className='fs-4' />, name: 'Pipelines', to: '/pipelines' },
     { icon: <TbSettingsDollar className='fs-4' />, name: 'Asset Settings', to: '/asset-settings/asset' },
+    { icon: <FiSettings className='fs-4' />, name: 'System Settings', to: '/system-settings/phase' },
     { icon: <AiFillUnlock className='fs-4' />, name: 'Vulnerabilities', to: '/vulnerabilities' },
 ]
 
@@ -45,6 +46,7 @@ function Navbar() {
                 show={expand}
                 onHide={() => setExpand(false)}
                 className='navbar-offcanvas'
+            // style={{ width: 300 }}
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title id='offcanvasNavbarLabel-expand-false'>

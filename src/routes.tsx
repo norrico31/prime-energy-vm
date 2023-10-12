@@ -18,9 +18,20 @@ const AssetSettings = lazy(() => import('./pages/settings/asset-settings/AssetSe
 const Asset = lazy(() => import('./pages/settings/asset-settings/Asset'))
 const AssetClassification = lazy(() => import('./pages/settings/asset-settings/AssetClassification'))
 
+// SYSTEM SETTINGS
+const SystemSettings = lazy(() => import('./pages/settings/system-settings/SystemSettings'))
+const Phase = lazy(() => import('./pages/settings/system-settings/Phase'))
+const Availability = lazy(() => import('./pages/settings/system-settings/Availability'))
+const Integrity = lazy(() => import('./pages/settings/system-settings/Integrity'))
+const InitialRamRating = lazy(() => import('./pages/settings/system-settings/InitialRamRating'))
+const RamPriority = lazy(() => import('./pages/settings/system-settings/RamPriority'))
+const ReAssesRamRating = lazy(() => import('./pages/settings/system-settings/ReAssesRamRating'))
+const Status = lazy(() => import('./pages/settings/system-settings/Status'))
+
 
 function Suspense({ children }: { children: ReactNode }) {
-    return <ReactSuspense fallback={<Spinner animation='grow' />}>
+    // <Spinner animation='grow' />
+    return <ReactSuspense fallback={<div />}>
         {children}
     </ReactSuspense>
 }
@@ -78,6 +89,40 @@ export const routes = createBrowserRouter([
                     {
                         path: 'asset-classification',
                         element: <Suspense><AssetClassification /></Suspense>
+                    },
+                ]
+            },
+            {
+                path: '/system-settings',
+                element: <Suspense><SystemSettings /></Suspense>,
+                children: [
+                    {
+                        path: 'phase',
+                        element: <Suspense><Phase /></Suspense>
+                    },
+                    {
+                        path: 'availability',
+                        element: <Suspense><Availability /></Suspense>
+                    },
+                    {
+                        path: 'integrity',
+                        element: <Suspense><Integrity /></Suspense>
+                    },
+                    {
+                        path: 'initial-ram-rating',
+                        element: <Suspense><InitialRamRating /></Suspense>
+                    },
+                    {
+                        path: 'ram-priority',
+                        element: <Suspense><RamPriority /></Suspense>
+                    },
+                    {
+                        path: 're-asses-ram-rating',
+                        element: <Suspense><ReAssesRamRating /></Suspense>
+                    },
+                    {
+                        path: 'status',
+                        element: <Suspense><Status /></Suspense>
                     },
                 ]
             },
