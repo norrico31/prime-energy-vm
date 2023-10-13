@@ -36,7 +36,7 @@ const systemTabs = [
 export default function SystemSettings() {
     return (
         <div className='mt-0'>
-            <h2 className='mb-3 text-color-gray'>System Settings</h2>
+            <h5 className='mb-3 text-color-gray'>System Settings</h5>
             <Tabs />
         </div >
     )

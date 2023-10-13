@@ -57,7 +57,7 @@ export default function InitialRamRating() {
 
     return (
         <>
-            <h2 className='text-color-gray mb-2'>Initial Ram Rating</h2>
+            <h3 className='text-color-gray mb-2'>Initial Ram Rating</h3>
             <Row className='d-flex justify-content-between'>
                 <Col>
                     <PageSize value={pageSize} onChange={pageSizeChange} />

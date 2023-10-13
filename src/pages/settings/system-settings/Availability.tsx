@@ -57,7 +57,7 @@ export default function Availability() {
 
     return (
         <>
-            <h2 className='text-color-gray mb-2'>Availability</h2>
+            <h3 className='text-color-gray mb-2'>Availability</h3>
             <Row className='d-flex justify-content-between'>
                 <Col>
                     <PageSize value={pageSize} onChange={pageSizeChange} />
