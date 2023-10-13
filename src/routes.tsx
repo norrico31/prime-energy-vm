@@ -1,6 +1,5 @@
 import { Suspense as ReactSuspense, lazy, ReactNode } from "react"
 import { createBrowserRouter, Navigate } from "react-router-dom"
-import Spinner from 'react-bootstrap/Spinner'
 import { Layout } from "./components"
 
 const Login = lazy(() => import('./pages/Login'))
@@ -27,6 +26,14 @@ const InitialRamRating = lazy(() => import('./pages/settings/system-settings/Ini
 const RamPriority = lazy(() => import('./pages/settings/system-settings/RamPriority'))
 const ReAssesRamRating = lazy(() => import('./pages/settings/system-settings/ReAssesRamRating'))
 const Status = lazy(() => import('./pages/settings/system-settings/Status'))
+
+// ADMIN admin
+const AdminSettings = lazy(() => import('./pages/settings/admin-settings/AdminSettings'))
+const Site = lazy(() => import('./pages/settings/admin-settings/Site'))
+const Users = lazy(() => import('./pages/settings/admin-settings/Users'))
+const RolesPermission = lazy(() => import('./pages/settings/admin-settings/RolesPermission'))
+const AuditLogs = lazy(() => import('./pages/settings/admin-settings/AuditLogs'))
+const NotificationLogs = lazy(() => import('./pages/settings/admin-settings/NotificationLogs'))
 
 
 function Suspense({ children }: { children: ReactNode }) {
@@ -123,6 +130,32 @@ export const routes = createBrowserRouter([
                     {
                         path: 'status',
                         element: <Suspense><Status /></Suspense>
+                    },
+                ]
+            },
+            {
+                path: '/admin-settings',
+                element: <Suspense><AdminSettings /></Suspense>,
+                children: [
+                    {
+                        path: 'site',
+                        element: <Suspense><Site /></Suspense>
+                    },
+                    {
+                        path: 'users',
+                        element: <Suspense><Users /></Suspense>
+                    },
+                    {
+                        path: 'roles-permission',
+                        element: <Suspense><RolesPermission /></Suspense>
+                    },
+                    {
+                        path: 'audit-logs',
+                        element: <Suspense><AuditLogs /></Suspense>
+                    },
+                    {
+                        path: 'notification-logs',
+                        element: <Suspense><NotificationLogs /></Suspense>
                     },
                 ]
             },

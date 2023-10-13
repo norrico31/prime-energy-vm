@@ -12,7 +12,7 @@ import Navbars from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import { FiSettings } from 'react-icons/fi'
-import { TbSettingsDollar } from 'react-icons/tb'
+import { TbSettingsDollar, TbSettingsBolt } from 'react-icons/tb'
 import Logo from '../shared/assets/logo_horizontal.svg'
 
 const links: { icon: JSX.Element; name: string; to: string }[] = [
@@ -23,6 +23,7 @@ const links: { icon: JSX.Element; name: string; to: string }[] = [
     { icon: <AiOutlineLineChart className='fs-4' />, name: 'Pipelines', to: '/pipelines' },
     { icon: <TbSettingsDollar className='fs-4' />, name: 'Asset Settings', to: '/asset-settings/asset' },
     { icon: <FiSettings className='fs-4' />, name: 'System Settings', to: '/system-settings/phase' },
+    { icon: <TbSettingsBolt className='fs-4' />, name: 'Admin Settings', to: '/admin-settings/site' },
     { icon: <AiFillUnlock className='fs-4' />, name: 'Vulnerabilities', to: '/vulnerabilities' },
 ]
 

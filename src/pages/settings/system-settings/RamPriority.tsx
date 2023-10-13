@@ -15,7 +15,7 @@ const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time
 
 const columns: TableColHead = [
     {
-        colHead: 'Ram Priority Name',
+        colHead: 'Ram Priority',
     },
     {
         colHead: 'Description',

@@ -1,4 +1,4 @@
-import Button from '../components/elements/Button'
+import Button from './Button'
 import { BsTrash, BsEye } from 'react-icons/bs';
 import { AiOutlineEdit, AiOutlineDownload, AiOutlineLock } from 'react-icons/ai'
 
