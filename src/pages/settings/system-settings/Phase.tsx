@@ -95,7 +95,7 @@ export default function Phase() {
 function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal show={show} onHide={onHide}>
         <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Create Phase</BootstrapModal.Title>
+            <BootstrapModal.Title>Phase - Create</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
             <Row className="mb-3">

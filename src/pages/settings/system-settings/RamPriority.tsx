@@ -95,7 +95,7 @@ export default function RamPriority() {
 function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal show={show} onHide={onHide}>
         <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Create Ram Priority</BootstrapModal.Title>
+            <BootstrapModal.Title>Ram Priority - Create</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
             <Row className="mb-3">

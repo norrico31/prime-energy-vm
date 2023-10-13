@@ -95,7 +95,7 @@ export default function Integrity() {
 function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal show={show} onHide={onHide}>
         <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Create Integrity</BootstrapModal.Title>
+            <BootstrapModal.Title>Integrity - Create</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
             <Row className="mb-3">
