@@ -123,17 +123,16 @@ function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
 
 function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal
-        // size="sm"
         show={show}
         onHide={onHide}
         centered
     >
         <BootstrapModal.Header closeButton>
             <BootstrapModal.Title id="example-modal-sizes-title-sm">
-                Delete Asset
+                Disabled Asset
             </BootstrapModal.Title>
         </BootstrapModal.Header>
-        <BootstrapModal.Body>Remove Selected Asset</BootstrapModal.Body>
+        <BootstrapModal.Body>Disable Selected Asset</BootstrapModal.Body>
         <BootstrapModal.Footer>
             <Button variant="secondary" onClick={onHide} title='Cancel'>
                 Cancel

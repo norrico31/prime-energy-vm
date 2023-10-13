@@ -34,14 +34,14 @@ export default function Phase() {
 
     const { data, createData, isLoading, error } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
 
-    const paginationProps: PageProps = {
+    const pageProps: PageProps = {
         active: data?.data?.current_page ?? 0,
         total: data?.data?.total ?? 0,
         perPage: data?.data?.per_page ?? 0,
         lastPage: data?.data?.last_page ?? 0,
         setCurrentPage
     }
-    console.log('assset')
+
     const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
         setCurrentPage(1)
         setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
@@ -57,6 +57,7 @@ export default function Phase() {
 
     return (
         <>
+            <h2 className='text-color-gray mb-2'>Phase</h2>
             <Row className='d-flex justify-content-between'>
                 <Col>
                     <PageSize value={pageSize} onChange={pageSizeChange} />
@@ -68,7 +69,7 @@ export default function Phase() {
             </Row>
             <Table
                 loading={false}
-                pageProps={paginationProps}
+                pageProps={pageProps}
                 columns={columns}
             >
                 {data?.data.data.map(d => {
@@ -123,7 +124,6 @@ function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
 
 function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal
-        // size="sm"
         show={show}
         onHide={onHide}
         centered
@@ -133,7 +133,7 @@ function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
                 Delete Phase
             </BootstrapModal.Title>
         </BootstrapModal.Header>
-        <BootstrapModal.Body>Remove Selected Phase</BootstrapModal.Body>
+        <BootstrapModal.Body>Disable Selected Phase</BootstrapModal.Body>
         <BootstrapModal.Footer>
             <Button variant="secondary" onClick={onHide} title='Cancel'>
                 Cancel
