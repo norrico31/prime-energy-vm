@@ -4,7 +4,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App.tsx'
 import './index.css'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			keepPreviousData: true,
+			staleTime: 0,
+			cacheTime: 0,
+			refetchOnWindowFocus: false
+		}
+	}
+})
 
 const { fetch: originalFetch } = window;
 window.fetch = async (...[resource, config]: Parameters<typeof originalFetch>) => {
