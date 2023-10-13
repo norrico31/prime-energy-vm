@@ -130,7 +130,7 @@ function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
     >
         <BootstrapModal.Header closeButton>
             <BootstrapModal.Title id="example-modal-sizes-title-sm">
-                Delete Phase
+                Disable Phase
             </BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>Disable Selected Phase</BootstrapModal.Body>
