@@ -92,7 +92,7 @@ export default function AssetClassification() {
 function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal show={show} onHide={onHide}>
         <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Create Asset Classification</BootstrapModal.Title>
+            <BootstrapModal.Title>Asset Classification- Create</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
             <Row className="mb-3">

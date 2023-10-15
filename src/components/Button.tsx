@@ -11,14 +11,15 @@ type Props = {
     loading?: boolean
     type?: 'button' | 'reset' | 'submit' | undefined
     title?: string
+    disabled?: boolean
 }
 
-function Button({ children, onClick, loading, variant = 'primary', size = 'sm', title, type = undefined }: PropsWithChildren<Props>) {
+function Button({ children, onClick, loading, disabled, variant = 'primary', size = 'sm', title, type = undefined }: PropsWithChildren<Props>) {
     return <OverlayTrigger offset={[0, 10]} overlay={<Tooltip id={title} className='position-fixed'>{title}</Tooltip>} trigger={['hover', 'focus']}>
         <BootstrapButton
             type={type}
             variant={variant}
-            disabled={loading}
+            disabled={loading || disabled}
             active={loading}
             size={size}
             onClick={(e) => {
