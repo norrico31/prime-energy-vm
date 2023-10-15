@@ -64,9 +64,9 @@ export default function Site() {
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center gap-2'>
                     <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
-                    <Button variant='success' title='Create' onClick={() => setShowModal(true)} disabled={true}>Create</Button>
+                    <Button variant='success' title='Create' onClick={() => setShowModal(true)} disabled>Create</Button>
                 </Col>
-            </Row>
+            </Row >
             <Table
                 loading={false}
                 pageProps={paginationProps}

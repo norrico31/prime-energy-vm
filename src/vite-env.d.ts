@@ -143,6 +143,7 @@ type Schedule = Common & {
 type User = {
     first_name: string;
     middle_name: string;
+    account_type: string
     last_name: string;
     email: string;
     internal: number;
@@ -157,6 +158,17 @@ type User = {
     teams: Team[];
     department: Department;
 } & Common
+
+type AuditLogs = Common & {
+    account_type: string
+    action: string
+    date: string
+    id: string | null
+    module_name: string
+    payload: unknown
+    user_full_name: string
+    user_id: string
+}
 
 type Team = {
     name: string;
