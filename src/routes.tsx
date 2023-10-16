@@ -1,5 +1,5 @@
 import { Suspense as ReactSuspense, lazy, ReactNode } from "react"
-import { createBrowserRouter, Navigate } from "react-router-dom"
+import { createBrowserRouter, Navigate, Link } from "react-router-dom"
 import { Layout } from "./components"
 
 const Login = lazy(() => import('./pages/Login'))
@@ -67,7 +67,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/swp/:id',
-                element: <Suspense><Form /></Suspense>
+                element: <Suspense><Form><Link to='/swp' className='mb-4 text-decoration-none'>Back to SWP</Link></Form></Suspense>
             },
             {
                 path: '/ogp',
@@ -80,10 +80,6 @@ export const routes = createBrowserRouter([
             {
                 path: '/vulnerabilities',
                 element: <Suspense><Vulnerabilities /></Suspense>
-            },
-            {
-                path: '/form',
-                element: <Suspense><Form /></Suspense>
             },
             {
                 path: '/form',

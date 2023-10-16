@@ -88,6 +88,7 @@ type CardList = {
     data: { id: string; title: string; lists: CardItem[] }[]
 }
 type CardItem = {
+    id: string
     statusAvailability: string
     statusIntegrity: string
     text: string
