@@ -1,6 +1,5 @@
 import { RouterProvider } from 'react-router-dom'
 import { routes } from './routes'
-import { Notification } from './shared/contexts/index'
 
 
 export default function App() {
@@ -8,9 +7,7 @@ export default function App() {
 	// window.document.title = 'Hello World'
 	return (
 		<>
-			<Notification>
-				<RouterProvider router={routes} />
-			</Notification>
+			<RouterProvider router={routes} />
 		</>
 	)
 }

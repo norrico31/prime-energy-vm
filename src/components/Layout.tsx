@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { Outlet, NavLink, useLocation } from "react-router-dom"
-import { useNotifCtx } from '../shared/contexts/Notification'
 import useWindowSize from '../shared/hooks/useWindowResize'
 import Container from 'react-bootstrap/Container'
-import Toast from 'react-bootstrap/Toast'
-import ToastContainer from 'react-bootstrap/ToastContainer'
-import { AiOutlineCheckCircle, AiOutlineDownload, AiOutlineEdit, AiOutlineDelete, AiOutlineInfoCircle, AiOutlineHome, AiOutlinePrinter, AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart, AiFillUnlock } from 'react-icons/ai'
+import { AiOutlineHome, AiOutlinePrinter, AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart, AiFillUnlock } from 'react-icons/ai'
 import { Row } from 'react-bootstrap'
 import Nav from 'react-bootstrap/Nav'
 import Navbars from 'react-bootstrap/Navbar'
@@ -99,41 +96,12 @@ function Navbar() {
     </Navbars>
 }
 
-function Notification() {
-    const { type: { type, title, msg }, setType } = useNotifCtx()
-    return <ToastContainer position="top-end" className="p-3 z-1">
-        <Toast
-            show={type !== null}
-            onClose={() => setType({ type: null, msg: '', title: '' })}
-            autohide
-        >
-            <Toast.Header className={`notification-title-${type}`}>
-                <Icon type={type} />
-                <strong className="me-auto ">{title}</strong>
-            </Toast.Header>
-            <Toast.Body className={`notification-text-${type}`}>{msg}</Toast.Body>
-        </Toast>
-    </ToastContainer>
-}
-
-export function Icon({ type }: { type: string | null }) {
-    if (!type) return null
-    const icons: Record<string, JSX.Element> = {
-        'success': <AiOutlineCheckCircle className='notification-icon' />,
-        'update': <AiOutlineEdit className='notification-icon' />,
-        'delete': <AiOutlineDelete className='notification-icon' />,
-        'info': <AiOutlineInfoCircle className='notification-icon' />,
-        'download': <AiOutlineDownload className='notification-icon' />,
-    }
-    return icons[type]
-}
-
 export default function Layout() {
     return <>
-        <Notification />
+        {/* <Notification /> */}
         <Navbar />
         <Container fluid className='px-5 py-3'>
-            <Row>
+            <Row className='mb-4'>
                 <Title />
             </Row>
             {<Outlet />}

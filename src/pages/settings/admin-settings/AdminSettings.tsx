@@ -42,7 +42,7 @@ function Tabs() {
         <Tab.Container id="left-tabs-example" activeKey={pathname} >
             <Row className='justify-content-between'>
                 <Col xs={1} sm={1} md={1} lg={2} xl={2}  >
-                    <Nav variant="pills" className="flex-column" onSelect={navigate as () => void}>
+                    <Nav variant="pills" className="d-flex flex-column gap-1" onSelect={navigate as () => void}>
                         {adminTabs.map((system, idx) => (
                             <Nav.Item key={idx} >
                                 <Nav.Link eventKey={system.key} className='text-color-black'>{system.title}</Nav.Link>

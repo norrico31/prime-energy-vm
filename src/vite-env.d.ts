@@ -75,6 +75,7 @@ type ToastNotification = {
     type: 'success' | 'update' | 'delete' | 'info' | 'download' | null
     title: string
     msg: string;
+    onClose: () => void
 }
 type PageProps = {
     active: number;
