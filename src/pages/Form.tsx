@@ -1,8 +1,6 @@
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
+import { Col, Form, Row, } from 'react-bootstrap'
+import { useParams } from 'react-router-dom'
+import { Button } from '../components';
 import * as formik from 'formik';
 import * as yup from 'yup';
 
@@ -31,7 +29,8 @@ const initValues = {
 }
 
 function Forms() {
-
+    const params = useParams()
+    console.log(params)
     const onSubmit = (v: typeof initValues) => {
         console.log(v)
     }

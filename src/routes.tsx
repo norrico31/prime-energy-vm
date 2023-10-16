@@ -66,6 +66,10 @@ export const routes = createBrowserRouter([
                 element: <Suspense><Swp /></Suspense>
             },
             {
+                path: '/swp/:id',
+                element: <Suspense><Form /></Suspense>
+            },
+            {
                 path: '/ogp',
                 element: <Suspense><Ogp /></Suspense>
             },

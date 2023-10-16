@@ -12,9 +12,9 @@ type Props = {
     type?: 'button' | 'reset' | 'submit' | undefined
     title?: string
     disabled?: boolean
-}
+} & Partial<{ className: string }>
 
-function Button({ children, onClick, loading, disabled, variant = 'primary', size = 'sm', title, type = undefined }: PropsWithChildren<Props>) {
+function Button({ children, onClick, loading, disabled, className, variant = 'primary', size = 'sm', title, type = undefined }: PropsWithChildren<Props>) {
     return <OverlayTrigger offset={[0, 10]} overlay={<Tooltip id={title} className='position-fixed'>{title}</Tooltip>} trigger={['hover', 'focus']}>
         <BootstrapButton
             type={type}
@@ -22,6 +22,7 @@ function Button({ children, onClick, loading, disabled, variant = 'primary', siz
             disabled={loading || disabled}
             active={loading}
             size={size}
+            className={className}
             onClick={(e) => {
                 e.stopPropagation()
                 e.preventDefault()

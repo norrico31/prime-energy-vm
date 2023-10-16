@@ -85,7 +85,7 @@ type PageProps = {
     setCurrentPage: React.Dispatch<React.SetStateAction<number>>
 }
 type CardList = {
-    data: { title: string; lists: CardItem[] }[]
+    data: { id: string; title: string; lists: CardItem[] }[]
 }
 type CardItem = {
     statusAvailability: string
