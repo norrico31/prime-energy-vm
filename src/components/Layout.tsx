@@ -101,9 +101,9 @@ export default function Layout() {
         {/* <Notification /> */}
         <Navbar />
         <Container fluid className='px-5 py-3'>
-            <Row className='mb-4'>
+            {/* <Row className='mb-4'>
                 <Title />
-            </Row>
+            </Row> */}
             {<Outlet />}
         </Container>
     </>

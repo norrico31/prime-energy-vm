@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import { CardList } from "../components"
+import { Outlet } from 'react-router-dom'
+import { MainHead } from '../components'
 
 export default function Swp() {
     const data = [
@@ -39,9 +39,7 @@ export default function Swp() {
         },
     ]
     return <>
-        <CardList
-            to='/swp/create'
-            data={data}
-        />
+        <h2 className='text-color-gray my-2'>SWP</h2>
+        <Outlet context={{ data: data as typeof data }} />
     </>
 }

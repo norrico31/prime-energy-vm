@@ -1,16 +1,22 @@
 import { Suspense as ReactSuspense, lazy, ReactNode } from "react"
-import { createBrowserRouter, Navigate, Link } from "react-router-dom"
-import { Layout } from "./components"
+import { createBrowserRouter, Link, Navigate, Outlet } from "react-router-dom"
+import { Button, Layout } from "./components"
 
 const Login = lazy(() => import('./pages/Login'))
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const PrintReport = lazy(() => import('./pages/PrintReport'))
-const Swp = lazy(() => import('./pages/Swp'))
+
+const MainLayout = lazy(() => import('./pages/views/Layout'))
+
 const Ogp = lazy(() => import('./pages/Ogp'))
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
 const Pipelines = lazy(() => import('./pages/Pipelines'))
 const Form = lazy(() => import('./pages/Form'))
+
+const Swp = lazy(() => import('./pages/Swp'))
+const SwpLists = lazy(() => import('./pages/views/SwpLists'))
+const SwpView = lazy(() => import('./pages/views/SwpView'))
 
 // ASSET SETTINGS
 const AssetSettings = lazy(() => import('./pages/settings/asset-settings/AssetSettings'))
@@ -38,6 +44,10 @@ const NotificationLogs = lazy(() => import('./pages/settings/admin-settings/Noti
 
 function Suspense({ children }: { children: ReactNode }) {
     // <Spinner animation='grow' />
+    // todo
+    // const pages = {
+
+    // }
     return <ReactSuspense fallback={<div />}>
         {children}
     </ReactSuspense>
@@ -63,11 +73,31 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/swp',
-                element: <Suspense><Swp /></Suspense>
-            },
-            {
-                path: '/swp/:id',
-                element: <Suspense><Form><Link to='/swp' className='mb-4 text-decoration-none'>Back to SWP</Link></Form></Suspense>
+                element: <Suspense><Swp /></Suspense>,
+                children: [
+                    {
+                        path: '',
+                        element: <Suspense><SwpLists /></Suspense>,
+                    },
+                    {
+                        path: ':id',
+                        children: [
+                            {
+                                path: 'view',
+                                element: <Suspense><SwpView /></Suspense>,
+                            },
+                            {
+                                path: 'create',
+                                element: <Suspense><Form to='/swp' /></Suspense>,
+                            },
+                        ]
+                    },
+                    {
+                        path: 'create',
+                        element: <Suspense><Form to='/swp' /></Suspense>,
+                    }
+
+                ]
             },
             {
                 path: '/ogp',
@@ -81,10 +111,10 @@ export const routes = createBrowserRouter([
                 path: '/vulnerabilities',
                 element: <Suspense><Vulnerabilities /></Suspense>
             },
-            {
-                path: '/form',
-                element: <Suspense><Form /></Suspense>
-            },
+            // {
+            //     path: '/form',
+            //     element: <Suspense><Form /></Suspense>
+            // },
             {
                 path: '/asset-settings',
                 element: <Suspense><AssetSettings /></Suspense>,

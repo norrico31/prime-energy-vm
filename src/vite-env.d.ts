@@ -92,6 +92,7 @@ type CardItem = {
     statusAvailability: string
     statusIntegrity: string
     text: string
+    to: string
 }
 type ButtonActionProps = {
     loading: boolean
@@ -191,5 +192,16 @@ type Role = Common & {
     can_approve: number;
     position_type_id?: string;
 }
+
+type CardData = {
+    title: string;
+    id: string;
+    lists: {
+        id: string;
+        statusAvailability: string;
+        statusIntegrity: string;
+        text: string;
+    }[];
+}[]
 // ================================
 // ================================

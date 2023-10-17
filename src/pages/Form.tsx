@@ -1,6 +1,6 @@
 import { useEffect, PropsWithChildren } from 'react'
 import { Col, Form, Row, } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Button } from '../components';
 import * as formik from 'formik';
 import * as yup from 'yup';
@@ -27,12 +27,12 @@ const initValues = {
     terms: false,
 }
 
-function Forms({ children }: PropsWithChildren<{ '': (p: null) => null }>) {
+function Forms({ to, children }: PropsWithChildren<{ to: string }>) {
     const { id } = useParams()
 
     useEffect(() => {
         if (id === 'create') return
-        alert('update')
+        // alert('update')
         // FETCH ENDPOINT BY ID
     }, [])
 
@@ -40,7 +40,7 @@ function Forms({ children }: PropsWithChildren<{ '': (p: null) => null }>) {
         // edit create endpoint
         console.log(v)
     }
-
+    console.log(children)
     return (
         <Formik
             validationSchema={schema}
@@ -49,11 +49,14 @@ function Forms({ children }: PropsWithChildren<{ '': (p: null) => null }>) {
         >
             {({ handleSubmit, handleChange, values, touched, errors, isSubmitting }) => (
                 <Form noValidate onSubmit={handleSubmit}>
-                    <div className={`d-flex justify-content-${id == 'create' ? 'start' : 'between'}`}>
+                    <div className={`d-flex justify-content-between`}>
                         {children}
-                        {id != 'create' &&
+                        {/* <h2 className='text-color-gray'>{to.split('/')[1].toUpperCase()}</h2> */}
+                        <Link to={to} className='mb-4 text-decoration-none'>Back to lists</Link>
+
+                        {/* {id != 'create' &&
                             <Button variant='danger' title='Disable' className='mb-3' onClick={() => alert('use modal to delete/disable and hit endpoint ')}>Disable</Button>
-                        }
+                        } */}
                     </div>
                     <Row className="mb-3">
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridActionNo">
