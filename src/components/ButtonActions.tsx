@@ -5,7 +5,7 @@ import { AiOutlineEdit, AiOutlineDownload, AiOutlineLock } from 'react-icons/ai'
 export default function ButtonActions({ loading, editData, viewData, deleteData, download, disabled }: ButtonActionProps) {
     return <>
         {viewData && (
-            <Button variant="info" loading={loading} title='View' onClick={editData}>
+            <Button variant="info" loading={loading} title='View' onClick={viewData}>
                 <BsEye />
             </Button>
         )}

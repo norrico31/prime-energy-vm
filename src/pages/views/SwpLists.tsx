@@ -6,7 +6,7 @@ export default function SwpLists() {
     const { data } = useOutletContext<{ data: CardData }>()
     return (
         <Row className='card-list px-4'>
-            <MainHead to='/swp/create' />
+            <MainHead to='/swp/form' />
             <CardList data={data} to='/swp' />
         </Row>
     )

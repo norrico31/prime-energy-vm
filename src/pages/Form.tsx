@@ -1,6 +1,6 @@
-import { useEffect, PropsWithChildren } from 'react'
+import { useEffect } from 'react'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { Col, Form, Row, } from 'react-bootstrap'
-import { Link, useParams } from 'react-router-dom'
 import { Button } from '../components';
 import * as formik from 'formik';
 import * as yup from 'yup';
@@ -27,20 +27,20 @@ const initValues = {
     terms: false,
 }
 
-function Forms({ to, children }: PropsWithChildren<{ to: string }>) {
-    const { id } = useParams()
+function Forms() {
+    const { swpId, id } = useParams()
 
-    useEffect(() => {
-        if (id === 'create') return
-        // alert('update')
-        // FETCH ENDPOINT BY ID
-    }, [])
+    const navigate = useNavigate()
+    // useEffect(() => {
+    //     if (id === 'create') return
+    //     alert('update')
+    //     // FETCH ENDPOINT BY ID
+    // }, [])
 
     const onSubmit = (v: typeof initValues) => {
         // edit create endpoint
         console.log(v)
     }
-    console.log(children)
     return (
         <Formik
             validationSchema={schema}
@@ -50,13 +50,7 @@ function Forms({ to, children }: PropsWithChildren<{ to: string }>) {
             {({ handleSubmit, handleChange, values, touched, errors, isSubmitting }) => (
                 <Form noValidate onSubmit={handleSubmit}>
                     <div className={`d-flex justify-content-between`}>
-                        {children}
-                        {/* <h2 className='text-color-gray'>{to.split('/')[1].toUpperCase()}</h2> */}
-                        <Link to={to} className='mb-4 text-decoration-none'>Back to lists</Link>
-
-                        {/* {id != 'create' &&
-                            <Button variant='danger' title='Disable' className='mb-3' onClick={() => alert('use modal to delete/disable and hit endpoint ')}>Disable</Button>
-                        } */}
+                        <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate(-1)}>Back to lists</Button>
                     </div>
                     <Row className="mb-3">
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridActionNo">
@@ -151,11 +145,7 @@ function Forms({ to, children }: PropsWithChildren<{ to: string }>) {
                             </Form.Select>
                         </Form.Group>
                     </Row>
-                    <div className={`d-flex justify-content-end`}>
-                        <Button variant={id === 'create' ? 'success' : 'primary'} type="submit" disabled={isSubmitting}>
-                            {id === 'create' ? 'Create' : 'Update'}
-                        </Button>
-                    </div>
+                    <ButtonSubmit isSubmitting={isSubmitting} />
                 </Form>
             )}
         </Formik>
@@ -163,3 +153,13 @@ function Forms({ to, children }: PropsWithChildren<{ to: string }>) {
 }
 
 export default Forms;
+
+function ButtonSubmit({ isSubmitting }: { isSubmitting: boolean }) {
+    const { pathname } = useLocation()
+    console.log(pathname)
+    return <div className={`d-flex justify-content-end`}>
+        <Button variant={pathname.includes('edit') ? 'primary' : 'success'} type="submit" disabled={isSubmitting}>
+            {pathname.includes('edit') ? 'Update' : 'Create'}
+        </Button>
+    </div>
+}

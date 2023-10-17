@@ -31,7 +31,7 @@ function CardItem(props: CardItem) {
                 </Toast.Header>
                 <Toast.Body className='d-flex gap-3 justify-content-center'>
                     <Button variant='info' onClick={() => navigate(to + '/view')}>View</Button>
-                    <Button variant='success' onClick={() => navigate(to + '/create')}>Create</Button>
+                    <Button variant='success' onClick={() => navigate(to + '/form')}>Create</Button>
                 </Toast.Body>
             </Toast>
         </>

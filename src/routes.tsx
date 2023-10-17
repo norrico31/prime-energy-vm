@@ -7,8 +7,6 @@ const Login = lazy(() => import('./pages/Login'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const PrintReport = lazy(() => import('./pages/PrintReport'))
 
-const MainLayout = lazy(() => import('./pages/views/Layout'))
-
 const Ogp = lazy(() => import('./pages/Ogp'))
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
 const Pipelines = lazy(() => import('./pages/Pipelines'))
@@ -80,20 +78,24 @@ export const routes = createBrowserRouter([
                         element: <Suspense><SwpLists /></Suspense>,
                     },
                     {
-                        path: ':id',
+                        path: ':swpId',
                         children: [
                             {
                                 path: 'view',
                                 element: <Suspense><SwpView /></Suspense>,
                             },
                             {
-                                path: 'create',
+                                path: 'form',
+                                element: <Suspense><Form to='/swp' /></Suspense>,
+                            },
+                            {
+                                path: 'edit/:id',
                                 element: <Suspense><Form to='/swp' /></Suspense>,
                             },
                         ]
                     },
                     {
-                        path: 'create',
+                        path: 'form',
                         element: <Suspense><Form to='/swp' /></Suspense>,
                     }
 

@@ -82,7 +82,7 @@ type PageProps = {
     total: number;
     perPage: number;
     lastPage: number;
-    setCurrentPage: React.Dispatch<React.SetStateAction<number>>
+    setCurrentPage: (payload: number) => void
 }
 type CardList = {
     data: { id: string; title: string; lists: CardItem[] }[]
@@ -205,3 +205,23 @@ type CardData = {
 }[]
 // ================================
 // ================================
+
+
+
+
+// ================================
+// ================================
+//*  STATES
+type ReducerState = {
+    view: boolean;
+    disable: boolean
+    selectedData?: AuditLogs,
+    currentPage: number,
+    pageSize: number,
+}
+type Action<T> =
+    | { type: 'MODAL_VIEW'; payload: T }
+    | { type: 'MODAL_DELETE'; payload: T }
+    | { type: 'CURRENT_PAGE'; payload: number }
+    | { type: 'PAGE_SIZE'; payload: number }
+    | { type: 'ON_HIDE' };
