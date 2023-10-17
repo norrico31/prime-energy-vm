@@ -10,9 +10,9 @@ export default function Pagination({ active, lastPage, perPage, total, setCurren
     return <div className="d-flex justify-content-center w-25 align-items-center m-auto">
         <p className='mb-0'>Total: <b>{total}</b></p>
         <BootstrapPagination className='m-auto mb-2'>
-            <BootstrapPagination.Prev disabled={active === 1} onClick={() => setCurrentPage(p => p - 1)} />
+            <BootstrapPagination.Prev disabled={active === 1} onClick={() => setCurrentPage(active - 1)} />
             <BootstrapPagination.Item active className='bg-color-primary'>{active}</BootstrapPagination.Item>
-            <BootstrapPagination.Next disabled={active === lastPage} onClick={() => setCurrentPage((p) => p + 1)} />
+            <BootstrapPagination.Next disabled={active === lastPage} onClick={() => setCurrentPage(active + 1)} />
         </BootstrapPagination>
         <p className='mb-0'>Per Page: <b>{perPage}</b></p>
     </div>
