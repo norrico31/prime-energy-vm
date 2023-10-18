@@ -7,7 +7,6 @@ function CardItem(props: CardItem) {
     const [show, setShow] = useState(false);
     const navigate = useNavigate()
     const to = props.to + '/' + props.id
-    console.log(to)
     return (
         <>
             <OverlayTrigger key={props.id} offset={[0, 10]} overlay={<Tooltip id={props.text} className='position-fixed'>{props.text}</Tooltip>} trigger={['hover', 'focus']}>

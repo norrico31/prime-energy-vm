@@ -110,10 +110,10 @@ export default function OgpView() {
 
     return (
         <>
-            <div className="d-flex justify-content-between">
+            {/* <div className="d-flex justify-content-between">
                 <h3 className='text-color-gray mb-2'>DISPLAY TITLE OF WELL HERE</h3>
-                <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/ogp')}>Back to OGP</Button>
-            </div>
+            </div> */}
+            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/ogp')}>Back to OGP</Button>
             <Row>
                 <Col >
                     <PageSize value={pageSize} onChange={pageSizeChange} />
