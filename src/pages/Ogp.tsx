@@ -11,7 +11,7 @@ export default function Ogp() {
                 { id: '2', statusAvailability: 'unavail', statusIntegrity: 'avail', text: 'well list 2 ' },
                 { id: '3', statusAvailability: 'avail', statusIntegrity: 'avail', text: 'well list 3' },
                 { id: '4', statusAvailability: 'avail', statusIntegrity: 'unavail', text: 'well list' },
-                { id: '5', statusAvailability: 'avail', statusIntegrity: 'avail', text: 'well list last' },
+                { id: '5', statusAvailability: 'avail', statusIntegrity: 'avail', text: 'well list lastasdasd' },
             ]
         },
         {
