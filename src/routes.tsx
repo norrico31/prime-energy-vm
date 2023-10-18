@@ -7,7 +7,6 @@ const Login = lazy(() => import('./pages/Login'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const PrintReport = lazy(() => import('./pages/PrintReport'))
 
-const Ogp = lazy(() => import('./pages/Ogp'))
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
 const Pipelines = lazy(() => import('./pages/Pipelines'))
 const Form = lazy(() => import('./pages/Form'))
@@ -15,6 +14,10 @@ const Form = lazy(() => import('./pages/Form'))
 const Swp = lazy(() => import('./pages/Swp'))
 const SwpLists = lazy(() => import('./pages/views/SwpLists'))
 const SwpView = lazy(() => import('./pages/views/SwpView'))
+
+const Ogp = lazy(() => import('./pages/Ogp'))
+const OgpLists = lazy(() => import('./pages/views/OgpLists'))
+const OgpView = lazy(() => import('./pages/views/OgpView'))
 
 // ASSET SETTINGS
 const AssetSettings = lazy(() => import('./pages/settings/asset-settings/AssetSettings'))
@@ -86,24 +89,52 @@ export const routes = createBrowserRouter([
                             },
                             {
                                 path: 'form',
-                                element: <Suspense><Form to='/swp' /></Suspense>,
+                                element: <Suspense><Form /></Suspense>,
                             },
                             {
-                                path: 'edit/:id',
-                                element: <Suspense><Form to='/swp' /></Suspense>,
+                                path: 'edit/:swpItemId',
+                                element: <Suspense><Form /></Suspense>,
                             },
                         ]
                     },
                     {
                         path: 'form',
-                        element: <Suspense><Form to='/swp' /></Suspense>,
+                        element: <Suspense><Form /></Suspense>,
                     }
 
                 ]
             },
             {
                 path: '/ogp',
-                element: <Suspense><Ogp /></Suspense>
+                element: <Suspense><Ogp /></Suspense>,
+                children: [
+                    {
+                        path: '',
+                        element: <Suspense><OgpLists /></Suspense>,
+                    },
+                    {
+                        path: ':ogpId',
+                        children: [
+                            {
+                                path: 'view',
+                                element: <Suspense><OgpView /></Suspense>,
+                            },
+                            {
+                                path: 'form',
+                                element: <Suspense><Form /></Suspense>,
+                            },
+                            {
+                                path: 'edit/:ogpItemId',
+                                element: <Suspense><Form /></Suspense>,
+                            },
+                        ]
+                    },
+                    {
+                        path: 'form',
+                        element: <Suspense><Form /></Suspense>,
+                    }
+
+                ]
             },
             {
                 path: '/pipelines',

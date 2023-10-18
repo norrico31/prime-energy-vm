@@ -28,7 +28,7 @@ const initValues = {
 }
 
 function Forms() {
-    const { swpId, id } = useParams()
+    const { swpId, swpItemId, ogpId, ogpItemId, } = useParams()
 
     const navigate = useNavigate()
     // useEffect(() => {
