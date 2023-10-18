@@ -5,7 +5,6 @@ import { useDebounceSearch } from '../../shared/hooks/useDebounceSearch'
 import { useDataResource } from '../../shared/hooks/useDataResource'
 import { Table, PageSize, Button, ButtonActions } from '../../components'
 
-
 const reducerState: ReducerState = {
     view: false,
     disable: false,
@@ -52,8 +51,10 @@ function reducer<T>(state: ReducerState, action: Action<T>) {
         }
         case ON_HIDE: {
             return {
-                ...reducerState,
                 ...state,
+                view: false,
+                disable: false,
+                selectedData: undefined
             }
         }
         default: throw Error('Unknown action: ' + action);
@@ -80,13 +81,12 @@ const columns: TableColHead = [
         colHead: 'Actions',
     },
 ]
+
 export default function SwpView() {
     const { swpId } = useParams()
     const navigate = useNavigate()
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [{ currentPage, pageSize, }, dispatch] = useReducer((state: typeof reducerState, action: Action<AuditLogs>) => reducer(state, action), reducerState);
-    // const [currentPage, setCurrentPage] = useState(1)
-    // const [pageSize, setPageSize] = useState(10);
     const { data, createData, isLoading, error } = useDataResource<ApiSuccess<AuditLogs[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
     const [selectedData, setSelectedData] = useState<AuditLogs | undefined>(undefined);
 
@@ -104,6 +104,7 @@ export default function SwpView() {
     }
 
     const onHide = () => {
+        dispatch({ type: ON_HIDE })
         setSelectedData(undefined)
     }
 

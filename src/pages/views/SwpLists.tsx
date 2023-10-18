@@ -5,8 +5,8 @@ import { CardList, MainHead } from '../../components'
 export default function SwpLists() {
     const { data } = useOutletContext<{ data: CardData }>()
     return (
-        <Row className='card-list px-4'>
-            <MainHead to='/swp/form' />
+        <Row className='card-list px-5'>
+            {/* <MainHead to='/swp/form' /> */}
             <CardList data={data} to='/swp' />
         </Row>
     )

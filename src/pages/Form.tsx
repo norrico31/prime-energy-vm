@@ -156,7 +156,6 @@ export default Forms;
 
 function ButtonSubmit({ isSubmitting }: { isSubmitting: boolean }) {
     const { pathname } = useLocation()
-    console.log(pathname)
     return <div className={`d-flex justify-content-end`}>
         <Button variant={pathname.includes('edit') ? 'primary' : 'success'} type="submit" disabled={isSubmitting}>
             {pathname.includes('edit') ? 'Update' : 'Create'}
