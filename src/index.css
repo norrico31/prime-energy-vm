@@ -14,6 +14,21 @@ body, #root {
   --color-gray: #3e3e3e;
 }
 
+button:not(.btn-close) {
+  border: none !important;
+  border-radius: 0 !important;
+  box-sizing: border-box !important;
+  color: #222 !important;
+  text-shadow: 0 0 #222 !important;
+  background-color: #e5e5e5 !important;
+  padding: 5px 15px !important;
+  box-shadow: inset 0px 0px #848484, inset 1px 1px #fff, inset -2px -2px grey,
+    inset 2px 2px #dfdfdf !important;
+}
+/* button:focus {
+  outline: revert !important;
+} */
+
 
 /* HEADINGS */
 :is(h1, h2, h3, h4, h5, h6)
@@ -71,7 +86,9 @@ body, #root {
 }
 
 .offcanvas-header .btn-close {
-  filter: invert(100%);
+  filter: grayscale(5) brightness(2);
+  /* filter: invert(1); */
+  /* background-color: #000 !important; */
 }
 .nav-link {
   color: #c0c0c0;
@@ -211,7 +228,6 @@ body, #root {
 .card-item-row-2 {
   width: 110px;
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   text-align: center;
 }
