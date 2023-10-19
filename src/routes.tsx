@@ -1,6 +1,6 @@
 import { Suspense as ReactSuspense, lazy, ReactNode } from "react"
-import { createBrowserRouter, Link, Navigate, Outlet } from "react-router-dom"
-import { Button, Layout } from "./components"
+import { createBrowserRouter, Navigate } from "react-router-dom"
+import { Layout } from "./components"
 
 const Login = lazy(() => import('./pages/Login'))
 
@@ -8,7 +8,6 @@ const Dashboard = lazy(() => import('./pages/Dashboard'))
 const PrintReport = lazy(() => import('./pages/PrintReport'))
 
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
-const Pipelines = lazy(() => import('./pages/Pipelines'))
 const Form = lazy(() => import('./pages/Form'))
 
 const Swp = lazy(() => import('./pages/Swp'))
@@ -18,6 +17,11 @@ const SwpView = lazy(() => import('./pages/views/SwpView'))
 const Ogp = lazy(() => import('./pages/Ogp'))
 const OgpLists = lazy(() => import('./pages/views/OgpLists'))
 const OgpView = lazy(() => import('./pages/views/OgpView'))
+
+const Pipelines = lazy(() => import('./pages/Pipelines'))
+const PipelineView = lazy(() => import('./pages/views/PipelineView'))
+const PipelineLists = lazy(() => import('./pages/views/PipelineLists'))
+
 
 // ASSET SETTINGS
 const AssetSettings = lazy(() => import('./pages/settings/asset-settings/AssetSettings'))
@@ -138,7 +142,35 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/pipelines',
-                element: <Suspense><Pipelines /></Suspense>
+                element: <Suspense><Pipelines /></Suspense>,
+                children: [
+                    {
+                        path: '',
+                        element: <Suspense><PipelineLists /></Suspense>,
+                    },
+                    {
+                        path: ':pipelineId',
+                        children: [
+                            {
+                                path: 'view',
+                                element: <Suspense><PipelineView /></Suspense>,
+                            },
+                            {
+                                path: 'form',
+                                element: <Suspense><Form /></Suspense>,
+                            },
+                            {
+                                path: 'edit/:pipelineItemId',
+                                element: <Suspense><Form /></Suspense>,
+                            },
+                        ]
+                    },
+                    {
+                        path: 'form',
+                        element: <Suspense><Form /></Suspense>,
+                    }
+
+                ]
             },
             {
                 path: '/vulnerabilities',

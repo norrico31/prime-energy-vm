@@ -82,8 +82,8 @@ const columns: TableColHead = [
     },
 ]
 
-export default function SwpView() {
-    const { swpId } = useParams()
+export default function PipelineView() {
+    const { pipelineId } = useParams()
     const navigate = useNavigate()
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [{ currentPage, pageSize, }, dispatch] = useReducer((state: typeof reducerState, action: Action<AuditLogs>) => reducer(state, action), reducerState);
@@ -113,14 +113,14 @@ export default function SwpView() {
             {/* <div className="d-flex justify-content-between">
                 <h3 className='text-color-gray mb-2'>DISPLAY TITLE OF WELL HERE</h3>
             </div> */}
-            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/swp')}>Back to SWP</Button>
+            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/pipeline')}>Back to Pipelines</Button>
             <Row>
                 <Col >
                     <PageSize value={pageSize} onChange={pageSizeChange} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center gap-2'>
                     <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
-                    <Button variant='success' title='Create' onClick={() => navigate(`/swp/${swpId}/form`)}>Create</Button>
+                    <Button variant='success' title='Create' onClick={() => navigate(`/pipeline/${pipelineId}/form`)}>Create</Button>
                 </Col>
             </Row>
             <Table
@@ -128,18 +128,17 @@ export default function SwpView() {
                 pageProps={paginationProps}
                 columns={columns}
             >
-                {data?.data.data.map((d, idx) => {
+                {data?.data.data.map(d => {
                     return <tr key={d.id}>
-                        {/* <td >{d.user.full_name}</td> */}
-                        <td >sample - {idx}</td>
-                        <td >{d.date}</td>
+                        <td >{d.user.full_name}</td>
                         <td >{d.account_type}</td>
+                        <td >{d.date}</td>
                         <td >{d.action}</td>
                         <td className='d-flex justify-content-center gap-1'>
                             <ButtonActions
                                 loading={isLoading}
                                 viewData={() => setSelectedData(d)} // DISPLAY IN MODAL
-                                editData={() => navigate(`/swp/${swpId}/edit/${d.id}`)}
+                                editData={() => navigate(`/pipeline/${pipelineId}/edit/${d.id}`)}
                                 disabled={() => alert('DISABLE SELECTED SWP')}
                             />
                         </td>
@@ -160,7 +159,7 @@ function ModalView({ selectedData, ...restProps }: { show: boolean; onHide: () =
         <Modal {...restProps} aria-labelledby="contained-modal-title-vcenter">
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    SWP - View
+                    Pipeline - View
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="grid-example">

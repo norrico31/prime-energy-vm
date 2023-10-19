@@ -21,7 +21,7 @@ const links: { icon: JSX.Element; name: string; to: string }[] = [
     { icon: <TbSettingsDollar className='fs-4' />, name: 'Asset Settings', to: '/asset-settings/asset' },
     { icon: <FiSettings className='fs-4' />, name: 'System Settings', to: '/system-settings/phase' },
     { icon: <TbSettingsBolt className='fs-4' />, name: 'Admin Settings', to: '/admin-settings/site' },
-    { icon: <AiFillUnlock className='fs-4' />, name: 'Vulnerabilities', to: '/vulnerabilities' },
+    // { icon: <AiFillUnlock className='fs-4' />, name: 'Vulnerabilities', to: '/vulnerabilities' },
 ]
 
 function Navbar() {

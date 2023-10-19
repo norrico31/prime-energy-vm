@@ -28,8 +28,8 @@ const initValues = {
 }
 
 function Forms() {
-    const { swpId, swpItemId, ogpId, ogpItemId, } = useParams()
-
+    const { swpId, swpItemId, ogpId, ogpItemId, pipelineId, pipelineItemId } = useParams()
+    console.log(swpId, swpItemId, ogpId, ogpItemId, pipelineId, pipelineItemId)
     const navigate = useNavigate()
     // useEffect(() => {
     //     if (id === 'create') return
@@ -131,7 +131,7 @@ function Forms() {
                     </Row>
                     <Row className="mb-3">
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
-                            <Form.Label>Availability.</Form.Label>
+                            <Form.Label>Availability</Form.Label>
                             <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
                                 {/* <option>Red</option>
                         <option>...</option> */}
@@ -143,6 +143,70 @@ function Forms() {
                                 {/* <option>Green</option>
                         <option>...</option> */}
                             </Form.Select>
+                        </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
+                            <Form.Label>Initial Ram Raiting</Form.Label>
+                            <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
+                                {/* <option>Red</option>
+                        <option>...</option> */}
+                            </Form.Select>
+                        </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
+                            <Form.Label>Ram Priority</Form.Label>
+                            <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
+                                {/* <option>Red</option>
+                        <option>...</option> */}
+                            </Form.Select>
+                        </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
+                            <Form.Label>Re-assessed RAM Rating</Form.Label>
+                            <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
+                                {/* <option>Red</option>
+                        <option>...</option> */}
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridStatus">
+                            <Form.Label>Status</Form.Label>
+                            <Form.Select placeholder='Select Status' defaultValue="Choose..." required>
+                                {/* <option>Green</option>
+                        <option>...</option> */}
+                            </Form.Select>
+                        </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
+                            <Form.Label>Vulnerability Owner</Form.Label>
+                            <Form.Control required type="text" placeholder="Enter vulnerability owner." />
+                        </Form.Group>
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridDateRaised">
+                            <Form.Label>Due Date - Baseed on risk rating</Form.Label>
+                            <Form.Control required type="date" placeholder="Select Date" />
+                        </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
+                            <Form.Label>SAP Notification</Form.Label>
+                            <Form.Control required type="text" placeholder="Enter sap notification." />
+                        </Form.Group>
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridDateRaised">
+                            <Form.Label>Due Date - Latest Estimate</Form.Label>
+                            <Form.Control required type="date" placeholder="Select Date" />
+                        </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
+                            <Form.Label>MDC Number</Form.Label>
+                            <Form.Control required type="text" placeholder="Enter MDC no." />
+                        </Form.Group>
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
+                            <Form.Label>SAP Work Order</Form.Label>
+                            <Form.Control required type="text" placeholder="Enter SAP work order." />
                         </Form.Group>
                     </Row>
                     <ButtonSubmit isSubmitting={isSubmitting} />
