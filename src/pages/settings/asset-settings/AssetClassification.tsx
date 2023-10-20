@@ -27,7 +27,7 @@ export default function AssetClassification() {
     const [pageSize, setPageSize] = useState(10)
     const [showModal, setShowModal] = useState(false)
     const [showModalDelete, setShowModalDelete] = useState(false)
-    const { data, createData, isLoading, error } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, createData, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,

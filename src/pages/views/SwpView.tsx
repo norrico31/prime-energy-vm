@@ -87,7 +87,7 @@ export default function SwpView() {
     const navigate = useNavigate()
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [{ currentPage, pageSize, }, dispatch] = useReducer((state: typeof reducerState, action: Action<AuditLogs>) => reducer(state, action), reducerState);
-    const { data, createData, isLoading, error } = useDataResource<ApiSuccess<AuditLogs[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, isLoading } = useDataResource<ApiSuccess<AuditLogs[]>, { id: string }>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
     const [selectedData, setSelectedData] = useState<AuditLogs | undefined>(undefined);
 
     const paginationProps: PageProps = {

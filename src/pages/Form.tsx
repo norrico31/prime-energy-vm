@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { Col, Form, Row, } from 'react-bootstrap'
 import { Button } from '../components';
@@ -47,7 +46,8 @@ function Forms() {
             onSubmit={onSubmit}
             initialValues={initValues}
         >
-            {({ handleSubmit, handleChange, values, touched, errors, isSubmitting }) => (
+            {/* {({ handleSubmit, handleChange, values, touched, errors, isSubmitting }) => ( */}
+            {({ handleSubmit, isSubmitting }) => (
                 <Form noValidate onSubmit={handleSubmit}>
                     <div className={`d-flex justify-content-between`}>
                         <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate(-1)}>Back to lists</Button>

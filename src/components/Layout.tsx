@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Outlet, NavLink, useLocation } from "react-router-dom"
+import { Outlet, NavLink } from "react-router-dom"
 import useWindowSize from '../shared/hooks/useWindowResize'
 import Container from 'react-bootstrap/Container'
-import { AiOutlineHome, AiOutlinePrinter, AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart, AiFillUnlock } from 'react-icons/ai'
-import { Row } from 'react-bootstrap'
+import { AiOutlineHome, AiOutlinePrinter, AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart } from 'react-icons/ai'
 import Nav from 'react-bootstrap/Nav'
 import Navbars from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
@@ -107,18 +106,4 @@ export default function Layout() {
             {<Outlet />}
         </Container>
     </>
-}
-
-function Title() {
-    let { pathname } = useLocation()
-    pathname = pathname.slice(1)
-    const titleHead: Record<string, string> = {
-        '': 'Dashboard',
-        'print-report': 'Print Report',
-        'swp': 'SWP',
-        'ogp': 'OGP',
-        'pipelines': 'Pipelines',
-        'vulnerabilities': 'Vulnerabilities'
-    }
-    return <h2 className='text-color-gray'>{titleHead[pathname]}</h2>
 }

@@ -1,4 +1,5 @@
-import { CardList } from '../components'
+import { Outlet } from 'react-router-dom'
+import { PageHeading } from '../components'
 
 export default function Dashboard() {
     const data = [
@@ -36,7 +37,8 @@ export default function Dashboard() {
             ]
         },
     ]
-    return <CardList
-        data={data}
-    />
+    return <>
+        <PageHeading title='Swp' />
+        <Outlet context={{ data: data as typeof data }} />
+    </>
 }

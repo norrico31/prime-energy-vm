@@ -41,7 +41,7 @@ export default function Users() {
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
 
-    const { data, createData, isLoading, error } = useDataResource<ApiSuccess<User[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, isLoading } = useDataResource<ApiSuccess<User[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -89,7 +89,7 @@ export default function Users() {
                         <td className='d-flex justify-content-center gap-1'>
                             <ButtonActions
                                 loading={isLoading}
-                                editData={() => createData({ name: 'gerald' })}
+                                // editData={() => createData({ name: 'gerald' })}
                                 disabled={() => setShowModalDelete(true)}
                             />
                         </td>

@@ -32,7 +32,7 @@ export default function Integrity() {
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
 
-    const { data, createData, isLoading, error } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
 
     const pageProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -79,7 +79,7 @@ export default function Integrity() {
                         <td className='d-flex justify-content-center gap-1'>
                             <ButtonActions
                                 loading={isLoading}
-                                editData={() => createData({ name: 'gerald' })}
+                                // editData={() => createData()}
                                 disabled={() => setShowModalDelete(true)}
                             />
                         </td>
