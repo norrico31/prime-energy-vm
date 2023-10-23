@@ -9,39 +9,39 @@ async function crudApi<T>(reqUrl: string, params?: ApiParams): Promise<T> {
     return Promise.resolve(res.json())
 }
 
-function appUrl(path: string, baseUrl: 'BASE' | 'DOWNLOAD' = 'BASE'): string {
+function appUrl(path: string, baseUrl: 'BACKEND' | 'DOWNLOAD' | 'REPORT' = 'BACKEND'): string {
     // const APP_VERSION = 'v2'
     const APP_URL: Record<string, string> = {
-        'BASE': `https://hrportal.redcoresolutions.com/passthru/api/backend/`,
+        'BACKEND': `https://hrportal.redcoresolutions.com/passthru/api/backend/`,
         'DOWNLOAD': `https://hrportal.redcoresolutions.com/passthru/api/backend/`
     }
     return APP_URL[baseUrl] + path
 }
 
-export const useDataResource = <T, P>({ queryKey, urls, ...restProps }: Queries & Partial<ApiParams>) => {
+export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries & Partial<ApiParams>) => {
     const { data, isLoading, ...restQueries } = useQuery<Return<T>>({
         queryKey: [queryKey, restProps],
-        queryFn: (): Promise<Return<T>> => crudApi(appUrl(urls.get), { ...restProps, method: 'GET' }),
+        queryFn: (): Promise<Return<T>> => crudApi(appUrl(paths.get), { ...restProps, method: 'GET' }),
     })
 
     const { mutate: createData, error: errorCreate, isLoading: loadingCreate } = useMutation<P | Partial<{ '_method': 'PUT' }>>({
         queryKey,
-        mutationFn: async (data: P | Partial<{ '_method': 'PUT' }>) => await crudApi(appUrl(urls?.post ?? '') ?? '', { method: 'POST', body: JSON.stringify(data) })
+        mutationFn: async (data: P | Partial<{ '_method': 'PUT' }>) => await crudApi(appUrl(paths?.post ?? '') ?? '', { method: 'POST', body: JSON.stringify(data) })
     })
     const { mutate: editData, error: errorEdit, isLoading: loadingEdit } = useMutation<P & Partial<{ id: string }>>({
         queryKey,
-        mutationFn: async (data: P & Partial<{ id: string }>) => await crudApi(appUrl(urls?.put ?? '' + data.id), { method: 'POST', body: JSON.stringify(data) })
+        mutationFn: async (data: P & Partial<{ id: string }>) => await crudApi(appUrl(paths?.put ?? '' + data.id), { method: 'POST', body: JSON.stringify(data) })
     })
     const { mutate: removeData, error: errorRemove, isLoading: loadingRemove } = useMutation<string>({
         queryKey,
-        mutationFn: async (id: string) => await crudApi(appUrl(urls?.delete + id), { method: 'POST', body: JSON.stringify(id) })
+        mutationFn: async (id: string) => await crudApi(appUrl(paths?.delete + id), { method: 'POST', body: JSON.stringify(id) })
     })
 
     return { createData, editData, removeData, data, isLoading: isLoading || loadingCreate || loadingEdit || loadingRemove, ...restQueries, error: errorEdit || errorCreate || errorRemove as ApiError }
 }
 
-export const useParallelFetch = ({ urls, k }: ParallelFetch) => useQueries({
-    queries: urls.map((url) => {
+export const useParallelFetch = ({ paths, k }: ParallelFetch) => useQueries({
+    queries: paths.map((url) => {
         return {
             queryKey: [k, url],
             queryFn: () => fetch(url),

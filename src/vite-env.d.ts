@@ -35,15 +35,16 @@ type ApiData<T> = {
 }
 type Queries = {
     queryKey: string
-    urls: {
+    paths: {
         get: string
         post?: string
         put?: string
         delete?: string
+        download?: string
     }
 }
 type ParallelFetch = {
-    urls: string[]
+    paths: string[]
     k: string
 }
 type ApiParams = {
