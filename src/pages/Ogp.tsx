@@ -26,7 +26,7 @@ export default function Ogp() {
             ]
         },
         {
-            title: 'WELL2121212',
+            title: 'WELL2121212123123123123',
             id: '3',
             lists: [
                 { id: '1', statusAvailability: 'avail', statusIntegrity: 'avail', text: 'well list' },

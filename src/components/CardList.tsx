@@ -17,7 +17,7 @@ function CardItem(props: CardItem) {
                             <div className={`circle ${props.statusIntegrity}`} />
                         </div>
                         <div className="card-item-row-2">
-                            <h5 className='ml-auto  text-truncate'>{props.text}</h5>
+                            <h5 className='ml-auto text-truncate'>{props.text}</h5>
                         </div>
                     </div >
                 </Link>
@@ -43,15 +43,18 @@ export default function CardList<T extends Partial<CardData>>({ to, data }: { to
         return (
             <div className="card-item p-0" key={d?.id} >
                 <div className="card-head text-color-white">
-                    <div className='card-head-title'>
-                        <div className="d-flex card-head-title-ai">
-                            <h5>A</h5>
-                            <h5>I</h5>
+                    <OverlayTrigger key={d?.title} offset={[0, 10]} overlay={<Tooltip id={d?.title} className='position-fixed'>{d?.title}</Tooltip>} trigger={['hover', 'focus']}>
+
+                        <div className='card-head-title'>
+                            <div className="d-flex card-head-title-ai">
+                                <h5>A</h5>
+                                <h5>I</h5>
+                            </div>
+                            <div className="card-item-row-2" >
+                                <h5 className='ml-auto d-inline text-truncate'>{d?.title}</h5>
+                            </div>
                         </div>
-                        <div className="card-item-row-2" >
-                            <h5 className='ml-auto d-inline text-truncate'>{d?.title}</h5>
-                        </div>
-                    </div>
+                    </OverlayTrigger>
                 </div>
                 <div className="card-body">
                     {d?.lists.map((l, idx) => {

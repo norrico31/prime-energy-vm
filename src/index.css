@@ -226,7 +226,7 @@ button:not(.btn-close, .navbar-toggler) {
   gap: 1.7rem;
 }
 .card-item-row-2 {
-  width: 110px;
+  width: 130px;
   display: flex;
   align-items: center;
   text-align: center;

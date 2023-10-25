@@ -26,7 +26,7 @@ export default function Swp() {
             ]
         },
         {
-            title: 'WELL2121212',
+            title: 'WELL212121212312312312',
             id: '3',
             lists: [
                 { id: '1', statusAvailability: 'avail', statusIntegrity: 'avail', text: 'well list' },
