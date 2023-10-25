@@ -17,7 +17,7 @@ const links: { icon: JSX.Element; name: string; to: string }[] = [
     { icon: <AiOutlineFolder className='fs-4' />, name: 'Swp', to: '/swp' },
     { icon: <AiOutlineFileText className='fs-4' />, name: 'Ogp', to: '/ogp' },
     { icon: <AiOutlineLineChart className='fs-4' />, name: 'Pipelines', to: '/pipelines' },
-    { icon: <TbSettingsDollar className='fs-4' />, name: 'Site Settings', to: '/site-settings/asset' },
+    { icon: <TbSettingsDollar className='fs-4' />, name: 'Site Settings', to: '/site-settings/systems' },
     { icon: <FiSettings className='fs-4' />, name: 'System Settings', to: '/system-settings/phase' },
     { icon: <TbSettingsBolt className='fs-4' />, name: 'Admin Settings', to: '/admin-settings/site' },
     // { icon: <AiFillUnlock className='fs-4' />, name: 'Vulnerabilities', to: '/vulnerabilities' },
@@ -47,7 +47,6 @@ function Navbar() {
                 show={expand}
                 onHide={() => setExpand(false)}
                 className='navbar-offcanvas'
-            // style={{ width: 300 }}
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title id='offcanvasNavbarLabel-expand-false'>

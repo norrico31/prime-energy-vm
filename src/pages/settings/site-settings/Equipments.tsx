@@ -1,17 +1,22 @@
 import { useState } from 'react'
+import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-bootstrap';
+import { AiOutlineSearch } from 'react-icons/ai'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
 import { Table, ButtonActions, PageSize, Button } from '../../../components';
-import { Col, Row, Form, Modal as BootstrapModal } from 'react-bootstrap';
 
-type Payload = {}
+type Payload = {
+    name: string
+    age: number
+    gender: string
+}
 
 const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 
 const columns: TableColHead = [
     {
-        colHead: 'Asset Classification',
+        colHead: 'Equipment',
     },
     {
         colHead: 'Description',
@@ -21,13 +26,13 @@ const columns: TableColHead = [
     },
 ]
 
-export default function AssetClassification() {
+export default function Equipments() {
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1)
-    const [pageSize, setPageSize] = useState(10)
+    // const [pageSize, setPageSize] = useState(10)
     const [showModal, setShowModal] = useState(false)
     const [showModalDelete, setShowModalDelete] = useState(false)
-    const { data, createData, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, createData, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: 100 })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -37,10 +42,10 @@ export default function AssetClassification() {
         setCurrentPage
     }
 
-    const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
-        setCurrentPage(1)
-        setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
-    }
+    // const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
+    //     setCurrentPage(1)
+    //     setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
+    // }
 
     const onHide = () => {
         setShowModal(false)
@@ -53,11 +58,19 @@ export default function AssetClassification() {
     return (
         <>
             <Row>
+                <h4 className='mb-3'>Equipments</h4>
+            </Row>
+            <Row>
                 <Col >
-                    <PageSize value={pageSize} onChange={pageSizeChange} />
+                    {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
+                    <InputGroup className='w-50'>
+                        <Form.Control required type="text" placeholder="Search..." value={searchVal} onChange={inputChange} />
+                        <InputGroup.Text>
+                            <AiOutlineSearch />
+                        </InputGroup.Text>
+                    </InputGroup>
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center gap-2'>
-                    <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
                     <Button variant='success' title='Create' onClick={() => setShowModal(true)}>Create</Button>
                 </Col>
             </Row>
@@ -92,13 +105,13 @@ export default function AssetClassification() {
 function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal show={show} onHide={onHide}>
         <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Asset Classification- Create</BootstrapModal.Title>
+            <BootstrapModal.Title>Equipment- Create</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
             <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridName">
-                    <Form.Label>Asset Classification Name</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter asset classification name." />
+                    <Form.Label>Equipment Name</Form.Label>
+                    <Form.Control required type="text" placeholder="Enter equipment name." />
                 </Form.Group>
             </Row>
             <Row>

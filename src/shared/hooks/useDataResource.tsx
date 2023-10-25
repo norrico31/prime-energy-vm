@@ -24,9 +24,9 @@ export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries
         queryFn: (): Promise<Return<T>> => crudApi(appUrl(paths.get), { ...restProps, method: 'GET' }),
     })
 
-    const { mutate: createData, error: errorCreate, isLoading: loadingCreate } = useMutation<P | Partial<{ '_method': 'PUT' }>>({
+    const { mutate: createData, error: errorCreate, isLoading: loadingCreate } = useMutation<P & Partial<{ '_method': 'PUT' }>>({
         queryKey,
-        mutationFn: async (data: P | Partial<{ '_method': 'PUT' }>) => await crudApi(appUrl(paths?.post ?? ''), { method: 'POST', body: JSON.stringify(data) })
+        mutationFn: async (data: P & Partial<{ '_method': 'PUT' }>) => await crudApi(appUrl(paths?.post ?? ''), { method: 'POST', body: JSON.stringify(data) })
     })
     const { mutate: editData, error: errorEdit, isLoading: loadingEdit } = useMutation<P & Partial<{ id: string }>>({
         queryKey,

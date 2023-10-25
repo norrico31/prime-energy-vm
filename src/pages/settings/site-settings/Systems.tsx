@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Col, Row, Form, Modal as BootstrapModal } from 'react-bootstrap';
+import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-bootstrap';
+import { AiOutlineSearch } from 'react-icons/ai'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
 import { Table, ButtonActions, PageSize, Button } from '../../../components';
@@ -15,7 +16,7 @@ const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time
 
 const columns: TableColHead = [
     {
-        colHead: 'Asset',
+        colHead: 'Systems',
     },
     {
         colHead: 'Description',
@@ -25,14 +26,14 @@ const columns: TableColHead = [
     },
 ]
 
-export default function Asset() {
+export default function Systems() {
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    // const [pageSize, setPageSize] = useState(10);
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
 
-    const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: 10 })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -42,10 +43,10 @@ export default function Asset() {
         setCurrentPage
     }
 
-    const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
-        setCurrentPage(1)
-        setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
-    }
+    // const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
+    //     setCurrentPage(1)
+    //     setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
+    // }
 
     const onHide = () => {
         setShowModal(false)
@@ -58,11 +59,19 @@ export default function Asset() {
     return (
         <>
             <Row>
+                <h4 className='mb-3'>Systems</h4>
+            </Row>
+            <Row>
                 <Col >
-                    <PageSize value={pageSize} onChange={pageSizeChange} />
+                    {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
+                    <InputGroup className='w-50'>
+                        <Form.Control required type="text" placeholder="Search..." value={searchVal} onChange={inputChange} />
+                        <InputGroup.Text>
+                            <AiOutlineSearch />
+                        </InputGroup.Text>
+                    </InputGroup>
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center gap-2'>
-                    <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
                     <Button variant='success' title='Create' onClick={() => setShowModal(true)}>Create</Button>
                 </Col>
             </Row>
@@ -94,13 +103,13 @@ export default function Asset() {
 function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal show={show} onHide={onHide}>
         <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Asset - Create</BootstrapModal.Title>
+            <BootstrapModal.Title>Systems - Create</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
             <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridEmail">
-                    <Form.Label>Asset Name</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter asset name." />
+                    <Form.Label>Systems Name</Form.Label>
+                    <Form.Control required type="text" placeholder="Enter system name." />
                 </Form.Group>
             </Row>
             <Row>
@@ -129,10 +138,10 @@ function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
     >
         <BootstrapModal.Header closeButton>
             <BootstrapModal.Title id="example-modal-sizes-title-sm">
-                Disabled Asset
+                Disabled Systems
             </BootstrapModal.Title>
         </BootstrapModal.Header>
-        <BootstrapModal.Body>Disable Selected Asset</BootstrapModal.Body>
+        <BootstrapModal.Body>Disable Selected Systems</BootstrapModal.Body>
         <BootstrapModal.Footer>
             <Button variant="secondary" onClick={onHide} title='Cancel'>
                 Cancel

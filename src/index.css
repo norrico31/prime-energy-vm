@@ -84,7 +84,6 @@ button:not(.btn-close, .navbar-toggler) {
 .offcanvas.show:not(.hiding), .offcanvas.showing {
   background: #1e9aff;
 }
-
 .offcanvas-header .btn-close {
   filter: grayscale(5) brightness(2);
   /* filter: invert(1); */
@@ -93,6 +92,9 @@ button:not(.btn-close, .navbar-toggler) {
 .nav-link {
   color: #fff;
   padding: .5rem 2rem; 
+}
+.nav-item.dropdown a {
+  color: #000 !important;
 }
 .nav-link.active {
   color: #000;
@@ -135,7 +137,7 @@ button:not(.btn-close, .navbar-toggler) {
   gap: 10px;
 }
 .dropdown-menu.show {
-  left: -133px;
+  left: -100px;
 }
 .settings-dropdown {
   margin-left: auto;
