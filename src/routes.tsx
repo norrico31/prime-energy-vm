@@ -22,7 +22,6 @@ const Pipelines = lazy(() => import('./pages/Pipelines'))
 const PipelineView = lazy(() => import('./pages/views/PipelineView'))
 const PipelineLists = lazy(() => import('./pages/views/PipelineLists'))
 
-
 // ASSET SETTINGS
 const SiteSettings = lazy(() => import('./pages/settings/site-settings/SiteSettings'))
 const SiteSystems = lazy(() => import('./pages/settings/site-settings/Systems'))
@@ -48,11 +47,6 @@ const NotificationLogs = lazy(() => import('./pages/settings/admin-settings/Noti
 
 
 function Suspense({ children }: { children: ReactNode }) {
-    // <Spinner animation='grow' />
-    // todo
-    // const pages = {
-
-    // }
     return <ReactSuspense fallback={<div />}>
         {children}
     </ReactSuspense>

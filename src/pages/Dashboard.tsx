@@ -38,7 +38,7 @@ export default function Dashboard() {
         },
     ]
     return <>
-        <PageHeading title='Swp' />
+        <PageHeading title='Dashboard' />
         <Outlet context={{ data: data as typeof data }} />
     </>
 }
