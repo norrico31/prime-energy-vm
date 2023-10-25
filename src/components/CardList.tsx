@@ -12,7 +12,7 @@ function CardItem(props: CardItem) {
             <OverlayTrigger key={props.id} offset={[0, 10]} overlay={<Tooltip id={props.text} className='position-fixed'>{props.text}</Tooltip>} trigger={['hover', 'focus']}>
                 <Link to={`#`} onClick={() => setShow(!show)}>
                     <div className='card-head-title'>
-                        <div className="d-flex card-head-title-ai gap-2">
+                        <div className="d-flex card-head-title-ai gap-4">
                             <div className={`circle ${props.statusAvailability}`} />
                             <div className={`circle ${props.statusIntegrity}`} />
                         </div>
@@ -29,7 +29,7 @@ function CardItem(props: CardItem) {
                 <Toast.Header>
                     <strong className="me-auto">Actions</strong>
                 </Toast.Header>
-                <Toast.Body className='d-flex gap-3 justify-content-center'>
+                <Toast.Body className='d-flex justify-content-center'>
                     <Button variant='info' onClick={() => navigate(to + '/view')}>View</Button>
                     <Button variant='success' onClick={() => navigate(to + '/form')}>Create</Button>
                 </Toast.Body>

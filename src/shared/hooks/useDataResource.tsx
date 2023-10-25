@@ -9,11 +9,11 @@ async function crudApi<T>(reqUrl: string, params?: ApiParams): Promise<T> {
     return Promise.resolve(res.json())
 }
 
-function appUrl(path: string, baseUrl: 'BACKEND' | 'DOWNLOAD' | 'REPORT' = 'BACKEND'): string {
+function appUrl(path: string, baseUrl: 'BACKEND' | 'DOWNLOAD' = 'BACKEND'): string {
     // const APP_VERSION = 'v2'
     const APP_URL: Record<string, string> = {
-        'BACKEND': `https://hrportal.redcoresolutions.com/passthru/api/backend/`,
-        'DOWNLOAD': `https://hrportal.redcoresolutions.com/passthru/api/backend/`
+        'BACKEND': `https://hrportal.redcoresolutions.com/passthru/api/backend`,
+        'DOWNLOAD': `https://hrportal.redcoresolutions.com/passthru/api/backend`
     }
     return APP_URL[baseUrl] + path
 }
@@ -26,7 +26,7 @@ export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries
 
     const { mutate: createData, error: errorCreate, isLoading: loadingCreate } = useMutation<P | Partial<{ '_method': 'PUT' }>>({
         queryKey,
-        mutationFn: async (data: P | Partial<{ '_method': 'PUT' }>) => await crudApi(appUrl(paths?.post ?? '') ?? '', { method: 'POST', body: JSON.stringify(data) })
+        mutationFn: async (data: P | Partial<{ '_method': 'PUT' }>) => await crudApi(appUrl(paths?.post ?? ''), { method: 'POST', body: JSON.stringify(data) })
     })
     const { mutate: editData, error: errorEdit, isLoading: loadingEdit } = useMutation<P & Partial<{ id: string }>>({
         queryKey,
@@ -36,15 +36,16 @@ export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries
         queryKey,
         mutationFn: async (id: string) => await crudApi(appUrl(paths?.delete + id), { method: 'POST', body: JSON.stringify(id) })
     })
+    const download = () => appUrl(paths?.download ?? '')
 
-    return { createData, editData, removeData, data, isLoading: isLoading || loadingCreate || loadingEdit || loadingRemove, ...restQueries, error: errorEdit || errorCreate || errorRemove as ApiError }
+    return { createData, editData, removeData, data, isLoading: isLoading || loadingCreate || loadingEdit || loadingRemove, ...restQueries, error: errorEdit || errorCreate || errorRemove as ApiError, download }
 }
 
 export const useParallelFetch = ({ paths, k }: ParallelFetch) => useQueries({
-    queries: paths.map((url) => {
+    queries: paths.map((path) => {
         return {
-            queryKey: [k, url],
-            queryFn: () => fetch(url),
+            queryKey: [k, path],
+            queryFn: () => fetch(path),
         }
     }),
 })

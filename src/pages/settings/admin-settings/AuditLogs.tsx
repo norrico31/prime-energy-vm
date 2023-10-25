@@ -39,7 +39,7 @@ export default function AuditLogs() {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
-    const { data } = useDataResource<ApiSuccess<AuditLogs[]>, Payload>({ queryKey: 'getWhos', urls: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data } = useDataResource<ApiSuccess<AuditLogs[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,

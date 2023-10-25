@@ -14,13 +14,13 @@ const assetTabs = [
     },
 ]
 
-export default function AssetSettings() {
+export default function SiteSettings() {
     let { pathname } = useLocation()
     const navigate = useNavigate()
     pathname = pathname?.split('/')[2]
     return (
         <div className='mt-0'>
-            <h2 className='mb-3'>Asset Settings - {firstLetterCapitalize(pathname.split('-').join(' '))}</h2>
+            <h2 className='mb-3'>Site Settings - {firstLetterCapitalize(pathname.split('-').join(' '))}</h2>
             <Tabs
                 activeKey={pathname}
                 id="uncontrolled-tab-example"

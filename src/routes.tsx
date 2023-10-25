@@ -24,7 +24,7 @@ const PipelineLists = lazy(() => import('./pages/views/PipelineLists'))
 
 
 // ASSET SETTINGS
-const AssetSettings = lazy(() => import('./pages/settings/asset-settings/AssetSettings'))
+const SiteSettings = lazy(() => import('./pages/settings/asset-settings/SiteSettings'))
 const Asset = lazy(() => import('./pages/settings/asset-settings/Asset'))
 const AssetClassification = lazy(() => import('./pages/settings/asset-settings/AssetClassification'))
 
@@ -181,8 +181,8 @@ export const routes = createBrowserRouter([
             //     element: <Suspense><Form /></Suspense>
             // },
             {
-                path: '/asset-settings',
-                element: <Suspense><AssetSettings /></Suspense>,
+                path: '/site-settings',
+                element: <Suspense><SiteSettings /></Suspense>,
                 children: [
                     {
                         path: 'asset',
