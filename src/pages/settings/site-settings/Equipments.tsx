@@ -3,7 +3,7 @@ import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-boots
 import { AiOutlineSearch } from 'react-icons/ai'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
-import { Table, ButtonActions, PageSize, Button } from '../../../components';
+import { Table, ButtonActions, Button } from '../../../components';
 
 type Payload = {
     name: string
@@ -17,6 +17,15 @@ const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time
 const columns: TableColHead = [
     {
         colHead: 'Equipment',
+    },
+    {
+        colHead: 'Systems',
+    },
+    {
+        colHead: 'Site',
+    },
+    {
+        colHead: 'Sequence No.s',
     },
     {
         colHead: 'Description',
@@ -110,14 +119,50 @@ function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
         <BootstrapModal.Body>
             <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridName">
-                    <Form.Label>Equipment Name</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter equipment name." />
+                    <Form.Label>Equipment</Form.Label>
+                    <Form.Control required type="text" placeholder="Enter equipment." />
                 </Form.Group>
             </Row>
-            <Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridSite">
+                    <Form.Label>Site</Form.Label>
+                    <Form.Select aria-label="Select site" placeholder='Select site'>
+                        {/* {[10, 25, 50, 100].map(p => (
+                    <option key={p} value={p}>{p}</option>
+                ))} */}
+                    </Form.Select>
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridSystems" >
+                    <Form.Label>Systems</Form.Label>
+                    <Form.Select aria-label="Select systems" placeholder='Select systems'>
+                        {/* {[10, 25, 50, 100].map(p => (
+                    <option key={p} value={p}>{p}</option>
+                ))} */}
+                    </Form.Select>
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridSeq">
+                    <Form.Label>Sequence No.</Form.Label>
+                    <Form.Control required type="text" placeholder="Enter sequence no." />
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridDescription">
                     <Form.Label>Description</Form.Label>
                     <Form.Control required type="text" placeholder="Enter description." />
+                </Form.Group>
+            </Row>
+            <Row>
+                <Form.Group as={Col} controlId="formGridDisable" className='d-flex justify-content-start'>
+                    <Form.Check // prettier-ignore
+                        reverse
+                        type="switch"
+                        // id="custom-switch"
+                        label="Disable"
+                    />
                 </Form.Group>
             </Row>
         </BootstrapModal.Body>

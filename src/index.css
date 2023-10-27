@@ -200,14 +200,14 @@ button:not(.btn-close, .navbar-toggler) {
 .card-item {
   display: flex;
   flex-direction: column;
-  flex-basis: 300px;
+  flex-basis: 280px;
   border: 1px solid #dfdfdf;
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
   -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
   -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
   text-decoration: none;
   overflow: hidden;
-  max-width: 300px;
+  max-width: 280px;
   height: 100%;
 }
 .card-head {

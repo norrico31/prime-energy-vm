@@ -1,10 +1,10 @@
 import { Suspense as ReactSuspense, lazy, ReactNode } from "react"
-import { createBrowserRouter, Navigate } from "react-router-dom"
+import { Navigate, createBrowserRouter } from "react-router-dom"
 import { Layout } from "./components"
 
 const Login = lazy(() => import('./pages/Login'))
 
-const Dashboard = lazy(() => import('./pages/Dashboard'))
+// const Dashboard = lazy(() => import('./pages/Dashboard'))
 const PrintReport = lazy(() => import('./pages/PrintReport'))
 
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
@@ -18,7 +18,7 @@ const Ogp = lazy(() => import('./pages/Ogp'))
 const OgpLists = lazy(() => import('./pages/views/OgpLists'))
 const OgpView = lazy(() => import('./pages/views/OgpView'))
 
-const Pipelines = lazy(() => import('./pages/Pipelines'))
+const Pipelines = lazy(() => import('./pages/_Pipelines'))
 const PipelineView = lazy(() => import('./pages/views/PipelineView'))
 const PipelineLists = lazy(() => import('./pages/views/PipelineLists'))
 
@@ -45,26 +45,42 @@ const RolesPermission = lazy(() => import('./pages/settings/admin-settings/Roles
 const AuditLogs = lazy(() => import('./pages/settings/admin-settings/AuditLogs'))
 const NotificationLogs = lazy(() => import('./pages/settings/admin-settings/NotificationLogs'))
 
-
 function Suspense({ children }: { children: ReactNode }) {
     return <ReactSuspense fallback={<div />}>
         {children}
     </ReactSuspense>
 }
 
-
 export const routes = createBrowserRouter([
     {
         path: '/',
         element: <Layout />,
         children: [
+            // {
+            //     path: 'dashboard',
+            //     element: <Suspense><Dashboard /></Suspense>,
+            //     children: [
+            //         {
+            //             path: 'print-report',
+            //             element: <Suspense><SwpLists /></Suspense>,
+            //         },
+            //         {
+            //             path: 'swp',
+            //             element: <Suspense><SwpLists /></Suspense>,
+            //         },
+            //         {
+            //             path: 'ogp',
+            //             element: <Suspense><SwpLists /></Suspense>,
+            //         },
+            //         {
+            //             path: 'pipelines',
+            //             element: <Suspense><SwpLists /></Suspense>,
+            //         },
+            //     ]
+            // },
             {
-                path: 'dashboard',
-                element: <Navigate to='/' />
-            },
-            {
-                path: '/',
-                element: <Suspense><Dashboard /></Suspense>
+                path: '',
+                element: <Navigate to='swp' />
             },
             {
                 path: '/print-report',

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, NavLink } from "react-router-dom"
 import useWindowSize from '../shared/hooks/useWindowResize'
 import Container from 'react-bootstrap/Container'
-import { AiOutlineHome, AiOutlinePrinter, AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart } from 'react-icons/ai'
+import { AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart } from 'react-icons/ai'
 import Nav from 'react-bootstrap/Nav'
 import Navbars from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
@@ -12,15 +12,12 @@ import { TbSettingsDollar, TbSettingsBolt } from 'react-icons/tb'
 import Logo from '../shared/assets/logo_horizontal.svg'
 
 const links: { icon: JSX.Element; name: string; to: string }[] = [
-    { icon: <AiOutlineHome className='fs-4' />, name: 'Dashboard', to: '/' },
-    { icon: <AiOutlinePrinter className='fs-4' />, name: 'Print Report', to: '/print-report' },
     { icon: <AiOutlineFolder className='fs-4' />, name: 'Swp', to: '/swp' },
     { icon: <AiOutlineFileText className='fs-4' />, name: 'Ogp', to: '/ogp' },
     { icon: <AiOutlineLineChart className='fs-4' />, name: 'Pipelines', to: '/pipelines' },
     { icon: <TbSettingsDollar className='fs-4' />, name: 'Site Settings', to: '/site-settings/systems' },
     { icon: <FiSettings className='fs-4' />, name: 'System Settings', to: '/system-settings/phase' },
     { icon: <TbSettingsBolt className='fs-4' />, name: 'Admin Settings', to: '/admin-settings/site' },
-    // { icon: <AiFillUnlock className='fs-4' />, name: 'Vulnerabilities', to: '/vulnerabilities' },
 ]
 
 function Navbar() {
