@@ -8,8 +8,8 @@ export default function PageHeading(props: { title: string }) {
         <Col xs={2} sm={2} md={2} lg={2}>
             <h2 className='text-color-gray my-2'>{props.title} {(pathname.includes('form') || pathname.includes('edit') ? pathname.includes('edit') ? '-Edit ' : '- Create' : !(pathname !== '/swp' && pathname !== '/ogp') ? '' : '')}</h2>
         </Col>
-        <Col className='d-flex justify-content-end gap-4' >
+        {/* <Col className='d-flex justify-content-end gap-4' >
             <Button variant='primary' title='Print Report' className='btn-print-report' onClick={() => alert('download')}>Print Report - {props.title.toUpperCase()}</Button>
-        </Col>
+        </Col> */}
     </Row>
 }

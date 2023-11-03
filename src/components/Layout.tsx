@@ -13,7 +13,7 @@ import { MdLocationOn, MdAdminPanelSettings, MdOutlineDashboard } from 'react-ic
 import Logo from '../shared/assets/logo_horizontal.svg'
 
 const links: { icon: JSX.Element; name: string; to: string }[] = [
-    { icon: <MdOutlineDashboard className='fs-4' />, name: 'Dashboard', to: '/' },
+    { icon: <MdOutlineDashboard className='fs-4' />, name: 'Dashboard', to: '/dashboard' },
     { icon: <AiOutlineFolder className='fs-4' />, name: 'Swp', to: '/swp' },
     { icon: <AiOutlineFileText className='fs-4' />, name: 'Ogp', to: '/ogp' },
     { icon: <AiOutlineLineChart className='fs-4' />, name: 'Pipelines', to: '/pipelines' },

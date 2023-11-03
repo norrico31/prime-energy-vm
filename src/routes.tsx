@@ -4,7 +4,7 @@ import { Layout } from "./components"
 
 const Login = lazy(() => import('./pages/Login'))
 
-// const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
 const PrintReport = lazy(() => import('./pages/PrintReport'))
 
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
@@ -57,35 +57,35 @@ export const routes = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                path: '',
-                element: <Suspense><h1>TS</h1></Suspense>,
+                path: 'dashboard',
+                element: <Suspense><Dashboard /></Suspense>,
                 children: [
-                    {
-                        path: 'print-report',
-                        element: <Suspense><SwpLists /></Suspense>,
-                    },
                     {
                         path: 'swp',
                         element: <Suspense><SwpLists /></Suspense>,
                     },
                     {
                         path: 'ogp',
-                        element: <Suspense><SwpLists /></Suspense>,
+                        element: <Suspense><OgpLists /></Suspense>,
                     },
                     {
                         path: 'pipelines',
+                        element: <Suspense><PipelineLists /></Suspense>,
+                    },
+                    {
+                        path: 'critical-equipment',
                         element: <Suspense><SwpLists /></Suspense>,
                     },
                 ]
             },
-            {
-                path: '',
-                element: <Navigate to='swp' />
-            },
-            {
-                path: '/print-report',
-                element: <Suspense><PrintReport /></Suspense>
-            },
+            // {
+            //     path: '',
+            //     element: <Navigate to='swp' />
+            // },
+            // {
+            //     path: '/print-report',
+            //     element: <Suspense><PrintReport /></Suspense>
+            // },
             {
                 path: '/swp',
                 element: <Suspense><Swp /></Suspense>,

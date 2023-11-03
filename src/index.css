@@ -89,6 +89,14 @@ button:not(.btn-close, .navbar-toggler) {
   /* filter: invert(1); */
   /* background-color: #000 !important; */
 }
+.dashboard-nav-links {
+  font-weight: bold;
+  text-decoration: none;
+  color: #777777;
+}
+.dashboard-nav-links.active {
+  color: #000000;
+}
 .nav-link {
   color: #fff;
   padding: .5rem 2rem; 
@@ -124,6 +132,8 @@ button.btn-print-report {
   background: none !important;
   color: rgb(230, 150, 0) !important;
   font-weight: bold;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 
