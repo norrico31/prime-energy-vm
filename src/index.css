@@ -23,7 +23,7 @@ button:not(.btn-close, .navbar-toggler) {
   background-color: #e5e5e5 !important;
   padding: 5px 15px !important;
   box-shadow: inset 0px 0px #848484, inset 1px 1px #fff, inset -2px -2px grey,
-    inset 2px 2px #dfdfdf !important;
+    inset 2px 2px #dfdfdf;
 }
 /* button:focus {
   outline: revert !important;
@@ -118,6 +118,12 @@ button:not(.btn-close, .navbar-toggler) {
 .nav-tabs .nav-link:hover {
   background: #236396;
   color: #fff;
+}
+button.btn-print-report {
+  box-shadow: none;
+  background: none !important;
+  color: rgb(230, 150, 0) !important;
+  font-weight: bold;
 }
 
 
@@ -277,7 +283,7 @@ button:not(.btn-close, .navbar-toggler) {
   background: green;
 }
 .circle.affected:before {
-  background: yellow;
+  background: rgb(230, 150, 0);
 }
 .circle.unavail:before {
   background: red;

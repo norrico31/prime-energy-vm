@@ -9,29 +9,21 @@ function CardItem(props: CardItem) {
     const to = props.to + '/' + props.id
     return (
         <>
-            <OverlayTrigger key={props.id} offset={[0, 10]} overlay={<Tooltip id={props.text} className='position-fixed'>{props.text}</Tooltip>} trigger={['hover', 'focus']}>
-                <Link to={`#`} onClick={() => setShow(!show)}>
-                    <div className='card-head-title'>
+            <Link to={`#`} className='text-decoration-none text-color-gray'>
+                <div className='card-head-title'>
+                    <OverlayTrigger key='create' offset={[0, 10]} overlay={<Tooltip id='create' className='position-fixed'>Create</Tooltip>} trigger={['hover', 'focus']}>
                         <div className="d-flex card-head-title-ai gap-4">
-                            <div className={`circle ${props.statusAvailability}`} onClick={(e) => {
-                                // e.stopPropagation()
-                                navigate(to + '/form')
-                                // setShow(false)
-
-                            }} />
-                            <div className={`circle ${props.statusIntegrity}`} onClick={(e) => {
-                                // e.stopPropagation()
-                                navigate(to + '/form')
-                                // setShow(false)
-
-                            }} />
+                            <div className={`circle ${props.statusAvailability}`} onClick={() => navigate(to + '/form')} />
+                            <div className={`circle ${props.statusIntegrity}`} onClick={() => navigate(to + '/form')} />
                         </div>
+                    </OverlayTrigger>
+                    <OverlayTrigger key={props.id} offset={[0, 10]} overlay={<Tooltip id={props.text} className='position-fixed'>{props.text}</Tooltip>} trigger={['hover', 'focus']}>
                         <div className="card-item-row-2">
-                            <h5 className='ml-auto text-truncate'>{props.text}</h5>
+                            <h5 className='ml-auto text-truncate text-decoration-none' onClick={() => setShow(!show)}>{props.text}</h5>
                         </div>
-                    </div >
-                </Link>
-            </OverlayTrigger>
+                    </OverlayTrigger>
+                </div >
+            </Link>
             <Toast show={show} onClose={(e) => {
                 e?.stopPropagation()
                 setShow(p => !p)

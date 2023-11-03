@@ -1,6 +1,6 @@
 import { Row, Col } from 'react-bootstrap'
-import { NavLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+import { Button } from '.'
 
 export default function PageHeading(props: { title: string }) {
     const { pathname } = useLocation()
@@ -9,7 +9,7 @@ export default function PageHeading(props: { title: string }) {
             <h2 className='text-color-gray my-2'>{props.title} {(pathname.includes('form') || pathname.includes('edit') ? pathname.includes('edit') ? '-Edit ' : '- Create' : !(pathname !== '/swp' && pathname !== '/ogp') ? '' : '')}</h2>
         </Col>
         <Col className='d-flex justify-content-end gap-4' >
-            <NavLink to='#' className='text-dark fw-bold text-decoration-none' onClick={() => alert('download')}>Print Report - {props.title}</NavLink>
+            <Button variant='primary' title='Print Report' className='btn-print-report' onClick={() => alert('download')}>Print Report - {props.title.toUpperCase()}</Button>
         </Col>
     </Row>
 }
