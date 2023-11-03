@@ -13,8 +13,18 @@ function CardItem(props: CardItem) {
                 <Link to={`#`} onClick={() => setShow(!show)}>
                     <div className='card-head-title'>
                         <div className="d-flex card-head-title-ai gap-4">
-                            <div className={`circle ${props.statusAvailability}`} />
-                            <div className={`circle ${props.statusIntegrity}`} />
+                            <div className={`circle ${props.statusAvailability}`} onClick={(e) => {
+                                // e.stopPropagation()
+                                navigate(to + '/form')
+                                // setShow(false)
+
+                            }} />
+                            <div className={`circle ${props.statusIntegrity}`} onClick={(e) => {
+                                // e.stopPropagation()
+                                navigate(to + '/form')
+                                // setShow(false)
+
+                            }} />
                         </div>
                         <div className="card-item-row-2">
                             <h5 className='ml-auto text-truncate'>{props.text}</h5>
@@ -31,7 +41,7 @@ function CardItem(props: CardItem) {
                 </Toast.Header>
                 <Toast.Body className='d-flex justify-content-center'>
                     <Button variant='info' onClick={() => navigate(to + '/view')}>View</Button>
-                    <Button variant='success' onClick={() => navigate(to + '/form')}>Create</Button>
+                    {/* <Button variant='success' onClick={() => navigate(to + '/form')}>Create</Button> */}
                 </Toast.Body>
             </Toast>
         </>

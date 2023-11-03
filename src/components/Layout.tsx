@@ -8,16 +8,19 @@ import Navbars from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import { FiSettings } from 'react-icons/fi'
-import { TbSettingsDollar, TbSettingsBolt } from 'react-icons/tb'
+import { GiBrokenAxe } from 'react-icons/gi'
+import { MdLocationOn, MdAdminPanelSettings, MdOutlineDashboard } from 'react-icons/md'
 import Logo from '../shared/assets/logo_horizontal.svg'
 
 const links: { icon: JSX.Element; name: string; to: string }[] = [
+    { icon: <MdOutlineDashboard className='fs-4' />, name: 'Dashboard', to: '/' },
     { icon: <AiOutlineFolder className='fs-4' />, name: 'Swp', to: '/swp' },
     { icon: <AiOutlineFileText className='fs-4' />, name: 'Ogp', to: '/ogp' },
     { icon: <AiOutlineLineChart className='fs-4' />, name: 'Pipelines', to: '/pipelines' },
-    { icon: <TbSettingsDollar className='fs-4' />, name: 'Site Settings', to: '/site-settings/systems' },
+    { icon: <GiBrokenAxe className='fs-4' />, name: 'Criical Equipment', to: '/critical-equipment' },
+    { icon: <MdLocationOn className='fs-4' />, name: 'Location Settings', to: '/location-settings/systems' },
     { icon: <FiSettings className='fs-4' />, name: 'System Settings', to: '/system-settings/phase' },
-    { icon: <TbSettingsBolt className='fs-4' />, name: 'Admin Settings', to: '/admin-settings/site' },
+    { icon: <MdAdminPanelSettings className='fs-4' />, name: 'Admin Settings', to: '/admin-settings/location' },
 ]
 
 function Navbar() {

@@ -23,9 +23,9 @@ const PipelineView = lazy(() => import('./pages/views/PipelineView'))
 const PipelineLists = lazy(() => import('./pages/views/PipelineLists'))
 
 // ASSET SETTINGS
-const SiteSettings = lazy(() => import('./pages/settings/site-settings/SiteSettings'))
-const SiteSystems = lazy(() => import('./pages/settings/site-settings/Systems'))
-const SiteEquipments = lazy(() => import('./pages/settings/site-settings/Equipments'))
+const LocationSettings = lazy(() => import('./pages/settings/location-settings/LocationSettings'))
+const LocationSystems = lazy(() => import('./pages/settings/location-settings/Systems'))
+const LocationEquipments = lazy(() => import('./pages/settings/location-settings/Equipments'))
 
 // SYSTEM SETTINGS
 const SystemSettings = lazy(() => import('./pages/settings/system-settings/SystemSettings'))
@@ -56,28 +56,28 @@ export const routes = createBrowserRouter([
         path: '/',
         element: <Layout />,
         children: [
-            // {
-            //     path: 'dashboard',
-            //     element: <Suspense><Dashboard /></Suspense>,
-            //     children: [
-            //         {
-            //             path: 'print-report',
-            //             element: <Suspense><SwpLists /></Suspense>,
-            //         },
-            //         {
-            //             path: 'swp',
-            //             element: <Suspense><SwpLists /></Suspense>,
-            //         },
-            //         {
-            //             path: 'ogp',
-            //             element: <Suspense><SwpLists /></Suspense>,
-            //         },
-            //         {
-            //             path: 'pipelines',
-            //             element: <Suspense><SwpLists /></Suspense>,
-            //         },
-            //     ]
-            // },
+            {
+                path: '',
+                element: <Suspense><h1>TS</h1></Suspense>,
+                children: [
+                    {
+                        path: 'print-report',
+                        element: <Suspense><SwpLists /></Suspense>,
+                    },
+                    {
+                        path: 'swp',
+                        element: <Suspense><SwpLists /></Suspense>,
+                    },
+                    {
+                        path: 'ogp',
+                        element: <Suspense><SwpLists /></Suspense>,
+                    },
+                    {
+                        path: 'pipelines',
+                        element: <Suspense><SwpLists /></Suspense>,
+                    },
+                ]
+            },
             {
                 path: '',
                 element: <Navigate to='swp' />
@@ -183,6 +183,38 @@ export const routes = createBrowserRouter([
                 ]
             },
             {
+                path: '/critical-equipment',
+                element: <Suspense><Pipelines /></Suspense>,
+                children: [
+                    {
+                        path: '',
+                        element: <Suspense><PipelineLists /></Suspense>,
+                    },
+                    {
+                        path: ':criticalEquipmentId',
+                        children: [
+                            {
+                                path: 'view',
+                                element: <Suspense><PipelineView /></Suspense>,
+                            },
+                            {
+                                path: 'form',
+                                element: <Suspense><Form /></Suspense>,
+                            },
+                            {
+                                path: 'edit/:criticalEquipmentItemId',
+                                element: <Suspense><Form /></Suspense>,
+                            },
+                        ]
+                    },
+                    {
+                        path: 'form',
+                        element: <Suspense><Form /></Suspense>,
+                    }
+
+                ]
+            },
+            {
                 path: '/vulnerabilities',
                 element: <Suspense><Vulnerabilities /></Suspense>
             },
@@ -191,16 +223,16 @@ export const routes = createBrowserRouter([
             //     element: <Suspense><Form /></Suspense>
             // },
             {
-                path: '/site-settings',
-                element: <Suspense><SiteSettings /></Suspense>,
+                path: '/Location-settings',
+                element: <Suspense><LocationSettings /></Suspense>,
                 children: [
                     {
                         path: 'systems',
-                        element: <Suspense><SiteSystems /></Suspense>
+                        element: <Suspense><LocationSystems /></Suspense>
                     },
                     {
                         path: 'equipments',
-                        element: <Suspense><SiteEquipments /></Suspense>
+                        element: <Suspense><LocationEquipments /></Suspense>
                     },
                 ]
             },

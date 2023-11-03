@@ -17,7 +17,7 @@ function appUrl(path: string, baseUrl: 'BACKEND' | 'DOWNLOAD' = 'BACKEND'): stri
     }
     return APP_URL[baseUrl] + path
 }
-
+// TODO: USE CONTEXT
 export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries & Partial<ApiParams>) => {
     const { data, isLoading, ...restQueries } = useQuery<Return<T>>({
         queryKey: [queryKey, restProps],

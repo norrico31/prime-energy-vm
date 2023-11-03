@@ -27,8 +27,8 @@ const initValues = {
 }
 
 function Forms() {
-    const { swpId, swpItemId, ogpId, ogpItemId, pipelineId, pipelineItemId } = useParams()
-    console.log(swpId, swpItemId, ogpId, ogpItemId, pipelineId, pipelineItemId)
+    const { swpId, swpItemId, ogpId, ogpItemId, pipelineId, pipelineItemId, criticalEquipmentId, criticalEquipmentItemId } = useParams()
+    console.log(swpId, swpItemId, ogpId, ogpItemId, pipelineId, pipelineItemId, criticalEquipmentId, criticalEquipmentItemId)
     const navigate = useNavigate()
     // useEffect(() => {
     //     if (id === 'create') return

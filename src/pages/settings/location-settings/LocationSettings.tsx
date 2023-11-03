@@ -12,14 +12,13 @@ const siteTabs = [
     },
 ]
 
-export default function SiteSettings() {
+export default function LocationSettings() {
     let { pathname } = useLocation()
     const navigate = useNavigate()
     pathname = pathname?.split('/')[2]
     return (
         <div className='mt-0'>
-            <h2 className='mb-3'>Site Settings</h2>
-            {/* <h2 className='mb-3'>Site Settings - {firstLetterCapitalize(pathname.split('-').join(' '))}</h2> */}
+            <h2 className='mb-3'>Location Settings</h2>
             <Tab.Container id="left-tabs-example" activeKey={pathname} >
                 <Row className='justify-content-between'>
                     <Col xs={1} sm={1} md={1} lg={2} xl={2}  >
