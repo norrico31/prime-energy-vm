@@ -30,6 +30,7 @@ function Forms() {
     const { swpId, swpItemId, ogpId, ogpItemId, pipelineId, pipelineItemId, criticalEquipmentId, criticalEquipmentItemId } = useParams()
     console.log(swpId, swpItemId, ogpId, ogpItemId, pipelineId, pipelineItemId, criticalEquipmentId, criticalEquipmentItemId)
     const navigate = useNavigate()
+
     // useEffect(() => {
     //     if (id === 'create') return
     //     alert('update')
@@ -53,8 +54,8 @@ function Forms() {
                         <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate(-1)}>Back to lists</Button>
                     </div>
                     <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridActionNo">
-                            <Form.Label>Action No.</Form.Label>
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridReferenceNo">
+                            <Form.Label>Reference No.</Form.Label>
                             <Form.Control required type="text" placeholder="Enter action no." />
                         </Form.Group>
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridDateRaised">
@@ -67,38 +68,61 @@ function Forms() {
                             <Form.Label>Equipment</Form.Label>
                             <Form.Control required type="text" placeholder="Enter equipment." />
                         </Form.Group>
-                        <Form.Group as={Col} controlId="formGridInitiator">
-                            <Form.Label>Initiator</Form.Label>
+                        <Form.Group as={Col} controlId="formGridThreat Owner">
+                            <Form.Label>Threat Owner</Form.Label>
+                            <Form.Control required type="text" placeholder="Enter theat owner." />
+                        </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridStatus">
+                            <Form.Label>Status</Form.Label>
+                            <Form.Select placeholder='Select Status' defaultValue="Choose..." required>
+                                {/* <option>Green</option>
+                        <option>...</option> */}
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridClassification">
+                            <Form.Label>Classification</Form.Label>
+                            <Form.Select placeholder='Select Classification' defaultValue="Choose..." required>
+                                {/* <option>Green</option>
+                        <option>...</option> */}
+                            </Form.Select>
+                        </Form.Group>
+                        {/* <Form.Group as={Col} controlId="formGridThreat Owner">
+                            <Form.Label>Threat Owner</Form.Label>
                             <Form.Control required type="text" placeholder="Enter initiator." />
-                        </Form.Group>
+                        </Form.Group> */}
                     </Row>
                     <Row className="mb-3">
-                        <Form.Group as={Col} md={6} controlId="formGridActionNo2">
-                            <Form.Label>Action No.</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter action no." />
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
+                            <Form.Label>Availability</Form.Label>
+                            <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
+                                {/* <option>Red</option>
+                        <option>...</option> */}
+                            </Form.Select>
                         </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} md={6} controlId="formGridEquipment2">
-                            <Form.Label>Equipment</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter equipment." />
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} md={6} controlId="formGridPhase">
-                            <Form.Label>Phase</Form.Label>
-                            <Form.Select defaultValue="Choose...">
-                                <option>Choose...</option>
-                                <option>...</option>
+                        <Form.Group as={Col} xs={12} md={6} controlId="formGridIntegrity">
+                            <Form.Label>Integrity</Form.Label>
+                            <Form.Select placeholder='Select Integrity' defaultValue="Choose..." required>
+                                {/* <option>Green</option>
+                        <option>...</option> */}
                             </Form.Select>
                         </Form.Group>
                     </Row>
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridVulnerabilityTitle">
                             <Form.Label>Vulnerability Title</Form.Label>
-                            <Form.Control required as='textarea' type="text" placeholder="Enter vulnerability title." />
+                            <Form.Control required type="text" placeholder="Enter vulnerability title." />
                         </Form.Group>
                     </Row>
+                    <Row className="mb-3">
+                        <Form.Group as={Col} controlId="formGridVulnerabilityDescription">
+                            <Form.Label>Vulnerability Description</Form.Label>
+                            <Form.Control required as='textarea' type="text" placeholder="Enter vulnerability description." />
+                        </Form.Group>
+                    </Row>
+
+
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridDescription">
                             <Form.Label>Risk Description</Form.Label>
