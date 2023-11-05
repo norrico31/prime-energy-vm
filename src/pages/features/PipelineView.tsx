@@ -110,17 +110,14 @@ export default function PipelineView() {
 
     return (
         <>
-            {/* <div className="d-flex justify-content-between">
-                <h3 className='text-color-gray mb-2'>DISPLAY TITLE OF WELL HERE</h3>
-            </div> */}
-            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/pipeline')}>Back to Pipelines</Button>
+            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/pipelines')}>Back to Pipelines</Button>
             <Row>
                 <Col >
                     <PageSize value={pageSize} onChange={pageSizeChange} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center gap-2'>
                     <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
-                    <Button variant='success' title='Create' onClick={() => navigate(`/pipeline/${pipelineId}/form`)}>Create</Button>
+                    <Button variant='success' title='Create' onClick={() => navigate(`/pipelines/${pipelineId}/form`)}>Create</Button>
                 </Col>
             </Row>
             <Table
@@ -138,7 +135,7 @@ export default function PipelineView() {
                             <ButtonActions
                                 loading={isLoading}
                                 viewData={() => setSelectedData(d)} // DISPLAY IN MODAL
-                                editData={() => navigate(`/pipeline/${pipelineId}/edit/${d.id}`)}
+                                editData={() => navigate(`/pipelines/${pipelineId}/edit/${d.id}`)}
                                 disabled={() => alert('DISABLE SELECTED SWP')}
                             />
                         </td>

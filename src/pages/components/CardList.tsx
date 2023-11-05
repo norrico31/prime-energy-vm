@@ -12,19 +12,20 @@ function CardItem(props: CardItem) {
             <Link to={`#`} className='text-decoration-none text-color-gray'>
                 <div className='card-head-title'>
                     <OverlayTrigger key='create' offset={[0, 10]} overlay={<Tooltip id='create' className='position-fixed'>Create</Tooltip>} trigger={['hover', 'focus']}>
-                        <div className="d-flex card-head-title-ai gap-4">
-                            <div className={`circle ${props.statusAvailability}`} onClick={() => navigate(to + '/form')} />
-                            <div className={`circle ${props.statusIntegrity}`} onClick={() => navigate(to + '/form')} />
+                        <div className="d-flex card-head-title-ai gap-4" onClick={() => navigate(to + '/form')}>
+                            <div className={`circle ${props.statusAvailability}`} />
+                            <div className={`circle ${props.statusIntegrity}`} />
                         </div>
                     </OverlayTrigger>
-                    <OverlayTrigger key={props.id} offset={[0, 10]} overlay={<Tooltip id={props.text} className='position-fixed'>{props.text}</Tooltip>} trigger={['hover', 'focus']}>
-                        <div className="card-item-row-2">
-                            <h5 className='ml-auto text-truncate text-decoration-none' onClick={() => setShow(!show)}>{props.text}</h5>
+                    <OverlayTrigger key={props.id} offset={[0, 10]} overlay={<Tooltip id={props.text} className='position-fixed'>{`View - ${props.text}`}</Tooltip>} trigger={['hover', 'focus']}>
+                        <div className="card-item-row-2" onClick={() => navigate(to + '/view')}>
+                            <h5 className='ml-auto text-truncate text-decoration-none'>{props.text}</h5>
+                            {/* <h5 className='ml-auto text-truncate text-decoration-none' onClick={() => setShow(!show)}>{props.text}</h5> */}
                         </div>
                     </OverlayTrigger>
                 </div >
             </Link>
-            <Toast show={show} onClose={(e) => {
+            {/* <Toast show={show} onClose={(e) => {
                 e?.stopPropagation()
                 setShow(p => !p)
             }}>
@@ -32,10 +33,9 @@ function CardItem(props: CardItem) {
                     <strong className="me-auto">Actions</strong>
                 </Toast.Header>
                 <Toast.Body className='d-flex justify-content-center'>
-                    <Button variant='info' onClick={() => navigate(to + '/view')}>View</Button>
-                    {/* <Button variant='success' onClick={() => navigate(to + '/form')}>Create</Button> */}
+                    <Button variant='success' onClick={() => navigate(to + '/form')}>Create</Button>
                 </Toast.Body>
-            </Toast>
+            </Toast> */}
         </>
     )
 }
@@ -68,5 +68,3 @@ export default function CardList<T extends Partial<CardData>>({ to, data }: { to
         )
     })
 }
-
-
