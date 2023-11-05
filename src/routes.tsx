@@ -3,7 +3,6 @@ import { Navigate, createBrowserRouter } from "react-router-dom"
 import { Layout } from "./components"
 
 const Login = lazy(() => import('./pages/Login'))
-
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
@@ -17,7 +16,7 @@ const Ogp = lazy(() => import('./pages/Ogp'))
 const OgpLists = lazy(() => import('./pages/feature/OgpLists'))
 const OgpView = lazy(() => import('./pages/feature/OgpView'))
 
-const Pipelines = lazy(() => import('./pages/_Pipelines'))
+const Pipelines = lazy(() => import('./pages/Pipelines'))
 const PipelineView = lazy(() => import('./pages/feature/PipelineView'))
 const PipelineLists = lazy(() => import('./pages/feature/PipelineLists'))
 
@@ -81,7 +80,7 @@ export const routes = createBrowserRouter([
                     },
                     {
                         path: 'critical-equipment',
-                        element: <Suspense><SwpLists /></Suspense>,
+                        element: <Suspense><CriticalEquipmentList /></Suspense>,
                     },
                 ]
             },

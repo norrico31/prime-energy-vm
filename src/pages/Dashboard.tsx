@@ -3,16 +3,10 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Button } from '../components'
 
 export default function Dashboard() {
-    const { pathname } = useLocation()
-    const heading: Record<string, string> = {
-        swp: 'SWP',
-        ogp: 'OGP',
-        pipelines: 'Pipelines',
-        critical: 'Critical Report',
-    }
-    console.log(pathname.split('/')[2])
+    let { pathname } = useLocation()
+    pathname = pathname.includes('critical') ? 'critical-equipment' : pathname
     return <Container fluid className='bg-color-white py-4'>
-        <Row className='justify-content-between align-items-center p-0 m-0'>
+        <Row className='justify-content-between gap-2 align-items-center p-0 m-0'>
             <Col>
                 <h3>{heading[shortenPathname(pathname)]}</h3>
             </Col>
@@ -36,6 +30,13 @@ function NavLists() {
     ))
 }
 
+const heading: Record<string, string> = {
+    swp: 'SWP',
+    ogp: 'OGP',
+    pipelines: 'Pipelines',
+    critical: 'Critical Equipment',
+}
+
 const links = [
     {
         to: 'swp',
@@ -50,7 +51,7 @@ const links = [
         title: 'Pipelines'
     },
     {
-        to: 'critical-report',
-        title: 'Critical Report'
+        to: 'critical-equipment',
+        title: 'Critical Equipment'
     },
 ]

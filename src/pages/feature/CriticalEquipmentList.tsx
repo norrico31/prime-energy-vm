@@ -15,17 +15,6 @@ export default function CriticalEquipmentList() {
                 { id: '5', statusAvailability: 'avail', statusIntegrity: 'avail', text: 'well list last' },
             ]
         },
-        {
-            title: 'WELL1',
-            id: '2',
-            lists: [
-                { id: '1', statusAvailability: 'avail', statusIntegrity: 'avail', text: 'well list' },
-                { id: '2', statusAvailability: 'affected', statusIntegrity: 'avail', text: 'well list' },
-                { id: '3', statusAvailability: 'avail', statusIntegrity: 'affected', text: 'well list' },
-                { id: '4', statusAvailability: 'avail', statusIntegrity: 'avail', text: 'well list' },
-                { id: '5', statusAvailability: 'unavail', statusIntegrity: 'unavail', text: 'well list' },
-            ]
-        },
     ]
     return (
         <Row className='card-list'>
