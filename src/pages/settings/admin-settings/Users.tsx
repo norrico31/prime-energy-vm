@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Col, Row, Form, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
-import { Table, ButtonActions, PageSize, Button } from '../../../components';
+import { Table, ButtonActions, PageSize, Button } from '../../components';
 
 type Payload = {
     name: string

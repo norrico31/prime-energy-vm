@@ -1,5 +1,5 @@
 import { Row } from 'react-bootstrap'
-import { CardList } from '../../components'
+import { CardList } from '../components'
 
 // TODO: FETCH DATA HERE
 export default function PipelineLists() {
@@ -29,7 +29,7 @@ export default function PipelineLists() {
     ]
     return (
         <Row className='card-list'>
-            <CardList data={data} to='/swp' />
+            <CardList data={data} to='/pipelines' />
         </Row>
     )
 }

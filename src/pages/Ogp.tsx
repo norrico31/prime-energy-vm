@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { Container, Col } from 'react-bootstrap'
-import { Button, PageHeading } from '../components'
+import { Button, PageHeading } from './components'
 
 export default function Ogp() {
     return <Container>

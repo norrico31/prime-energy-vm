@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import { Button, PageHeading } from '../components'
+import { Button, PageHeading } from './components'
 import { Col, Container } from 'react-bootstrap'
 
 export default function Pipelines() {

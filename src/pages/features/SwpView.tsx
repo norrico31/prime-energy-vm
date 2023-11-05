@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Modal, Col, Row, Form, Container } from 'react-bootstrap'
 import { useDebounceSearch } from '../../shared/hooks/useDebounceSearch'
 import { useDataResource } from '../../shared/hooks/useDataResource'
-import { Table, PageSize, Button, ButtonActions } from '../../components'
+import { Table, PageSize, Button, ButtonActions } from '../components'
 
 const reducerState: ReducerState = {
     view: false,
@@ -82,12 +82,12 @@ const columns: TableColHead = [
     },
 ]
 
-export default function OgpView() {
-    const { ogpId } = useParams()
+export default function SwpView() {
+    const { swpId } = useParams()
     const navigate = useNavigate()
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [{ currentPage, pageSize, }, dispatch] = useReducer((state: typeof reducerState, action: Action<AuditLogs>) => reducer(state, action), reducerState);
-    const { data, isLoading } = useDataResource<ApiResponse<AuditLogs[]>, unknown>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, isLoading } = useDataResource<ApiSuccess<AuditLogs[]>, { id: string }>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
     const [selectedData, setSelectedData] = useState<AuditLogs | undefined>(undefined);
 
     const paginationProps: PageProps = {
@@ -113,14 +113,14 @@ export default function OgpView() {
             {/* <div className="d-flex justify-content-between">
                 <h3 className='text-color-gray mb-2'>DISPLAY TITLE OF WELL HERE</h3>
             </div> */}
-            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/ogp')}>Back to OGP</Button>
+            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/swp')}>Back to SWP</Button>
             <Row>
                 <Col >
                     <PageSize value={pageSize} onChange={pageSizeChange} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center gap-2'>
                     <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
-                    <Button variant='success' title='Create' onClick={() => navigate(`/ogp/${ogpId}/form`)}>Create</Button>
+                    <Button variant='success' title='Create' onClick={() => navigate(`/swp/${swpId}/form`)}>Create</Button>
                 </Col>
             </Row>
             <Table
@@ -128,17 +128,18 @@ export default function OgpView() {
                 pageProps={paginationProps}
                 columns={columns}
             >
-                {data?.data.data.map(d => {
+                {data?.data.data.map((d, idx) => {
                     return <tr key={d.id}>
-                        <td >{d.user.full_name}</td>
-                        <td >{d.account_type}</td>
+                        {/* <td >{d.user.full_name}</td> */}
+                        <td >sample - {idx}</td>
                         <td >{d.date}</td>
+                        <td >{d.account_type}</td>
                         <td >{d.action}</td>
                         <td className='d-flex justify-content-center gap-1'>
                             <ButtonActions
                                 loading={isLoading}
                                 viewData={() => setSelectedData(d)} // DISPLAY IN MODAL
-                                editData={() => navigate(`/ogp/${ogpId}/edit/${d.id}`)}
+                                editData={() => navigate(`/swp/${swpId}/edit/${d.id}`)}
                                 disabled={() => alert('DISABLE SELECTED SWP')}
                             />
                         </td>
@@ -159,7 +160,7 @@ function ModalView({ selectedData, ...restProps }: { show: boolean; onHide: () =
         <Modal {...restProps} aria-labelledby="contained-modal-title-vcenter">
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    OGP - View
+                    SWP - View
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="grid-example">

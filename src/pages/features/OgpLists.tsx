@@ -1,5 +1,5 @@
 import { Row } from 'react-bootstrap'
-import { CardList } from '../../components'
+import { CardList } from '../components'
 
 // TODO: FETCH DATA HERE
 export default function OgpLists() {

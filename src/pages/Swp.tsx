@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { Col, Container } from 'react-bootstrap'
-import { Button, PageHeading } from '../components'
+import { Button, PageHeading } from './components'
 
 export default function Swp() {
     return <Container>

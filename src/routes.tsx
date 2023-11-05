@@ -1,6 +1,6 @@
 import { Suspense as ReactSuspense, lazy, ReactNode } from "react"
 import { Navigate, createBrowserRouter } from "react-router-dom"
-import { Layout } from "./components"
+import { Layout } from "./pages/components"
 
 const Login = lazy(() => import('./pages/Login'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
@@ -9,20 +9,20 @@ const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
 const Form = lazy(() => import('./pages/Form'))
 
 const Swp = lazy(() => import('./pages/Swp'))
-const SwpLists = lazy(() => import('./pages/feature/SwpLists'))
-const SwpView = lazy(() => import('./pages/feature/SwpView'))
+const SwpLists = lazy(() => import('./pages/features/SwpLists'))
+const SwpView = lazy(() => import('./pages/features/SwpView'))
 
 const Ogp = lazy(() => import('./pages/Ogp'))
-const OgpLists = lazy(() => import('./pages/feature/OgpLists'))
-const OgpView = lazy(() => import('./pages/feature/OgpView'))
+const OgpLists = lazy(() => import('./pages/features/OgpLists'))
+const OgpView = lazy(() => import('./pages/features/OgpView'))
 
 const Pipelines = lazy(() => import('./pages/Pipelines'))
-const PipelineView = lazy(() => import('./pages/feature/PipelineView'))
-const PipelineLists = lazy(() => import('./pages/feature/PipelineLists'))
+const PipelineView = lazy(() => import('./pages/features/PipelineView'))
+const PipelineLists = lazy(() => import('./pages/features/PipelineLists'))
 
 const CriticalEquipments = lazy(() => import('./pages/CriticalEquipment'))
-const CriticalEquipmentView = lazy(() => import('./pages/feature/CriticalEquipmentView'))
-const CriticalEquipmentList = lazy(() => import('./pages/feature/CriticalEquipmentList'))
+const CriticalEquipmentView = lazy(() => import('./pages/features/CriticalEquipmentView'))
+const CriticalEquipmentList = lazy(() => import('./pages/features/CriticalEquipmentList'))
 
 // ASSET SETTINGS
 const LocationSettings = lazy(() => import('./pages/settings/location-settings/LocationSettings'))

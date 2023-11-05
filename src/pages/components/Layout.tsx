@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, NavLink } from "react-router-dom"
-import useWindowSize from '../shared/hooks/useWindowResize'
+import useWindowSize from '../../shared/hooks/useWindowResize'
 import Container from 'react-bootstrap/Container'
 import { AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart } from 'react-icons/ai'
 import Nav from 'react-bootstrap/Nav'
@@ -10,7 +10,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas'
 import { FiSettings } from 'react-icons/fi'
 import { GiBrokenAxe } from 'react-icons/gi'
 import { MdLocationOn, MdAdminPanelSettings, MdOutlineDashboard } from 'react-icons/md'
-import Logo from '../shared/assets/logo_horizontal.svg'
+import Logo from '../../shared/assets/logo_horizontal.svg'
 
 const links: { icon: JSX.Element; name: string; to: string }[] = [
     { icon: <MdOutlineDashboard className='fs-4' />, name: 'Dashboard', to: '/dashboard' },
@@ -24,22 +24,10 @@ const links: { icon: JSX.Element; name: string; to: string }[] = [
 ]
 
 function Navbar() {
-    const { width } = useWindowSize()
-    const [expand, setExpand] = useState(false);
+    const [expand, setExpand] = useState(false)
     return <Navbars expand={false} className="bg-body-tertiary mb-3">
         <Container fluid>
-            {width >= 860 &&
-                <Navbars.Brand className='logo-width p-0'>
-                    <img src={Logo} alt="logo" className='main-logo' />
-                </Navbars.Brand>
-            }
-            <Navbars.Toggle aria-controls='offcanvasNavbar-expand-false' onClick={() => setExpand(true)} />
-            {width > 640 && (
-                <h4 className={`m-0 fs-6`}>
-                    Malampaya SWP Vulnerabilities
-                </h4>
-
-            )}
+            <NavbarBrand onClick={() => setExpand(true)} />
             <Navbars.Offcanvas
                 id='offcanvasNavbar-expand-false'
                 aria-labelledby='offcanvasNavbarLabel-expand-false'
@@ -54,15 +42,6 @@ function Navbar() {
                     </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body className='p-0'>
-                    {/* <Form className="d-flex">
-                    <Form.Control
-                        type="search"
-                        placeholder="Search"
-                        className="me-2"
-                        aria-label="Search"
-                    />
-                    <Button variant="outline-success">Search</Button>
-                </Form> */}
                     <Nav className="mt-3">
                         {links.map((link, idx) => {
                             // guard clause for permissions
@@ -81,9 +60,6 @@ function Navbar() {
                     id='offcanvasNavbarDropdown-expand-false'
                 >
                     <NavDropdown.Item href="#action3">Profile</NavDropdown.Item>
-                    {/* <NavDropdown.Item href="#action4">
-                            Another action
-                        </NavDropdown.Item> */}
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="#action5">
                         Logout
@@ -94,14 +70,29 @@ function Navbar() {
     </Navbars>
 }
 
+function NavbarBrand(props: { onClick: () => void }) {
+    const { width } = useWindowSize()
+    return <>
+        {width >= 860 &&
+            <Navbars.Brand className='logo-width p-0'>
+                <img src={Logo} alt="logo" className='main-logo' />
+            </Navbars.Brand>
+        }
+        <Navbars.Toggle aria-controls='offcanvasNavbar-expand-false' onClick={props.onClick} />
+        {width > 640 && (
+            <h4 className={`m-0 fs-6`}>
+                Malampaya SWP Vulnerabilities
+            </h4>
+
+        )}
+    </>
+}
+
 export default function Layout() {
     return <>
         {/* <Notification /> */}
         <Navbar />
         <Container fluid className='bg-color-white px-4 py-3'>
-            {/* <Row className='mb-4'>
-                <Title />
-            </Row> */}
             {<Outlet />}
         </Container>
     </>

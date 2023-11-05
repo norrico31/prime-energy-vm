@@ -1,5 +1,5 @@
 import { Table } from "react-bootstrap"
-import { Button } from "../components"
+import { Button } from "./components"
 
 export default function Pipelines() {
     return <div>

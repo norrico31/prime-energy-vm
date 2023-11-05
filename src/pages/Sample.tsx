@@ -4,7 +4,7 @@ import { useDebounceSearch } from '../shared/hooks/useDebounceSearch'
 import Table from 'react-bootstrap/Table'
 import Spinner from 'react-bootstrap/Spinner'
 import Form from 'react-bootstrap/Form';
-import { ButtonActions, Pagination } from '../components'
+import { ButtonActions, Pagination } from './components'
 
 const url = 'time_keepings/whos/in?date=2023-10-05'
 const urlPost = 'time_keepings/whos/in?date=2023-10-05'

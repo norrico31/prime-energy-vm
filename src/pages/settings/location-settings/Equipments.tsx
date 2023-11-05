@@ -3,7 +3,7 @@ import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-boots
 import { AiOutlineSearch } from 'react-icons/ai'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
-import { Table, ButtonActions, Button } from '../../../components';
+import { Table, ButtonActions, Button } from '../../components';
 
 type Payload = {
     name: string

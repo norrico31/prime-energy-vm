@@ -1,6 +1,6 @@
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { Col, Form, Row, } from 'react-bootstrap'
-import { Button } from '../components';
+import { Button } from './components';
 import * as formik from 'formik';
 import * as yup from 'yup';
 

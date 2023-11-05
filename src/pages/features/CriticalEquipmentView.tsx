@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Modal, Col, Row, Form, Container } from 'react-bootstrap'
 import { useDebounceSearch } from '../../shared/hooks/useDebounceSearch'
 import { useDataResource } from '../../shared/hooks/useDataResource'
-import { Table, PageSize, Button, ButtonActions } from '../../components'
+import { Table, PageSize, Button, ButtonActions } from '../components'
 
 const reducerState: ReducerState = {
     view: false,
@@ -82,13 +82,13 @@ const columns: TableColHead = [
     },
 ]
 
-export default function PipelineView() {
-    const { pipelineId } = useParams()
+export default function CriticalEquipmentView() {
+    const { criticalEquipmentId } = useParams()
     const navigate = useNavigate()
     const [search, searchVal, inputChange] = useDebounceSearch()
-    const [{ currentPage, pageSize, }, dispatch] = useReducer((state: typeof reducerState, action: Action<AuditLogs>) => reducer(state, action), reducerState);
-    const { data, isLoading, } = useDataResource<ApiSuccess<AuditLogs[]>, unknown>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
-    const [selectedData, setSelectedData] = useState<AuditLogs | undefined>(undefined);
+    const [{ currentPage, pageSize, }, dispatch] = useReducer((state: typeof reducerState, action: Action<CriticalEquipment>) => reducer(state, action), reducerState);
+    const { data, isLoading } = useDataResource<ApiResponse<CriticalEquipment[]>, unknown>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const [selectedData, setSelectedData] = useState<CriticalEquipment | undefined>(undefined);
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -113,14 +113,14 @@ export default function PipelineView() {
             {/* <div className="d-flex justify-content-between">
                 <h3 className='text-color-gray mb-2'>DISPLAY TITLE OF WELL HERE</h3>
             </div> */}
-            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/pipeline')}>Back to Pipelines</Button>
+            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/critical-equipment')}>Back to CriticalEquipment</Button>
             <Row>
                 <Col >
                     <PageSize value={pageSize} onChange={pageSizeChange} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center gap-2'>
                     <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
-                    <Button variant='success' title='Create' onClick={() => navigate(`/pipeline/${pipelineId}/form`)}>Create</Button>
+                    <Button variant='success' title='Create' onClick={() => navigate(`/critical-equipment/${criticalEquipmentId}/form`)}>Create</Button>
                 </Col>
             </Row>
             <Table
@@ -138,7 +138,7 @@ export default function PipelineView() {
                             <ButtonActions
                                 loading={isLoading}
                                 viewData={() => setSelectedData(d)} // DISPLAY IN MODAL
-                                editData={() => navigate(`/pipeline/${pipelineId}/edit/${d.id}`)}
+                                editData={() => navigate(`/critical-equipment/${criticalEquipmentId}/edit/${d.id}`)}
                                 disabled={() => alert('DISABLE SELECTED SWP')}
                             />
                         </td>
@@ -154,12 +154,12 @@ export default function PipelineView() {
     )
 }
 
-function ModalView({ selectedData, ...restProps }: { show: boolean; onHide: () => void; selectedData: AuditLogs | undefined }) {
+function ModalView({ selectedData, ...restProps }: { show: boolean; onHide: () => void; selectedData: CriticalEquipment | undefined }) {
     return (
         <Modal {...restProps} aria-labelledby="contained-modal-title-vcenter">
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Pipeline - View
+                    Critical Equipment - View
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="grid-example">
