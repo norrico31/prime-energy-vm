@@ -5,22 +5,25 @@ import { Layout } from "./components"
 const Login = lazy(() => import('./pages/Login'))
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
-const PrintReport = lazy(() => import('./pages/PrintReport'))
 
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
 const Form = lazy(() => import('./pages/Form'))
 
 const Swp = lazy(() => import('./pages/Swp'))
-const SwpLists = lazy(() => import('./pages/views/SwpLists'))
-const SwpView = lazy(() => import('./pages/views/SwpView'))
+const SwpLists = lazy(() => import('./pages/feature/SwpLists'))
+const SwpView = lazy(() => import('./pages/feature/SwpView'))
 
 const Ogp = lazy(() => import('./pages/Ogp'))
-const OgpLists = lazy(() => import('./pages/views/OgpLists'))
-const OgpView = lazy(() => import('./pages/views/OgpView'))
+const OgpLists = lazy(() => import('./pages/feature/OgpLists'))
+const OgpView = lazy(() => import('./pages/feature/OgpView'))
 
 const Pipelines = lazy(() => import('./pages/_Pipelines'))
-const PipelineView = lazy(() => import('./pages/views/PipelineView'))
-const PipelineLists = lazy(() => import('./pages/views/PipelineLists'))
+const PipelineView = lazy(() => import('./pages/feature/PipelineView'))
+const PipelineLists = lazy(() => import('./pages/feature/PipelineLists'))
+
+const CriticalEquipments = lazy(() => import('./pages/CriticalEquipment'))
+const CriticalEquipmentView = lazy(() => import('./pages/feature/CriticalEquipmentView'))
+const CriticalEquipmentList = lazy(() => import('./pages/feature/CriticalEquipmentList'))
 
 // ASSET SETTINGS
 const LocationSettings = lazy(() => import('./pages/settings/location-settings/LocationSettings'))
@@ -61,6 +64,10 @@ export const routes = createBrowserRouter([
                 element: <Suspense><Dashboard /></Suspense>,
                 children: [
                     {
+                        path: '',
+                        element: <Navigate to='swp' />
+                    },
+                    {
                         path: 'swp',
                         element: <Suspense><SwpLists /></Suspense>,
                     },
@@ -78,14 +85,10 @@ export const routes = createBrowserRouter([
                     },
                 ]
             },
-            // {
-            //     path: '',
-            //     element: <Navigate to='swp' />
-            // },
-            // {
-            //     path: '/print-report',
-            //     element: <Suspense><PrintReport /></Suspense>
-            // },
+            {
+                path: '',
+                element: <Navigate to='dashboard' />
+            },
             {
                 path: '/swp',
                 element: <Suspense><Swp /></Suspense>,
@@ -184,18 +187,18 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/critical-equipment',
-                element: <Suspense><Pipelines /></Suspense>,
+                element: <Suspense><CriticalEquipments /></Suspense>,
                 children: [
                     {
                         path: '',
-                        element: <Suspense><PipelineLists /></Suspense>,
+                        element: <Suspense><CriticalEquipmentList /></Suspense>,
                     },
                     {
                         path: ':criticalEquipmentId',
                         children: [
                             {
                                 path: 'view',
-                                element: <Suspense><PipelineView /></Suspense>,
+                                element: <Suspense><CriticalEquipmentView /></Suspense>,
                             },
                             {
                                 path: 'form',

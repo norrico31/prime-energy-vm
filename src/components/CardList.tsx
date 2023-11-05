@@ -46,7 +46,6 @@ export default function CardList<T extends Partial<CardData>>({ to, data }: { to
             <div className="card-item p-0" key={d?.id} >
                 <div className="card-head text-color-white">
                     <OverlayTrigger key={d?.title} offset={[0, 10]} overlay={<Tooltip id={d?.title} className='position-fixed'>{d?.title}</Tooltip>} trigger={['hover', 'focus']}>
-
                         <div className='card-head-title'>
                             <div className="d-flex card-head-title-ai">
                                 <h5>A</h5>

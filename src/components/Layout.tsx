@@ -98,7 +98,7 @@ export default function Layout() {
     return <>
         {/* <Notification /> */}
         <Navbar />
-        <Container fluid className='px-5 py-3'>
+        <Container fluid className='bg-color-white px-4 py-3'>
             {/* <Row className='mb-4'>
                 <Title />
             </Row> */}
