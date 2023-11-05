@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { Col, Form, Row, } from 'react-bootstrap'
-import { Button } from './components';
+import { Button, FileUpload } from './components';
 import * as formik from 'formik';
 import * as yup from 'yup';
 
@@ -27,10 +28,10 @@ const initValues = {
 }
 
 function Forms() {
-    const { swpId, swpItemId, ogpId, ogpItemId, pipelineId, pipelineItemId, criticalEquipmentId, criticalEquipmentItemId } = useParams()
-    console.log(swpId, swpItemId, ogpId, ogpItemId, pipelineId, pipelineItemId, criticalEquipmentId, criticalEquipmentItemId)
+    const params = useParams()
+    console.log(params)
     const navigate = useNavigate()
-
+    const [classification, setClassification] = useState('');
     // useEffect(() => {
     //     if (id === 'create') return
     //     alert('update')
@@ -41,6 +42,8 @@ function Forms() {
         // edit create endpoint
         console.log(v)
     }
+
+
     return (
         <Formik
             validationSchema={schema}
@@ -76,22 +79,20 @@ function Forms() {
                     <Row className="mb-3">
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridStatus">
                             <Form.Label>Status</Form.Label>
-                            <Form.Select placeholder='Select Status' defaultValue="Choose..." required>
+                            <Form.Select placeholder='Select Status' required>
                                 {/* <option>Green</option>
                         <option>...</option> */}
                             </Form.Select>
                         </Form.Group>
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridClassification">
                             <Form.Label>Classification</Form.Label>
-                            <Form.Select placeholder='Select Classification' defaultValue="Choose..." required>
-                                {/* <option>Green</option>
-                        <option>...</option> */}
+                            <Form.Select placeholder='Select Classification' value={classification} onChange={(e) => {
+                                setClassification(e.target.value)
+                            }} required>
+                                <option key='short term' value='shortTerm'>Short Term</option>
+                                <option key='long term' value='longTerm'>Long Term</option>
                             </Form.Select>
                         </Form.Group>
-                        {/* <Form.Group as={Col} controlId="formGridThreat Owner">
-                            <Form.Label>Threat Owner</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter initiator." />
-                        </Form.Group> */}
                     </Row>
                     <Row className="mb-3">
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
@@ -103,7 +104,7 @@ function Forms() {
                         </Form.Group>
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridIntegrity">
                             <Form.Label>Integrity</Form.Label>
-                            <Form.Select placeholder='Select Integrity' defaultValue="Choose..." required>
+                            <Form.Select placeholder='Select Integrity' required>
                                 {/* <option>Green</option>
                         <option>...</option> */}
                             </Form.Select>
@@ -121,32 +122,46 @@ function Forms() {
                             <Form.Control required as='textarea' type="text" placeholder="Enter vulnerability description." />
                         </Form.Group>
                     </Row>
-
-
                     <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridDescription">
+                        <Form.Group as={Col} controlId="formGridRiskDescription">
                             <Form.Label>Risk Description</Form.Label>
                             <Form.Control required as='textarea' type="text" placeholder="Enter risk description." />
                         </Form.Group>
                     </Row>
+
+                    {classification === 'shortTerm' ?
+                        <Row className="mb-3">
+                            <Form.Group as={Col} xs={12} md={6} controlId="formGridActionItem">
+                                <Form.Label>Action Item</Form.Label>
+                                <Form.Control required type="text" placeholder="Enter item no." />
+                                <Form.Control required type="text" placeholder="Enter item no." className='mt-1 mb-1' />
+                                <Form.Control required type="text" placeholder="Enter item no." />
+                                <Form.Control required type="text" placeholder="Enter item no." className='mt-1 mb-1' />
+                                <Form.Control required type="text" placeholder="Enter item no." />
+                            </Form.Group>
+                            <Form.Group as={Col} xs={12} md={6} controlId="formGridActionOwner">
+                                <Form.Label>Action Owner</Form.Label>
+                                <Form.Control required type="text" placeholder="Enter owner." />
+                                <Form.Control required type="text" placeholder="Enter owner." className='mt-1 mb-1' />
+                                <Form.Control required type="text" placeholder="Enter owner." />
+                                <Form.Control required type="text" placeholder="Enter owner." className='mt-1 mb-1' />
+                                <Form.Control required type="text" placeholder="Enter owner." />
+                            </Form.Group>
+                        </Row>
+                        : null}
+                    <hr />
                     <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridActionItem">
-                            <Form.Label>Action Item</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter item no." />
-                            <Form.Control required type="text" placeholder="Enter item no." className='mt-1 mb-1' />
-                            <Form.Control required type="text" placeholder="Enter item no." />
-                            <Form.Control required type="text" placeholder="Enter item no." className='mt-1 mb-1' />
-                            <Form.Control required type="text" placeholder="Enter item no." />
-                        </Form.Group>
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridActionOwner">
-                            <Form.Label>Action Owner</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter owner." />
-                            <Form.Control required type="text" placeholder="Enter owner." className='mt-1 mb-1' />
-                            <Form.Control required type="text" placeholder="Enter owner." />
-                            <Form.Control required type="text" placeholder="Enter owner." className='mt-1 mb-1' />
-                            <Form.Control required type="text" placeholder="Enter owner." />
+                        <Form.Group as={Col} controlId="formGridOtherRemarks">
+                            <Form.Label>Other Remarks</Form.Label>
+                            {/* <Form.Control required as='textarea' type="text" placeholder="Enter risk description." /> */}
+                            <Form.Group as={Col} xs={6} md={6} controlId="formGridOtherRemarks">
+                                <Form.Label>Upload Documents</Form.Label>
+                                <FileUpload />
+                            </Form.Group>
                         </Form.Group>
                     </Row>
+
+                    {/* 
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridMitigation">
                             <Form.Label>Mitigation</Form.Label>
@@ -157,15 +172,15 @@ function Forms() {
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
                             <Form.Label>Availability</Form.Label>
                             <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
-                                {/* <option>Red</option>
-                        <option>...</option> */}
+                                <option>Red</option>
+                        <option>...</option>
                             </Form.Select>
                         </Form.Group>
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridIntegrity">
                             <Form.Label>Integrity</Form.Label>
-                            <Form.Select placeholder='Select Integrity' defaultValue="Choose..." required>
-                                {/* <option>Green</option>
-                        <option>...</option> */}
+                            <Form.Select placeholder='Select Integrity' required>
+                                <option>Green</option>
+                        <option>...</option>
                             </Form.Select>
                         </Form.Group>
                     </Row>
@@ -173,8 +188,8 @@ function Forms() {
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
                             <Form.Label>Initial Ram Raiting</Form.Label>
                             <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
-                                {/* <option>Red</option>
-                        <option>...</option> */}
+                                <option>Red</option>
+                        <option>...</option>
                             </Form.Select>
                         </Form.Group>
                     </Row>
@@ -182,8 +197,8 @@ function Forms() {
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
                             <Form.Label>Ram Priority</Form.Label>
                             <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
-                                {/* <option>Red</option>
-                        <option>...</option> */}
+                                <option>Red</option>
+                        <option>...</option>
                             </Form.Select>
                         </Form.Group>
                     </Row>
@@ -191,15 +206,15 @@ function Forms() {
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
                             <Form.Label>Re-assessed RAM Rating</Form.Label>
                             <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
-                                {/* <option>Red</option>
-                        <option>...</option> */}
+                                <option>Red</option>
+                        <option>...</option>
                             </Form.Select>
                         </Form.Group>
                         <Form.Group as={Col} xs={12} md={6} controlId="formGridStatus">
                             <Form.Label>Status</Form.Label>
-                            <Form.Select placeholder='Select Status' defaultValue="Choose..." required>
-                                {/* <option>Green</option>
-                        <option>...</option> */}
+                            <Form.Select placeholder='Select Status' required>
+                                <option>Green</option>
+                        <option>...</option>
                             </Form.Select>
                         </Form.Group>
                     </Row>
@@ -232,7 +247,7 @@ function Forms() {
                             <Form.Label>SAP Work Order</Form.Label>
                             <Form.Control required type="text" placeholder="Enter SAP work order." />
                         </Form.Group>
-                    </Row>
+                    </Row> */}
                     <ButtonSubmit isSubmitting={isSubmitting} />
                 </Form>
             )}
@@ -244,9 +259,10 @@ export default Forms;
 
 function ButtonSubmit({ isSubmitting }: { isSubmitting: boolean }) {
     const { pathname } = useLocation()
-    return <div className={`d-flex justify-content-end`}>
-        <Button variant={pathname.includes('edit') ? 'primary' : 'success'} type="submit" disabled={isSubmitting}>
-            {pathname.includes('edit') ? 'Update' : 'Create'}
+    return <div className={`d-flex justify-content-end gap-2`}>
+        <Button variant='danger' title='Close'>Cancel</Button>
+        <Button variant={pathname.includes('edit') ? 'primary' : 'success'} title={pathname.includes('edit') ? 'Update' : 'Create'} type="submit" disabled={isSubmitting}>
+            {pathname.includes('edit') ? 'Update' : 'Submit'}
         </Button>
     </div>
 }
