@@ -26,6 +26,7 @@ const FileUpload: React.FunctionComponent<FileUploadProps> = ({
 }) => {
     // the list of files to be uploaded (lift this state to parent comp)
     const [list, setList] = useState(value || []);
+
     const rerender = () => {
         setList(list.slice());
         onChange?.(list);

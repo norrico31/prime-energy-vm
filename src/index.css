@@ -135,6 +135,10 @@ button.btn-print-report {
   padding: 0 !important;
   margin: 0 !important;
 }
+.form-label {
+  font-weight: bold;
+  color: #3d3d3d
+}
 
 
 /* COMPONENTS */

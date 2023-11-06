@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
-import { Col, Form, Row, } from 'react-bootstrap'
+import { CloseButton, Col, FloatingLabel, Form, Modal, Row, Table } from 'react-bootstrap'
 import { Button, FileUpload } from './components';
 import * as formik from 'formik';
 import * as yup from 'yup';
@@ -160,6 +160,9 @@ function Forms() {
                             </Form.Group>
                         </Form.Group>
                     </Row>
+                    <Row className="mb-3">
+                        <FormUrl />
+                    </Row>
 
                     {/* 
                     <Row className="mb-3">
@@ -250,12 +253,108 @@ function Forms() {
                     </Row> */}
                     <ButtonSubmit isSubmitting={isSubmitting} />
                 </Form>
-            )}
-        </Formik>
+            )
+            }
+        </Formik >
     );
 }
 
 export default Forms;
+
+function FormUrl() {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [dataList, setDataRow] = useState<typeof dataRow>([]);
+    return <Form.Group as={Col} controlId="formGridOtherRemarks">
+        <div className='d-flex justify-content-between mb-2'>
+            <Form.Label>Upload URL</Form.Label>
+            <Button variant='primary' onClick={() => setIsModalVisible(true)}>Click to upload url</Button>
+        </div>
+        <Table bordered striped hover className='text-center'>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">URL</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {dataList?.map((d, idx) => (
+                    <tr key={idx}>
+                        <td>{d.url}</td>
+                    </tr>
+
+                ))}
+            </tbody>
+        </Table>
+        <ModalUrl
+            show={isModalVisible}
+            onHide={() => setIsModalVisible(false)}
+            onChange={(list) => console.log(list)}
+        />
+    </Form.Group>
+}
+
+function ModalUrl(props: { show: boolean; onHide: () => void; onChange: (urls: typeof dataRow) => void }) {
+    const [urlList, setUrlList] = useState(() => dataRow)
+    const addRow = () => setUrlList(prevUrl => [...prevUrl, dataRow[0]])
+    const removeRow = (idx: number) => {
+        const rows = [...urlList]
+        rows.splice(idx, 1)
+        setUrlList(rows)
+    }
+
+    return (
+        <Modal
+            {...props}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Upload URL
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Button variant='primary' className='mb-3' onClick={addRow}>Add Entry</Button>
+                {urlList.map((url, idx) => {
+                    // console.log('render')
+                    // TODO: Optimize rerenders
+                    return (
+                        <Row className='d-flex align-items-center px-3' key={idx}>
+                            <Form.Group as={Col} controlId="formGridOtherRemarks">
+                                <FloatingLabel
+                                    controlId="floatingInput"
+                                    label="Add Link"
+                                    className="mb-2"
+
+                                >
+                                    <Form.Control type="text" placeholder="name@example.com" value={url.url} onChange={(e) => {
+                                        const value = e.target.value
+                                        const newUrl = [...urlList].map((u, i) => i === idx ? { ...u, url: value } : u)
+                                        setUrlList(newUrl)
+                                    }} />
+                                </FloatingLabel>
+                            </Form.Group>
+                            <CloseButton onClick={() => removeRow(idx)} disabled={urlList.length === 1} />
+                        </Row>
+                    )
+                })}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant='primary' onClick={() => {
+                    props.onHide()
+                    setTimeout(() => setUrlList(dataRow), 500)
+
+                }}>Cancel</Button>
+                <Button variant='primary' onClick={() => {
+                    props.onHide()
+                    props.onChange(urlList)
+                    setTimeout(() => setUrlList(dataRow), 500)
+                }}>Upload</Button>
+            </Modal.Footer>
+        </Modal>
+    )
+}
 
 function ButtonSubmit({ isSubmitting }: { isSubmitting: boolean }) {
     const { pathname } = useLocation()
@@ -266,3 +365,10 @@ function ButtonSubmit({ isSubmitting }: { isSubmitting: boolean }) {
         </Button>
     </div>
 }
+
+
+const dataRow = [
+    {
+        url: ''
+    }
+]
