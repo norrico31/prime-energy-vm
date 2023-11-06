@@ -200,18 +200,27 @@ function Forms() {
 export default Forms;
 
 function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: React.Dispatch<React.SetStateAction<{ id: string; url: string; }[]>> }) {
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [urlList, setUrlList] = useState<typeof initDataRowState>(initDataRowState);
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [urlList, setUrlList] = useState<typeof initDataRowState>(initDataRowState)
+
+    useEffect(() => {
+        if (isModalVisible && urls.length) {
+            setUrlList(urls)
+        } else {
+            setTimeout(() => setUrlList(initDataRowState), 200)
+        }
+    }, [isModalVisible, urls])
 
     const addRow = () => setUrlList(prevUrl => [...prevUrl, { ...initDataRowState[0], id: Math.floor(Math.random() * 99999) + '', }])
 
     const removeRow = (id: string) => {
-        //TODO: BUG
         const updatedRows = urlList.filter((url) => id !== url.id)
         setUrlList(updatedRows)
     }
 
     const onHide = () => setIsModalVisible(false)
+
+
     return <Form.Group as={Col} controlId="formGridOtherRemarks">
         <div className='d-flex justify-content-between mb-2'>
             <Form.Label>Upload URL</Form.Label>
@@ -233,16 +242,10 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
                             <Link to={d.url}>{d.url}</Link>
                         </td>
                         <td >
-                            {/* <Button variant='primary' onClick={() => {
-                                if (selectedUrl) {
-                                    const updatedRows = urlList.map(url => url.id !== selectedUrl.id ? url : selectedUrl)
-                                    setUrls(updatedRows)
-                                    setSelectedUrl(undefined)
-                                } else {
-                                    setSelectedUrl(d)
-                                }
-                            }}>{selectedUrl?.id === d.id ? 'Save' : "Edit"}</Button> */}
-                            <Button variant='primary'>Remove</Button>
+                            <Button variant='primary' onClick={() => {
+                                const filteredUrls = urls.filter(u => u.id !== d.id)
+                                setUrls([...filteredUrls])
+                            }}>Remove</Button>
                         </td>
                     </tr>
 
@@ -293,12 +296,12 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
                         onHide()
                         setTimeout(() => {
                             setUrls(urlList)
-                            setUrlList(initDataRowState)
+                            // setUrlList(initDataRowState)
                         }, 500)
                     }}>Upload</Button>
             </Modal.Footer>
         </Modal>
-    </Form.Group>
+    </Form.Group >
 }
 
 function ButtonSubmit({ isSubmitting }: { isSubmitting: boolean }) {
