@@ -75,7 +75,10 @@ function Forms() {
                         </Form.Group>
                         <Form.Group as={Col} controlId="formGridThreat Owner">
                             <Form.Label>Threat Owner</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter theat owner." />
+                            <Form.Select placeholder='Select threat owner' required>
+                                {/* <option>Green</option>
+                        <option>...</option> */}
+                            </Form.Select>
                         </Form.Group>
                     </Row>
                     <Row className="mb-3">
@@ -115,7 +118,7 @@ function Forms() {
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridVulnerabilityTitle">
                             <Form.Label>Vulnerability Title</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter vulnerability title." />
+                            <Form.Control required as='textarea' type="text" placeholder="Enter vulnerability title." />
                         </Form.Group>
                     </Row>
                     <Row className="mb-3">
@@ -135,19 +138,40 @@ function Forms() {
                         <Row className="mb-3">
                             <Form.Group as={Col} xs={12} md={6} controlId="formGridActionItem">
                                 <Form.Label>Action Item</Form.Label>
-                                <Form.Control required type="text" placeholder="Enter item no." />
+                                {/* <Form.Control required type="text" placeholder="Enter item no." />
                                 <Form.Control required type="text" placeholder="Enter item no." className='mt-1 mb-1' />
                                 <Form.Control required type="text" placeholder="Enter item no." />
                                 <Form.Control required type="text" placeholder="Enter item no." className='mt-1 mb-1' />
-                                <Form.Control required type="text" placeholder="Enter item no." />
+                                <Form.Control required type="text" placeholder="Enter item no." /> */}
+                                <Form.Control required as='textarea' type="text" placeholder="Enter action item." />
+                                <Form.Control required as='textarea' type="text" placeholder="Enter action item." className='mt-1 mb-1' />
+                                <Form.Control required as='textarea' type="text" placeholder="Enter action item." />
+                                <Form.Control required as='textarea' type="text" placeholder="Enter action item." className='mt-1 mb-1' />
+                                <Form.Control required as='textarea' type="text" placeholder="Enter action item." />
                             </Form.Group>
                             <Form.Group as={Col} xs={12} md={6} controlId="formGridActionOwner">
                                 <Form.Label>Action Owner</Form.Label>
-                                <Form.Control required type="text" placeholder="Enter owner." />
+                                <Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
+                                    {/* <option>Green</option>
+                        <option>...</option> */}
+                                </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
+                                    {/* <option>Green</option>
+                        <option>...</option> */}
+                                </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
+                                    {/* <option>Green</option>
+                        <option>...</option> */}
+                                </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
+                                    {/* <option>Green</option>
+                        <option>...</option> */}
+                                </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
+                                    {/* <option>Green</option>
+                        <option>...</option> */}
+                                </Form.Select>
+                                {/* <Form.Control required type="text" placeholder="Enter owner." />
                                 <Form.Control required type="text" placeholder="Enter owner." className='mt-1 mb-1' />
                                 <Form.Control required type="text" placeholder="Enter owner." />
                                 <Form.Control required type="text" placeholder="Enter owner." className='mt-1 mb-1' />
-                                <Form.Control required type="text" placeholder="Enter owner." />
+                                <Form.Control required type="text" placeholder="Enter owner." /> */}
                             </Form.Group>
                         </Row>
                         : null}
@@ -178,25 +202,13 @@ export default Forms;
 function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: React.Dispatch<React.SetStateAction<{ id: string; url: string; }[]>> }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [urlList, setUrlList] = useState<typeof initDataRowState>(initDataRowState);
-    const [selectedUrl, setSelectedUrl] = useState<typeof initDataRowState[0] | undefined>(undefined);
 
     const addRow = () => setUrlList(prevUrl => [...prevUrl, { ...initDataRowState[0], id: Math.floor(Math.random() * 99999) + '', }])
 
-    const removeRow = (idx: number) => {
-        const rows = [...urlList]
-        rows.splice(idx, 1)
-        setUrlList(rows)
-    }
-    const inputChange = (d: typeof initDataRowState[0]) => {
-        if (!d) return
-        const updatedRows = urlList.map(url => url.id !== d.id ? url : { ...d })
+    const removeRow = (id: string) => {
+        //TODO: BUG
+        const updatedRows = urlList.filter((url) => id !== url.id)
         setUrlList(updatedRows)
-    }
-
-    const editUrlRow = (value: string) => {
-        if (!selectedUrl) return
-        const newUrl = { ...selectedUrl, url: value }
-        setSelectedUrl(newUrl)
     }
 
     const onHide = () => setIsModalVisible(false)
@@ -218,14 +230,10 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
                     <tr key={idx}>
                         <td>{idx + 1}</td>
                         <td>
-                            {selectedUrl?.id === d.id ?
-                                <Form.Control required type="text" placeholder="Enter item no." value={selectedUrl?.url} onChange={(e) => editUrlRow(e.target.value)} />
-                                :
-                                <Link to={d.url}>{d.url}</Link>
-                            }
+                            <Link to={d.url}>{d.url}</Link>
                         </td>
                         <td >
-                            <Button variant='primary' onClick={() => {
+                            {/* <Button variant='primary' onClick={() => {
                                 if (selectedUrl) {
                                     const updatedRows = urlList.map(url => url.id !== selectedUrl.id ? url : selectedUrl)
                                     setUrls(updatedRows)
@@ -233,7 +241,7 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
                                 } else {
                                     setSelectedUrl(d)
                                 }
-                            }}>{selectedUrl?.id === d.id ? 'Save' : "Edit"}</Button>
+                            }}>{selectedUrl?.id === d.id ? 'Save' : "Edit"}</Button> */}
                             <Button variant='primary'>Remove</Button>
                         </td>
                     </tr>
@@ -262,10 +270,13 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
                             className="mb-2"
 
                         >
-                            <FormControlUrl data={url} inputChange={inputChange} />
+                            <Form.Control type="text" placeholder="name@example.com" value={urlList[idx].url} onChange={(e) => {
+                                const urls = urlList.map((u) => u.id === url.id ? { ...url, url: e.target.value } : u)
+                                setUrlList(urls)
+                            }} />
                         </FloatingLabel>
                     </Form.Group>
-                    <CloseButton onClick={() => removeRow(idx)} disabled={urlList.length === 1} />
+                    <CloseButton onClick={() => removeRow(url.id)} disabled={urlList.length === 1} />
                 </Row>
                 )}
             </Modal.Body>
@@ -274,28 +285,20 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
                     onHide()
                     // setTimeout(() => setUrlList(initDataRowState), 500)
                 }}>Cancel</Button>
-                <Button variant='primary' type='submit' onClick={() => {
-                    onHide()
-                    setTimeout(() => {
-                        setUrls(urlList)
-                        setUrlList(initDataRowState)
-                    }, 500)
-                }}>Upload</Button>
+                <Button
+                    variant='primary'
+                    type='submit'
+                    disabled={Object.values(urlList).map(Object.values).flat().some(u => u === '')}
+                    onClick={() => {
+                        onHide()
+                        setTimeout(() => {
+                            setUrls(urlList)
+                            setUrlList(initDataRowState)
+                        }, 500)
+                    }}>Upload</Button>
             </Modal.Footer>
         </Modal>
     </Form.Group>
-}
-
-function FormControlUrl({ data, inputChange }: { data: typeof initDataRowState[0]; inputChange: (d: typeof initDataRowState[0]) => void }) {
-    const [row, setRow] = useState<typeof initDataRowState[0]>(data)
-    useEffect(() => {
-        inputChange(row)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [row])
-
-    return (
-        <Form.Control type="text" placeholder="name@example.com" value={row.url} onChange={(e) => setRow({ ...row, url: e.target.value })} />
-    )
 }
 
 function ButtonSubmit({ isSubmitting }: { isSubmitting: boolean }) {
