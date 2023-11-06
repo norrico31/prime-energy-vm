@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { CloseButton, Col, FloatingLabel, Form, Modal, Row, Table } from 'react-bootstrap'
 import { Button, FileUpload } from './components';
@@ -31,7 +31,8 @@ function Forms() {
     const params = useParams()
     console.log(params)
     const navigate = useNavigate()
-    const [classification, setClassification] = useState('');
+    const [classification, setClassification] = useState('shortTerm');
+
     // useEffect(() => {
     //     if (id === 'create') return
     //     alert('update')
@@ -43,6 +44,7 @@ function Forms() {
         console.log(v)
     }
 
+    const [urls, setUrls] = useState<typeof initDataRowState>([]);
 
     return (
         <Formik
@@ -161,96 +163,8 @@ function Forms() {
                         </Form.Group>
                     </Row>
                     <Row className="mb-3">
-                        <FormUrl />
+                        <FormUrl urls={urls} setUrls={setUrls} />
                     </Row>
-
-                    {/* 
-                    <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridMitigation">
-                            <Form.Label>Mitigation</Form.Label>
-                            <Form.Control required as='textarea' type="text" placeholder="Enter mitigation." />
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
-                            <Form.Label>Availability</Form.Label>
-                            <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
-                                <option>Red</option>
-                        <option>...</option>
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridIntegrity">
-                            <Form.Label>Integrity</Form.Label>
-                            <Form.Select placeholder='Select Integrity' required>
-                                <option>Green</option>
-                        <option>...</option>
-                            </Form.Select>
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
-                            <Form.Label>Initial Ram Raiting</Form.Label>
-                            <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
-                                <option>Red</option>
-                        <option>...</option>
-                            </Form.Select>
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
-                            <Form.Label>Ram Priority</Form.Label>
-                            <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
-                                <option>Red</option>
-                        <option>...</option>
-                            </Form.Select>
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
-                            <Form.Label>Re-assessed RAM Rating</Form.Label>
-                            <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
-                                <option>Red</option>
-                        <option>...</option>
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridStatus">
-                            <Form.Label>Status</Form.Label>
-                            <Form.Select placeholder='Select Status' required>
-                                <option>Green</option>
-                        <option>...</option>
-                            </Form.Select>
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
-                            <Form.Label>Vulnerability Owner</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter vulnerability owner." />
-                        </Form.Group>
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridDateRaised">
-                            <Form.Label>Due Date - Baseed on risk rating</Form.Label>
-                            <Form.Control required type="date" placeholder="Select Date" />
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
-                            <Form.Label>SAP Notification</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter sap notification." />
-                        </Form.Group>
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridDateRaised">
-                            <Form.Label>Due Date - Latest Estimate</Form.Label>
-                            <Form.Control required type="date" placeholder="Select Date" />
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
-                            <Form.Label>MDC Number</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter MDC no." />
-                        </Form.Group>
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
-                            <Form.Label>SAP Work Order</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter SAP work order." />
-                        </Form.Group>
-                    </Row> */}
                     <ButtonSubmit isSubmitting={isSubmitting} />
                 </Form>
             )
@@ -261,9 +175,24 @@ function Forms() {
 
 export default Forms;
 
-function FormUrl() {
+function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: React.Dispatch<React.SetStateAction<{ id: string; url: string; }[]>> }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [dataList, setDataRow] = useState<typeof dataRow>([]);
+    const [urlList, setUrlList] = useState<typeof initDataRowState>(initDataRowState);
+
+    const addRow = () => setUrlList(prevUrl => [...prevUrl, { ...initDataRowState[0], id: Math.floor(Math.random() * 99999) + '', }])
+
+    const removeRow = (idx: number) => {
+        const rows = [...urlList]
+        rows.splice(idx, 1)
+        setUrlList(rows)
+    }
+    const inputChange = (d: typeof initDataRowState[0]) => {
+        if (!d) return
+        const updatedRows = urlList.map(url => url.id !== d.id ? url : { ...d })
+        setUrlList(updatedRows)
+    }
+
+    const onHide = () => setIsModalVisible(false)
     return <Form.Group as={Col} controlId="formGridOtherRemarks">
         <div className='d-flex justify-content-between mb-2'>
             <Form.Label>Upload URL</Form.Label>
@@ -278,35 +207,20 @@ function FormUrl() {
                 </tr>
             </thead>
             <tbody>
-                {dataList?.map((d, idx) => (
+                {urls?.map((d, idx) => (
                     <tr key={idx}>
+                        <td>{idx + 1}</td>
                         <td>{d.url}</td>
+                        <td><Button variant='primary'>Remove</Button></td>
                     </tr>
 
                 ))}
             </tbody>
         </Table>
-        <ModalUrl
-            show={isModalVisible}
-            onHide={() => setIsModalVisible(false)}
-            onChange={(list) => console.log(list)}
-        />
-    </Form.Group>
-}
-
-function ModalUrl(props: { show: boolean; onHide: () => void; onChange: (urls: typeof dataRow) => void }) {
-    const [urlList, setUrlList] = useState(() => dataRow)
-    const addRow = () => setUrlList(prevUrl => [...prevUrl, dataRow[0]])
-    const removeRow = (idx: number) => {
-        const rows = [...urlList]
-        rows.splice(idx, 1)
-        setUrlList(rows)
-    }
-
-    return (
         <Modal
-            {...props}
             aria-labelledby="contained-modal-title-vcenter"
+            show={isModalVisible}
+            onHide={onHide}
             centered
         >
             <Modal.Header closeButton>
@@ -316,43 +230,46 @@ function ModalUrl(props: { show: boolean; onHide: () => void; onChange: (urls: t
             </Modal.Header>
             <Modal.Body>
                 <Button variant='primary' className='mb-3' onClick={addRow}>Add Entry</Button>
-                {urlList.map((url, idx) => {
-                    // console.log('render')
-                    // TODO: Optimize rerenders
-                    return (
-                        <Row className='d-flex align-items-center px-3' key={idx}>
-                            <Form.Group as={Col} controlId="formGridOtherRemarks">
-                                <FloatingLabel
-                                    controlId="floatingInput"
-                                    label="Add Link"
-                                    className="mb-2"
+                {urlList.map((url, idx) => <Row className='d-flex align-items-center px-3' key={idx}>
+                    <Form.Group as={Col} controlId="formGridOtherRemarks">
+                        <FloatingLabel
+                            controlId="floatingInput"
+                            label="Add Link"
+                            className="mb-2"
 
-                                >
-                                    <Form.Control type="text" placeholder="name@example.com" value={url.url} onChange={(e) => {
-                                        const value = e.target.value
-                                        const newUrl = [...urlList].map((u, i) => i === idx ? { ...u, url: value } : u)
-                                        setUrlList(newUrl)
-                                    }} />
-                                </FloatingLabel>
-                            </Form.Group>
-                            <CloseButton onClick={() => removeRow(idx)} disabled={urlList.length === 1} />
-                        </Row>
-                    )
-                })}
+                        >
+                            <FormControlUrl data={url} inputChange={inputChange} />
+                        </FloatingLabel>
+                    </Form.Group>
+                    <CloseButton onClick={() => removeRow(idx)} disabled={urlList.length === 1} />
+                </Row>
+                )}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant='primary' onClick={() => {
-                    props.onHide()
-                    setTimeout(() => setUrlList(dataRow), 500)
-
+                    onHide()
+                    setTimeout(() => setUrlList(initDataRowState), 500)
                 }}>Cancel</Button>
-                <Button variant='primary' onClick={() => {
-                    props.onHide()
-                    props.onChange(urlList)
-                    setTimeout(() => setUrlList(dataRow), 500)
+                <Button variant='primary' type='submit' onClick={() => {
+                    console.log('potangina')
+                    onHide()
+                    setTimeout(() => setUrls(urlList), 500)
                 }}>Upload</Button>
             </Modal.Footer>
         </Modal>
+    </Form.Group>
+}
+
+function FormControlUrl({ data, inputChange }: { data: typeof initDataRowState[0]; inputChange: (d: typeof initDataRowState[0]) => void }) {
+    const [row, setRow] = useState<typeof initDataRowState[0]>(data)
+    console.log('row')
+    useEffect(() => {
+        inputChange(row)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [row])
+
+    return (
+        <Form.Control type="text" placeholder="name@example.com" value={row.url} onChange={(e) => setRow({ ...row, url: e.target.value })} />
     )
 }
 
@@ -367,8 +284,9 @@ function ButtonSubmit({ isSubmitting }: { isSubmitting: boolean }) {
 }
 
 
-const dataRow = [
+const initDataRowState = [
     {
+        id: Math.floor(Math.random() * 99999) + '',
         url: ''
     }
 ]
