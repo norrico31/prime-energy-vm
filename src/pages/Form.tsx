@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom'
 import { CloseButton, Col, FloatingLabel, Form, Modal, Row, Table } from 'react-bootstrap'
 import { Button, FileUpload } from './components';
 import * as formik from 'formik';
@@ -178,6 +178,7 @@ export default Forms;
 function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: React.Dispatch<React.SetStateAction<{ id: string; url: string; }[]>> }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [urlList, setUrlList] = useState<typeof initDataRowState>(initDataRowState);
+    const [selectedUrl, setSelectedUrl] = useState<typeof initDataRowState[0] | undefined>(undefined);
 
     const addRow = () => setUrlList(prevUrl => [...prevUrl, { ...initDataRowState[0], id: Math.floor(Math.random() * 99999) + '', }])
 
@@ -190,6 +191,12 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
         if (!d) return
         const updatedRows = urlList.map(url => url.id !== d.id ? url : { ...d })
         setUrlList(updatedRows)
+    }
+
+    const editUrlRow = (value: string) => {
+        if (!selectedUrl) return
+        const newUrl = { ...selectedUrl, url: value }
+        setSelectedUrl(newUrl)
     }
 
     const onHide = () => setIsModalVisible(false)
@@ -210,8 +217,25 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
                 {urls?.map((d, idx) => (
                     <tr key={idx}>
                         <td>{idx + 1}</td>
-                        <td>{d.url}</td>
-                        <td><Button variant='primary'>Remove</Button></td>
+                        <td>
+                            {selectedUrl?.id === d.id ?
+                                <Form.Control required type="text" placeholder="Enter item no." value={selectedUrl?.url} onChange={(e) => editUrlRow(e.target.value)} />
+                                :
+                                <Link to={d.url}>{d.url}</Link>
+                            }
+                        </td>
+                        <td >
+                            <Button variant='primary' onClick={() => {
+                                if (selectedUrl) {
+                                    const updatedRows = urlList.map(url => url.id !== selectedUrl.id ? url : selectedUrl)
+                                    setUrls(updatedRows)
+                                    setSelectedUrl(undefined)
+                                } else {
+                                    setSelectedUrl(d)
+                                }
+                            }}>{selectedUrl?.id === d.id ? 'Save' : "Edit"}</Button>
+                            <Button variant='primary'>Remove</Button>
+                        </td>
                     </tr>
 
                 ))}
@@ -248,12 +272,14 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
             <Modal.Footer>
                 <Button variant='primary' onClick={() => {
                     onHide()
-                    setTimeout(() => setUrlList(initDataRowState), 500)
+                    // setTimeout(() => setUrlList(initDataRowState), 500)
                 }}>Cancel</Button>
                 <Button variant='primary' type='submit' onClick={() => {
-                    console.log('potangina')
                     onHide()
-                    setTimeout(() => setUrls(urlList), 500)
+                    setTimeout(() => {
+                        setUrls(urlList)
+                        setUrlList(initDataRowState)
+                    }, 500)
                 }}>Upload</Button>
             </Modal.Footer>
         </Modal>
@@ -262,7 +288,6 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
 
 function FormControlUrl({ data, inputChange }: { data: typeof initDataRowState[0]; inputChange: (d: typeof initDataRowState[0]) => void }) {
     const [row, setRow] = useState<typeof initDataRowState[0]>(data)
-    console.log('row')
     useEffect(() => {
         inputChange(row)
         // eslint-disable-next-line react-hooks/exhaustive-deps
