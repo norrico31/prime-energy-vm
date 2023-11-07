@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import {
-    CloseButton,
     Button,
-    OverlayTrigger,
-    Tooltip,
-    TooltipProps,
     Table,
     Form
 } from "react-bootstrap";
@@ -32,19 +28,19 @@ const FileUpload: React.FunctionComponent<FileUploadProps> = ({
         onChange?.(list);
     };
 
-    const handleUp = (i: number) => {
-        const temp = list[i];
-        list[i] = list[i - 1];
-        list[i - 1] = temp;
-        rerender();
-    };
+    // const handleUp = (i: number) => {
+    //     const temp = list[i];
+    //     list[i] = list[i - 1];
+    //     list[i - 1] = temp;
+    //     rerender();
+    // };
 
-    const handleDown = (i: number) => {
-        const temp = list[i];
-        list[i] = list[i + 1];
-        list[i + 1] = temp;
-        rerender();
-    };
+    // const handleDown = (i: number) => {
+    //     const temp = list[i];
+    //     list[i] = list[i + 1];
+    //     list[i + 1] = temp;
+    //     rerender();
+    // };
 
     const handleDelete = (i: number) => {
         list.splice(i, 1);

@@ -1,10 +1,7 @@
-import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom"
-import { OverlayTrigger, Tooltip, Toast } from 'react-bootstrap'
-import { Button } from '.';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 function CardItem(props: CardItem) {
-    const [show, setShow] = useState(false);
     const navigate = useNavigate()
     const to = props.to + '/' + props.id
     return (

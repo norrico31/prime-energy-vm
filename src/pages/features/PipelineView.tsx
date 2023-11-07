@@ -1,9 +1,8 @@
 import { useState, useReducer } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Modal, Col, Row, Form, Container } from 'react-bootstrap'
-import { useDebounceSearch } from '../../shared/hooks/useDebounceSearch'
+import { Modal, Col, Row, Container } from 'react-bootstrap'
 import { useDataResource } from '../../shared/hooks/useDataResource'
-import { Table, PageSize, Button, ButtonActions, ListViewHeader } from '../components'
+import { Table, Button, ButtonActions, ListViewHeader } from '../components'
 
 const reducerState: ReducerState = {
     view: false,
@@ -85,9 +84,9 @@ const columns: TableColHead = [
 export default function PipelineView() {
     const { pipelineId } = useParams()
     const navigate = useNavigate()
-    const [search, searchVal, inputChange] = useDebounceSearch()
+    // const [search, searchVal, inputChange] = useDebounceSearch()
     const [{ currentPage, pageSize, }, dispatch] = useReducer((state: typeof reducerState, action: Action<AuditLogs>) => reducer(state, action), reducerState);
-    const { data, isLoading, } = useDataResource<ApiSuccess<AuditLogs[]>, unknown>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, isLoading, } = useDataResource<ApiSuccess<AuditLogs[]>, unknown>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, page: currentPage, limit: pageSize })
     const [selectedData, setSelectedData] = useState<AuditLogs | undefined>(undefined);
 
     const paginationProps: PageProps = {
@@ -98,10 +97,10 @@ export default function PipelineView() {
         setCurrentPage: (payload: number) => dispatch({ type: CURRENT_PAGE, payload })
     }
 
-    const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
-        dispatch({ type: CURRENT_PAGE, payload: 1 })
-        dispatch({ type: PAGE_SIZE, payload: isNaN(+v.target.value) ? 10 : parseInt(v.target.value) })
-    }
+    // const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
+    //     dispatch({ type: CURRENT_PAGE, payload: 1 })
+    //     dispatch({ type: PAGE_SIZE, payload: isNaN(+v.target.value) ? 10 : parseInt(v.target.value) })
+    // }
 
     const onHide = () => {
         dispatch({ type: ON_HIDE })
