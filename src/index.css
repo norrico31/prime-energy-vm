@@ -121,7 +121,12 @@ button:not(.btn-close, .navbar-toggler) {
   color: #fff;
   background: #1e9aff;
 }
-
+:where(.css-dev-only-do-not-override-2i2tap).ant-menu-light .ant-menu-submenu-selected >.ant-menu-submenu-title, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-light>.ant-menu .ant-menu-submenu-selected >.ant-menu-submenu-title {
+  color: #0a3253;
+}
+.ant-menu-title-content {
+  font-size: 20px;
+}
 .nav-pills .nav-link:hover,
 .nav-tabs .nav-link:hover {
   background: #236396;
@@ -159,9 +164,9 @@ button.btn-print-report {
   justify-content: initial;
   gap: 10px;
 }
-.dropdown-menu.show {
+/* .dropdown-menu.show {
   left: -100px;
-}
+} */
 .settings-dropdown {
   margin-left: auto;
   margin-right: 30px;

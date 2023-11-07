@@ -225,18 +225,12 @@ export const routes = createBrowserRouter([
             //     element: <Suspense><Form /></Suspense>
             // },
             {
-                path: '/Location-settings',
-                element: <Suspense><LocationSettings /></Suspense>,
-                children: [
-                    {
-                        path: 'systems',
-                        element: <Suspense><LocationSystems /></Suspense>
-                    },
-                    {
-                        path: 'equipments',
-                        element: <Suspense><LocationEquipments /></Suspense>
-                    },
-                ]
+                path: '/Location-settings/systems',
+                element: <Suspense><LocationSystems /></Suspense>,
+            },
+            {
+                path: '/Location-settings/equipments',
+                element: <Suspense><LocationEquipments /></Suspense>,
             },
             {
                 path: '/system-settings',

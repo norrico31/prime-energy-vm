@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { MdDarkMode, MdLightMode } from 'react-icons/md'
 import { useDarkMode } from '../../shared/contexts/DarkMode'
+import { FiSettings } from 'react-icons/fi'
 
 const { Header: AntDHeader } = Layout
 const { Text: AntText } = Typography
@@ -35,12 +36,10 @@ export default function Header({ collapsed, setCollapsed }: { collapsed: boolean
     const items: MenuProps['items'] = [
         {
             key: '1',
-            danger: true,
-            label: <Link to='/profile'>Profile</Link>,
+            label: <Link to='/profile' className='text-decoration-none'>Profile</Link>,
         },
         {
             key: '2',
-            danger: true,
             label: (
                 <div onClick={logout}>
                     Logout
@@ -62,17 +61,19 @@ export default function Header({ collapsed, setCollapsed }: { collapsed: boolean
 
     return (
         <Container style={{ background: '#fff', paddingInline: 20 }}>
-            <div className={`header-wrapper light`}>
+            <div className='d-flex align-items-center gap-2'>
                 {burgerMenu}
+                <h4 className={`m-0 fs-6`}>
+                    Malampaya SWP Vulnerabilities
+                </h4>
             </div>
-            <div className={`header-wrapper light`}>
+            <div >
                 <Row align='middle' style={{ gap: 10 }}>
-                    {/* <Button className={isDarkMode ? 'bg-dark' : 'bg-light'} style={{ border: 'none' }} onClick={toggleDarkMode}> {isDarkMode ? <MdLightMode size={24} /> : <MdDarkMode size={24} />}</Button> */}
                     <Dropdown menu={{ items }}>
                         <a onClick={e => e.preventDefault()}>
                             <Space>
-                                <UserName>{'ADMIN'}</UserName>
-                                <DownOutlined className='dropdown-icon' />
+                                <UserName>{'ADMINISTRATOR'}</UserName>
+                                <FiSettings />
                             </Space>
                         </a>
                     </Dropdown>
@@ -81,6 +82,7 @@ export default function Header({ collapsed, setCollapsed }: { collapsed: boolean
         </Container>
     )
 }
+
 const UserName = styled.span`
     color: #45464B;
     font-weight: 500;

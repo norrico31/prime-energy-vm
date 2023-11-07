@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
-import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
-} from '@ant-design/icons';
-import { Layout, Menu as AntdMenu, Button, theme, MenuProps } from 'antd';
+import { Layout, Menu as AntdMenu, theme, MenuProps } from 'antd';
 import { NavLink, Outlet } from 'react-router-dom'
 import { AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart } from 'react-icons/ai'
 import { FiSettings } from 'react-icons/fi'
 import { GiBrokenAxe } from 'react-icons/gi'
-import { MdLocationOn, MdAdminPanelSettings, MdOutlineDashboard } from 'react-icons/md'
+import { TbSettingsCog } from 'react-icons/tb'
+import { MdLocationOn, MdAdminPanelSettings, MdOutlineDashboard, MdSystemUpdateAlt } from 'react-icons/md'
 import Header from './Header';
 import VMLogo from '../../../shared/assets/logo_horizontal.svg'
 import styled from 'styled-components';
@@ -53,7 +47,7 @@ const App: React.FC = () => {
                     <img src={VMLogo} alt="" style={{ width: 100 }} className='brand-logo' />
                 </div>
                 <MenuContainer
-                    // theme="light"
+                    theme="dark"
                     mode="inline"
                     defaultSelectedKeys={['1']}
                     onSelect={handleSelect}
@@ -84,19 +78,11 @@ const MenuContainer = styled(AntdMenu)`
     background-color: #1e9aff;
     color: #fff;
     
-    /* .menu-item-main {
-        color: rgb(250, 228, 149) !important;
-        &:hover {
-            color: #9B3423 !important;
-        }
-        &:active {
-            color: #9B3423 !important;
-        }
-    } */
-    .menu-item-main.active, .menu-item-main.active > * {
+  
+    /* .menu-item-main.active, .menu-item-main.active > * {
         color: #9B3423 !important;
     }
-   
+    */
     .ant-menu-title-content a {
         display: block;
     }
@@ -108,9 +94,9 @@ const MenuContainer = styled(AntdMenu)`
     .menu-item-icon {
         color: #00AEEF;
     }
-    .ant-menu.ant-menu-sub.ant-menu-inline {
+    /* .ant-menu.ant-menu-sub.ant-menu-inline {
         background: #9B3423;
-    }
+    } */
 `
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -178,12 +164,29 @@ const links = [
         true
     ),
     getItemLinks(
-        <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/location-settings/systems'>
-            Location Settings
-        </NavLink>,
+        'Location Settings',
         '/location-settings/systems',
         <MdLocationOn className='fs-4' />,
-        undefined,
+        [
+            getItemLinks(
+                <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/location-settings/systems'>
+                    Systems
+                </NavLink>,
+                '/location-settings/systems',
+                <MdSystemUpdateAlt className='fs-4' />,
+                undefined,
+                true
+            ),
+            getItemLinks(
+                <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/location-settings/equipments'>
+                    Equipments
+                </NavLink>,
+                '/location-settings/equipments',
+                <TbSettingsCog className='fs-4' />,
+                undefined,
+                true
+            ),
+        ],
         true
     ),
     getItemLinks(
