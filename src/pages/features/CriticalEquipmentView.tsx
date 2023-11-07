@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Modal, Col, Row, Form, Container } from 'react-bootstrap'
 import { useDebounceSearch } from '../../shared/hooks/useDebounceSearch'
 import { useDataResource } from '../../shared/hooks/useDataResource'
-import { Table, PageSize, Button, ButtonActions } from '../components'
+import { Table, PageSize, Button, ButtonActions, ListViewHeader } from '../components'
 
 const reducerState: ReducerState = {
     view: false,
@@ -110,19 +110,8 @@ export default function CriticalEquipmentView() {
 
     return (
         <>
-            {/* <div className="d-flex justify-content-between">
-                <h3 className='text-color-gray mb-2'>DISPLAY TITLE OF WELL HERE</h3>
-            </div> */}
             <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/critical-equipment')}>Back to CriticalEquipment</Button>
-            <Row>
-                <Col >
-                    <PageSize value={pageSize} onChange={pageSizeChange} />
-                </Col>
-                <Col className='d-flex justify-content-end align-items-center gap-2'>
-                    <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
-                    <Button variant='success' title='Create' onClick={() => navigate(`/critical-equipment/${criticalEquipmentId}/form`)}>Create</Button>
-                </Col>
-            </Row>
+            <ListViewHeader />
             <Table
                 loading={false}
                 pageProps={paginationProps}

@@ -2,7 +2,7 @@ import { Col, Container, Row, Form } from "react-bootstrap"
 import useWindowSize from "../../shared/hooks/useWindowResize"
 import { Button } from "."
 
-export default function ListViewCols() {
+export default function ListViewHeader() {
     return <Container>
         <Row>
             <Col md lg>
@@ -58,7 +58,7 @@ export default function ListViewCols() {
 function ListViewColEnd() {
     const { width } = useWindowSize()
     return <Col xs={width > 768 ? 2 : 10} className={`d-flex align-items-end ${width > 768 ? 'flex-column' : ''} gap-3`}>
-        {/* <Button variant='primary'>Close</Button> */}
+        <Button variant='primary'>Close</Button>
         <Button variant='primary'>Print</Button>
         <Button variant='primary'>Add New</Button>
     </Col>

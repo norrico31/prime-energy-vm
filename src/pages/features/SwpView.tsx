@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Modal, Col, Row, Container } from 'react-bootstrap'
 import { useDebounceSearch } from '../../shared/hooks/useDebounceSearch'
 import { useDataResource } from '../../shared/hooks/useDataResource'
-import { Table, Button, ButtonActions, ListViewCols } from '../components'
+import { Table, Button, ButtonActions, ListViewHeader } from '../components'
 
 const reducerState: ReducerState = {
     view: false,
@@ -111,7 +111,7 @@ export default function SwpView() {
     return (
         <>
             <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/swp')}>Back to SWP</Button>
-            <ListViewCols />
+            <ListViewHeader />
             <Table
                 loading={false}
                 pageProps={paginationProps}
