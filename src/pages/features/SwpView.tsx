@@ -1,9 +1,9 @@
 import { useState, useReducer } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Modal, Col, Row, Form, Container } from 'react-bootstrap'
+import { Modal, Col, Row, Container } from 'react-bootstrap'
 import { useDebounceSearch } from '../../shared/hooks/useDebounceSearch'
 import { useDataResource } from '../../shared/hooks/useDataResource'
-import { Table, PageSize, Button, ButtonActions } from '../components'
+import { Table, Button, ButtonActions, ListViewCols } from '../components'
 
 const reducerState: ReducerState = {
     view: false,
@@ -110,19 +110,8 @@ export default function SwpView() {
 
     return (
         <>
-            {/* <div className="d-flex justify-content-between">
-                <h3 className='text-color-gray mb-2'>DISPLAY TITLE OF WELL HERE</h3>
-            </div> */}
             <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/swp')}>Back to SWP</Button>
-            <Row>
-                <Col >
-                    <PageSize value={pageSize} onChange={pageSizeChange} />
-                </Col>
-                <Col className='d-flex justify-content-end align-items-center gap-2'>
-                    <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
-                    <Button variant='success' title='Create' onClick={() => navigate(`/swp/${swpId}/form`)}>Create</Button>
-                </Col>
-            </Row>
+            <ListViewCols />
             <Table
                 loading={false}
                 pageProps={paginationProps}
@@ -154,6 +143,7 @@ export default function SwpView() {
         </>
     )
 }
+
 
 function ModalView({ selectedData, ...restProps }: { show: boolean; onHide: () => void; selectedData: AuditLogs | undefined }) {
     return (
