@@ -64,24 +64,6 @@ function reducer<T>(state: ReducerState, action: Action<T>) {
 const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 
-const columns: TableColHead = [
-    {
-        colHead: 'Action No.',
-    },
-    {
-        colHead: 'Date Raised',
-    },
-    {
-        colHead: 'Equipment',
-    },
-    {
-        colHead: 'Initiator',
-    },
-    {
-        colHead: 'Actions',
-    },
-]
-
 export default function CriticalEquipmentView() {
     const { criticalEquipmentId } = useParams()
     const navigate = useNavigate()
@@ -110,12 +92,14 @@ export default function CriticalEquipmentView() {
 
     return (
         <>
-            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/critical-equipment')}>Back to CriticalEquipment</Button>
-            <ListViewHeader />
+            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/critical-equipment')}>Back to Critical Equipments</Button>
+            <ListViewHeader
+                handleCreate={() => navigate(`/critical-equipment/${criticalEquipmentId}/form`)}
+                handleClose={() => navigate('/critical-equipment')}
+            />
             <Table
                 loading={false}
                 pageProps={paginationProps}
-                columns={columns}
             >
                 {data?.data.data.map(d => {
                     return <tr key={d.id}>

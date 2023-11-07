@@ -63,31 +63,14 @@ function reducer<T>(state: ReducerState, action: Action<T>) {
 const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 
-const columns: TableColHead = [
-    {
-        colHead: 'Action No.',
-    },
-    {
-        colHead: 'Date Raised',
-    },
-    {
-        colHead: 'Equipment',
-    },
-    {
-        colHead: 'Initiator',
-    },
-    {
-        colHead: 'Actions',
-    },
-]
 
 export default function SwpView() {
     const { swpId } = useParams()
     const navigate = useNavigate()
     // const [search, searchVal, inputChange] = useDebounceSearch()
-    const [{ currentPage, pageSize, }, dispatch] = useReducer((state: typeof reducerState, action: Action<AuditLogs>) => reducer(state, action), reducerState);
+    const [{ currentPage, pageSize, }, dispatch] = useReducer((state: typeof reducerState, action: Action<AuditLogs>) => reducer(state, action), reducerState)
     const { data, isLoading } = useDataResource<ApiSuccess<AuditLogs[]>, { id: string }>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, page: currentPage, limit: pageSize })
-    const [selectedData, setSelectedData] = useState<AuditLogs | undefined>(undefined);
+    const [selectedData, setSelectedData] = useState<AuditLogs | undefined>(undefined)
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -109,12 +92,13 @@ export default function SwpView() {
 
     return (
         <>
-            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/swp')}>Back to SWP</Button>
-            <ListViewHeader />
+            <ListViewHeader
+                handleCreate={() => navigate(`/swp/${swpId}/form`)}
+                handleClose={() => navigate('/swp')}
+            />
             <Table
                 loading={false}
                 pageProps={paginationProps}
-                columns={columns}
             >
                 {data?.data.data.map((d, idx) => {
                     return <tr key={d.id}>

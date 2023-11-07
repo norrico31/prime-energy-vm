@@ -293,7 +293,7 @@ button.btn-print-report {
   height: 15px;
   border-radius: 50%;
 }
-.circle::after {
+/* .circle::after {
  content: ''; 
  position: absolute;
  transform: translate(10%, 10%);
@@ -301,7 +301,7 @@ button.btn-print-report {
  height: 12px;
  border: 2px solid #fff;
  border-radius: 50%;
-}
+} */
 .circle.avail:before {
   background: green;
 }
@@ -339,6 +339,6 @@ td.bg-red {
   font-size: 12px;
 }
 .table-component-bg th {
-  background: #1e9aff;
-  color: #fff;
+  background: #cccccc;
+  color: #000;
 }

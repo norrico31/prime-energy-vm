@@ -63,24 +63,6 @@ function reducer<T>(state: ReducerState, action: Action<T>) {
 const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 
-const columns: TableColHead = [
-    {
-        colHead: 'Action No.',
-    },
-    {
-        colHead: 'Date Raised',
-    },
-    {
-        colHead: 'Equipment',
-    },
-    {
-        colHead: 'Initiator',
-    },
-    {
-        colHead: 'Actions',
-    },
-]
-
 export default function PipelineView() {
     const { pipelineId } = useParams()
     const navigate = useNavigate()
@@ -109,12 +91,13 @@ export default function PipelineView() {
 
     return (
         <>
-            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/pipelines')}>Back to Pipelines</Button>
-            <ListViewHeader />
+            <ListViewHeader
+                handleCreate={() => navigate(`/pipelines/${pipelineId}/form`)}
+                handleClose={() => navigate('/pipelines')}
+            />
             <Table
                 loading={false}
                 pageProps={paginationProps}
-                columns={columns}
             >
                 {data?.data.data.map(d => {
                     return <tr key={d.id}>

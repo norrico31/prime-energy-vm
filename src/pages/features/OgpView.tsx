@@ -63,24 +63,6 @@ function reducer<T>(state: ReducerState, action: Action<T>) {
 const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 
-const columns: TableColHead = [
-    {
-        colHead: 'Action No.',
-    },
-    {
-        colHead: 'Date Raised',
-    },
-    {
-        colHead: 'Equipment',
-    },
-    {
-        colHead: 'Initiator',
-    },
-    {
-        colHead: 'Actions',
-    },
-]
-
 export default function OgpView() {
     const { ogpId } = useParams()
     const navigate = useNavigate()
@@ -111,11 +93,13 @@ export default function OgpView() {
         <>
 
             <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/ogp')}>Back to OGP</Button>
-            <ListViewHeader />
+            <ListViewHeader
+                handleCreate={() => navigate(`/ogp/${ogpId}/form`)}
+                handleClose={() => navigate('/ogp')}
+            />
             <Table
                 loading={false}
                 pageProps={paginationProps}
-                columns={columns}
             >
                 {data?.data.data.map(d => {
                     return <tr key={d.id}>

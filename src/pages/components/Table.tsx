@@ -5,11 +5,42 @@ import { Pagination } from '.'
 
 type Table = {
     loading: boolean
-    columns: TableColHead
+    // columns: TableColHead
     pageProps: PageProps
 }
 
-export default function Table({ loading, columns, pageProps, children }: PropsWithChildren<Table>) {
+
+const columns: TableColHead = [
+    {
+        colHead: 'Ref No.',
+    },
+    {
+        colHead: 'Data Added',
+    },
+    {
+        colHead: 'Vulnerability Title',
+    },
+    {
+        colHead: 'Availability',
+    },
+    {
+        colHead: 'Integrity',
+    },
+    {
+        colHead: 'Threat Classification',
+    },
+    {
+        colHead: 'Threat Owner',
+    },
+    {
+        colHead: 'Status',
+    },
+    {
+        colHead: 'Action',
+    },
+]
+
+export default function Table({ loading, pageProps, children }: PropsWithChildren<Table>) {
     return loading ? <Spinner animation="border" />
         : <div className='p-3 text-center'>
             <BootstrapTable responsive="sm" bordered size='sm' variant={undefined} className='table-component-bg'>

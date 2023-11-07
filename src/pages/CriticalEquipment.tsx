@@ -4,7 +4,7 @@ import { PageHeading } from './components'
 
 export default function CriticalEquipment() {
     return <Container>
-        <PageHeading title='Critical Equipment' onClick={() => alert('print report critical')} />
+        <PageHeading title='Critical Equipments' onClick={() => alert('print report critical')} />
         <Outlet />
     </Container>
 }

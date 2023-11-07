@@ -2,7 +2,12 @@ import { Col, Container, Row, Form } from "react-bootstrap"
 import useWindowSize from "../../shared/hooks/useWindowResize"
 import { Button } from "."
 
-export default function ListViewHeader() {
+type Props = Partial<ListViewColEndProps> & {
+    data?: null
+}
+
+export default function ListViewHeader(props: Props) {
+
     return <Container>
         <Row>
             <Col md lg>
@@ -11,7 +16,7 @@ export default function ListViewHeader() {
                         Equipment Tags
                     </Form.Label>
                     <Col xs="7">
-                        <Form.Control plaintext readOnly value="SAMPLE-TAG01" />
+                        <Form.Control plaintext readOnly style={{ border: '1px solid #000', padding: '3px 11px' }} value="SAMPLE-TAG01" />
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3 d-flex justify-content-center" controlId="formPlaintextEqupmentname">
@@ -19,7 +24,7 @@ export default function ListViewHeader() {
                         Equipment Name
                     </Form.Label>
                     <Col xs="7">
-                        <Form.Control plaintext readOnly value="RCS-2023-(1)" />
+                        <Form.Control plaintext readOnly style={{ border: '1px solid #000', padding: '3px 11px' }} value="RCS-2023-(1)" />
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3 d-flex justify-content-center" controlId="formPlaintextSystems">
@@ -27,7 +32,7 @@ export default function ListViewHeader() {
                         Systems
                     </Form.Label>
                     <Col xs="7">
-                        <Form.Control plaintext readOnly value="MACHINE-1" />
+                        <Form.Control plaintext readOnly style={{ border: '1px solid #000', padding: '3px 11px' }} value="MACHINE-1" />
                     </Col>
                 </Form.Group>
             </Col>
@@ -37,7 +42,7 @@ export default function ListViewHeader() {
                         Equipment ID
                     </Form.Label>
                     <Col xs="7">
-                        <Form.Control plaintext readOnly value="SAMPLE-TAG01" />
+                        <Form.Control plaintext readOnly style={{ border: '1px solid #000', padding: '3px 11px' }} value="SAMPLE-TAG01" />
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3 d-flex justify-content-center" controlId="formPlaintextEqupmentname">
@@ -45,21 +50,31 @@ export default function ListViewHeader() {
                         Location
                     </Form.Label>
                     <Col xs="7">
-                        <Form.Control plaintext readOnly value="RCS-2023-(1)" />
+                        <Form.Control plaintext readOnly style={{ border: '1px solid #000', padding: '3px 11px' }} value="RCS-2023-(1)" />
                     </Col>
                 </Form.Group>
             </Col>
             {/* xs={2 && 10} */}
-            <ListViewColEnd />
+            <ListViewColEnd
+                handleClose={props?.handleClose ?? (() => null)}
+                handlePrint={props?.handlePrint ?? (() => null)}
+                handleCreate={props?.handleCreate ?? (() => null)}
+            />
         </Row>
     </Container>
 }
 
-function ListViewColEnd() {
+type ListViewColEndProps = {
+    handleClose: () => void
+    handlePrint: () => void
+    handleCreate: () => void
+}
+
+function ListViewColEnd(props: ListViewColEndProps) {
     const { width } = useWindowSize()
     return <Col xs={width > 768 ? 2 : 10} className={`d-flex align-items-end ${width > 768 ? 'flex-column' : ''} gap-3`}>
-        <Button variant='primary'>Close</Button>
-        <Button variant='primary'>Print</Button>
-        <Button variant='primary'>Add New</Button>
+        <Button variant='primary' onClick={props.handleClose}>Close</Button>
+        <Button variant='primary' onClick={props.handlePrint}>Print</Button>
+        <Button variant='primary' onClick={props.handleCreate}>Add New</Button>
     </Col>
 }
