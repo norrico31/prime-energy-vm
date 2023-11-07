@@ -4,7 +4,7 @@ export { default as Button } from './Button'
 
 
 // COMPONENTS
-export { default as Layout } from './Layout'
+export { default as Layout } from './layout/Layout'
 export { default as CardList } from './CardList'
 export { default as Table } from './Table'
 export { default as Notification } from './Notification'
