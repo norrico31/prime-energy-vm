@@ -25,7 +25,6 @@ const CriticalEquipmentView = lazy(() => import('./pages/features/CriticalEquipm
 const CriticalEquipmentList = lazy(() => import('./pages/features/CriticalEquipmentList'))
 
 // ASSET SETTINGS
-const LocationSettings = lazy(() => import('./pages/settings/location-settings/LocationSettings'))
 const LocationSystems = lazy(() => import('./pages/settings/location-settings/Systems'))
 const LocationEquipments = lazy(() => import('./pages/settings/location-settings/Equipments'))
 

@@ -5,12 +5,12 @@ import { Pagination } from '.'
 
 type Table = {
     loading: boolean
-    // columns: TableColHead
+    columns?: TableColHead
     pageProps: PageProps
 }
 
 
-const columns: TableColHead = [
+const mainColumns: TableColHead = [
     {
         colHead: 'Ref No.',
     },
@@ -40,13 +40,14 @@ const columns: TableColHead = [
     },
 ]
 
-export default function Table({ loading, pageProps, children }: PropsWithChildren<Table>) {
+export default function Table({ columns, loading, pageProps, children }: PropsWithChildren<Table>) {
+    const renderCols = columns !== undefined ? columns : mainColumns
     return loading ? <Spinner animation="border" />
         : <div className='p-3 text-center'>
             <BootstrapTable responsive="sm" bordered size='sm' variant={undefined} className='table-component-bg'>
                 <thead>
                     <tr>
-                        {columns.map((c, idx) => (
+                        {renderCols.map((c, idx) => (
                             <th key={idx}>{c.colHead}</th>
                         ))}
                     </tr>

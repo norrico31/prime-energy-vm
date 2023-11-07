@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Col, Row, Form, Modal as BootstrapModal } from 'react-bootstrap';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
-import { Table, ButtonActions, PageSize, Button } from '../../components';
+import { Table, ButtonActions, Button } from '../../components';
 
 type Payload = {
     name: string
@@ -23,9 +23,6 @@ const columns: TableColHead = [
     {
         colHead: 'Role',
     },
-    // {
-    //     colHead: 'Department',
-    // },
     {
         colHead: 'Action',
     },
@@ -37,11 +34,11 @@ const columns: TableColHead = [
 export default function Users() {
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    // const [pageSize, setPageSize] = useState(10);
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
 
-    const { data, isLoading } = useDataResource<ApiSuccess<User[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: pageSize })
+    const { data, isLoading } = useDataResource<ApiSuccess<User[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: 10 })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -51,10 +48,10 @@ export default function Users() {
         setCurrentPage
     }
 
-    const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
-        setCurrentPage(1)
-        setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
-    }
+    // const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
+    //     setCurrentPage(1)
+    //     setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
+    // }
 
     const onHide = () => {
         setShowModal(false)
@@ -69,7 +66,7 @@ export default function Users() {
             <h3 className='text-color-gray mb-2'>Users Management</h3>
             <Row>
                 <Col >
-                    <PageSize value={pageSize} onChange={pageSizeChange} />
+                    {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center gap-2'>
                     <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
