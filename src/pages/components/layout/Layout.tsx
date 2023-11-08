@@ -8,6 +8,7 @@ import { TbSettingsCog } from 'react-icons/tb'
 import { MdLocationOn, MdAdminPanelSettings, MdOutlineDashboard, MdSystemUpdateAlt } from 'react-icons/md'
 import Header from './Header';
 import VMLogo from '../../../shared/assets/logo_horizontal.svg'
+import Logo from '../../../shared/assets/logo.jpg'
 import styled from 'styled-components';
 
 const { Sider, Content } = Layout;
@@ -44,7 +45,11 @@ const App: React.FC = () => {
             {/* SIDEBAR */}
             <Sider trigger={null} collapsible collapsed={collapsed} width={280} breakpoint='md' collapsedWidth={collapsedWidth} onBreakpoint={onBreakpoint}>
                 <div style={{ height: 64, padding: '.3rem', background: '#fff', display: 'grid', placeItems: 'center' }}>
-                    <img src={VMLogo} alt="" style={{ width: 100 }} className='brand-logo' />
+                    {collapsed ?
+                        <img src={Logo} alt="" className='brand-logo' style={{ width: 50 }} />
+                        :
+                        <img src={VMLogo} alt="" className='brand-logo' style={{ width: 100 }} />
+                    }
                 </div>
                 <MenuContainer
                     theme="dark"
