@@ -156,13 +156,24 @@ function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
                 </Form.Group>
             </Row>
             <Row>
-                <Form.Group as={Col} controlId="formGridDisable" className='d-flex justify-content-start'>
+                <Form.Group as={Col} controlId="formGridDisable" className='d-flex justify-content-start mb-3'>
                     <Form.Check // prettier-ignore
                         reverse
                         type="switch"
                         // id="custom-switch"
-                        label="Disable"
+                        label="Disable Equipment"
                     />
+                </Form.Group>
+            </Row>
+            <Row>
+                <Form.Group as={Col} controlId="formGridDisable" className='d-flex justify-content-start'>
+                    <Form.Group as={Col} controlId="formGridSite">
+                        <Form.Label>Critical Equipment</Form.Label>
+                        <Form.Select aria-label="Select site" placeholder='Select site'>
+                            <option value='yes'>Yes</option>
+                            <option value='no'>No</option>
+                        </Form.Select>
+                    </Form.Group>
                 </Form.Group>
             </Row>
         </BootstrapModal.Body>

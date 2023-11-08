@@ -59,7 +59,7 @@ export default function Header({ collapsed, setCollapsed }: Props) {
             <div className='d-flex align-items-center gap-2'>
                 {burgerMenu}
                 <h4 className={`m-0 fs-6`}>
-                    Malampaya SWP Vulnerabilities
+                    Vulnerability Monitoring System
                 </h4>
             </div>
             <div >
