@@ -4,7 +4,7 @@ import { Col, Nav, Row } from 'react-bootstrap'
 
 const adminTabs = [
     {
-        key: 'site',
+        key: 'location',
         title: 'Location',
     },
     {
@@ -12,8 +12,12 @@ const adminTabs = [
         title: 'Users Management',
     },
     {
-        key: 'roles-permission',
-        title: 'Roles & Permission',
+        key: 'roles',
+        title: 'Roles',
+    },
+    {
+        key: 'permission',
+        title: 'Permission',
     },
     {
         key: 'audit-logs',

@@ -204,10 +204,10 @@ const links = [
         true
     ),
     getItemLinks(
-        <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/admin-settings/site'>
+        <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/admin-settings/location'>
             Admin Settings
         </NavLink>,
-        '/admin-settings/site',
+        '/admin-settings/location',
         <MdAdminPanelSettings className='fs-4' />,
         undefined,
         true

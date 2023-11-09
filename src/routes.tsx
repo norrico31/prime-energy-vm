@@ -42,7 +42,8 @@ const Status = lazy(() => import('./pages/settings/system-settings/Status'))
 const AdminSettings = lazy(() => import('./pages/settings/admin-settings/AdminSettings'))
 const Location = lazy(() => import('./pages/settings/admin-settings/Location'))
 const Users = lazy(() => import('./pages/settings/admin-settings/Users'))
-const RolesPermission = lazy(() => import('./pages/settings/admin-settings/RolesPermission'))
+const Roles = lazy(() => import('./pages/settings/admin-settings/Roles'))
+const Permission = lazy(() => import('./pages/settings/admin-settings/Permission'))
 const AuditLogs = lazy(() => import('./pages/settings/admin-settings/AuditLogs'))
 const NotificationLogs = lazy(() => import('./pages/settings/admin-settings/NotificationLogs'))
 
@@ -270,7 +271,7 @@ export const routes = createBrowserRouter([
                 element: <Suspense><AdminSettings /></Suspense>,
                 children: [
                     {
-                        path: 'site',
+                        path: 'location',
                         element: <Suspense><Location /></Suspense>
                     },
                     {
@@ -278,8 +279,12 @@ export const routes = createBrowserRouter([
                         element: <Suspense><Users /></Suspense>
                     },
                     {
-                        path: 'roles-permission',
-                        element: <Suspense><RolesPermission /></Suspense>
+                        path: 'roles',
+                        element: <Suspense><Roles /></Suspense>
+                    },
+                    {
+                        path: 'permission',
+                        element: <Suspense><Permission /></Suspense>
                     },
                     {
                         path: 'audit-logs',
