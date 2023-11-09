@@ -40,7 +40,7 @@ const Status = lazy(() => import('./pages/settings/system-settings/Status'))
 
 // ADMIN admin
 const AdminSettings = lazy(() => import('./pages/settings/admin-settings/AdminSettings'))
-const Site = lazy(() => import('./pages/settings/admin-settings/Site'))
+const Location = lazy(() => import('./pages/settings/admin-settings/Location'))
 const Users = lazy(() => import('./pages/settings/admin-settings/Users'))
 const RolesPermission = lazy(() => import('./pages/settings/admin-settings/RolesPermission'))
 const AuditLogs = lazy(() => import('./pages/settings/admin-settings/AuditLogs'))
@@ -271,7 +271,7 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         path: 'site',
-                        element: <Suspense><Site /></Suspense>
+                        element: <Suspense><Location /></Suspense>
                     },
                     {
                         path: 'users',

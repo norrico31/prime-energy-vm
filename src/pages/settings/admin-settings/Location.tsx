@@ -15,7 +15,7 @@ const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time
 
 // const columns: TableColHead = [
 //     {
-//         colHead: 'Site',
+//         colHead: 'Location',
 //     },
 //     {
 //         colHead: 'Description',
@@ -25,7 +25,7 @@ const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time
 //     },
 // ]
 
-export default function Site() {
+export default function Location() {
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1);
     // const [pageSize, setPageSize] = useState(10);
@@ -57,7 +57,7 @@ export default function Site() {
 
     return (
         <>
-            <h3 className='text-color-gray mb-2'>Site Management</h3>
+            <h3 className='text-color-gray mb-2'>Location Management</h3>
             <Row>
                 <Col >
                     {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
@@ -95,12 +95,12 @@ export default function Site() {
 function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal show={show} onHide={onHide}>
         <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Site - Edit</BootstrapModal.Title>
+            <BootstrapModal.Title>Location - Edit</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
             <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridEmail">
-                    <Form.Label>Site Name</Form.Label>
+                    <Form.Label>Location Name</Form.Label>
                     <Form.Control required type="text" placeholder="Enter site name." />
                 </Form.Group>
             </Row>
@@ -130,10 +130,10 @@ function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
     >
         <BootstrapModal.Header closeButton>
             <BootstrapModal.Title id="example-modal-sizes-title-sm">
-                Disabled Site
+                Disabled Location
             </BootstrapModal.Title>
         </BootstrapModal.Header>
-        <BootstrapModal.Body>Disable Selected Site</BootstrapModal.Body>
+        <BootstrapModal.Body>Disable Selected Location</BootstrapModal.Body>
         <BootstrapModal.Footer>
             <Button variant="secondary" onClick={onHide} title='Cancel'>
                 Cancel

@@ -148,12 +148,27 @@ button.btn-print-report {
   background-color: #fff !important;
   color: #000 !important;
 }
+.error-text {
+  display: grid;
+  place-items: center;
+  color: red;
+  margin-top: 10px;
+}
+/* [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled),
+:where(.css-dev-only-do-not-override-2i2tap).ant-form:not(.ant-form-inline) .ant-form-item,
+:where(.css-dev-only-do-not-override-2i2tap).ant-btn-primary:disabled, :where(.css-dev-only-do-not-override-2i2tap).ant-btn-primary.ant-btn-disabled {
+  width: 100%;
+} */
+
 
 /* COMPONENTS */
 .login-container {
-  height: 80vh;
-  display: grid;
-  place-items: center;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+.login-container > * {
+  width: 50%;
 }
 .active>.page-link, .page-link.active {
   background: var(--color-primary);
@@ -341,4 +356,39 @@ td.bg-red {
 .table-component-bg th {
   background: #cccccc;
   color: #000;
+}
+
+.login-bg-container {
+  position: relative;
+  padding: 0 1rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  text-align: left;
+  color: #fff;
+  
+  height: 100%;
+  width: 50%;
+  z-index: 2;  
+  ::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(37, 101, 185, 0.50), rgba(56,170,181,.50)), url(./shared/assets/loginbg.png);
+	  background-size: cover;
+    background-position: center; 
+  }
+  ::after {
+    
+  }
+
+  /* background-position: center; */
 }

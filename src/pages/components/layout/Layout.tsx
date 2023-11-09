@@ -8,7 +8,7 @@ import { TbSettingsCog } from 'react-icons/tb'
 import { MdLocationOn, MdAdminPanelSettings, MdOutlineDashboard, MdSystemUpdateAlt } from 'react-icons/md'
 import Header from './Header';
 import VMLogo from '../../../shared/assets/logo_horizontal.svg'
-import Logo from '../../../shared/assets/logo.jpg'
+import Logo from '../../../shared/assets/logo.png'
 import styled from 'styled-components';
 
 const { Sider, Content } = Layout;

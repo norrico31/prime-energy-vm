@@ -1,31 +1,7 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom'
 import { CloseButton, Col, FloatingLabel, Form, Modal, Row, Table } from 'react-bootstrap'
 import { Button, FileUpload } from './components';
-import * as formik from 'formik';
-import * as yup from 'yup';
-
-const { Formik } = formik;
-
-const schema = yup.object().shape({
-    firstName: yup.string().required(),
-    lastName: yup.string().required(),
-    username: yup.string().required(),
-    city: yup.string().required(),
-    state: yup.string().required(),
-    zip: yup.string().required(),
-    terms: yup.bool().required().oneOf([true], 'Terms must be accepted'),
-});
-
-const initValues = {
-    firstName: '',
-    lastName: '',
-    username: '',
-    city: '',
-    state: '',
-    zip: '',
-    terms: false,
-}
 
 function Forms() {
     const params = useParams()
@@ -39,162 +15,153 @@ function Forms() {
     //     // FETCH ENDPOINT BY ID
     // }, [])
 
-    const onSubmit = (v: typeof initValues) => {
+    const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
         // edit create endpoint
-        console.log(v)
     }
 
     const [urls, setUrls] = useState<typeof initDataRowState>([]);
 
     return (
-        <Formik
-            validationSchema={schema}
-            onSubmit={onSubmit}
-            initialValues={initValues}
-        >
-            {/* {({ handleSubmit, handleChange, values, touched, errors, isSubmitting }) => ( */}
-            {({ handleSubmit, isSubmitting }) => (
-                <Form noValidate onSubmit={handleSubmit}>
-                    <div className={`d-flex justify-content-between`}>
-                        <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate(-1)}>Back to lists</Button>
-                    </div>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridReferenceNo">
-                            <Form.Label>Reference No.</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter action no." />
-                        </Form.Group>
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridDateRaised">
-                            <Form.Label>Date Raised (mm/dd/yyyy)</Form.Label>
-                            <Form.Control required type="date" placeholder="Select Date" />
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridEquipment">
-                            <Form.Label>Equipment</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter equipment." />
-                        </Form.Group>
-                        <Form.Group as={Col} controlId="formGridThreat Owner">
-                            <Form.Label>Threat Owner</Form.Label>
-                            <Form.Select placeholder='Select threat owner' required>
-                                {/* <option>Green</option>
-                        <option>...</option> */}
-                            </Form.Select>
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridStatus">
-                            <Form.Label>Status</Form.Label>
-                            <Form.Select placeholder='Select Status' required>
-                                {/* <option>Green</option>
-                        <option>...</option> */}
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridClassification">
-                            <Form.Label>Classification</Form.Label>
-                            <Form.Select placeholder='Select Classification' value={classification} onChange={(e) => {
-                                setClassification(e.target.value)
-                            }} required>
-                                <option key='short term' value='shortTerm'>Short Term</option>
-                                <option key='long term' value='longTerm'>Long Term</option>
-                            </Form.Select>
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
-                            <Form.Label>Availability</Form.Label>
-                            <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
-                                {/* <option>Red</option>
-                        <option>...</option> */}
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group as={Col} xs={12} md={6} controlId="formGridIntegrity">
-                            <Form.Label>Integrity</Form.Label>
-                            <Form.Select placeholder='Select Integrity' required>
-                                {/* <option>Green</option>
-                        <option>...</option> */}
-                            </Form.Select>
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridVulnerabilityTitle">
-                            <Form.Label>Vulnerability Title</Form.Label>
-                            <Form.Control required as='textarea' type="text" placeholder="Enter vulnerability title." />
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridVulnerabilityDescription">
-                            <Form.Label>Vulnerability Description</Form.Label>
-                            <Form.Control required as='textarea' type="text" placeholder="Enter vulnerability description." />
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridRiskDescription">
-                            <Form.Label>Risk Description</Form.Label>
-                            <Form.Control required as='textarea' type="text" placeholder="Enter risk description." />
-                        </Form.Group>
-                    </Row>
 
-                    {classification === 'shortTerm' ?
-                        <Row className="mb-3">
-                            <Form.Group as={Col} xs={12} md={6} controlId="formGridActionItem">
-                                <Form.Label>Action Item</Form.Label>
-                                {/* <Form.Control required type="text" placeholder="Enter item no." />
+        <Form noValidate onSubmit={onSubmit}>
+            <div className={`d-flex justify-content-between`}>
+                <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate(-1)}>Back to lists</Button>
+            </div>
+            <Row className="mb-3">
+                <Form.Group as={Col} xs={12} md={6} controlId="formGridReferenceNo">
+                    <Form.Label>Reference No.</Form.Label>
+                    <Form.Control required type="text" placeholder="Enter action no." />
+                </Form.Group>
+                <Form.Group as={Col} xs={12} md={6} controlId="formGridDateRaised">
+                    <Form.Label>Date Raised (mm/dd/yyyy)</Form.Label>
+                    <Form.Control required type="date" placeholder="Select Date" />
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridEquipment">
+                    <Form.Label>Equipment</Form.Label>
+                    <Form.Control required type="text" placeholder="Enter equipment." />
+                </Form.Group>
+                <Form.Group as={Col} controlId="formGridThreat Owner">
+                    <Form.Label>Threat Owner</Form.Label>
+                    <Form.Select placeholder='Select threat owner' required>
+                        {/* <option>Green</option>
+                        <option>...</option> */}
+                    </Form.Select>
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} xs={12} md={6} controlId="formGridStatus">
+                    <Form.Label>Status</Form.Label>
+                    <Form.Select placeholder='Select Status' required>
+                        {/* <option>Green</option>
+                        <option>...</option> */}
+                    </Form.Select>
+                </Form.Group>
+                <Form.Group as={Col} xs={12} md={6} controlId="formGridClassification">
+                    <Form.Label>Classification</Form.Label>
+                    <Form.Select placeholder='Select Classification' value={classification} onChange={(e) => {
+                        setClassification(e.target.value)
+                    }} required>
+                        <option key='short term' value='shortTerm'>Short Term</option>
+                        <option key='long term' value='longTerm'>Long Term</option>
+                    </Form.Select>
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} xs={12} md={6} controlId="formGridAvailability">
+                    <Form.Label>Availability</Form.Label>
+                    <Form.Select placeholder='Select Availability' defaultValue="Select Availability..." required>
+                        {/* <option>Red</option>
+                        <option>...</option> */}
+                    </Form.Select>
+                </Form.Group>
+                <Form.Group as={Col} xs={12} md={6} controlId="formGridIntegrity">
+                    <Form.Label>Integrity</Form.Label>
+                    <Form.Select placeholder='Select Integrity' required>
+                        {/* <option>Green</option>
+                        <option>...</option> */}
+                    </Form.Select>
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridVulnerabilityTitle">
+                    <Form.Label>Vulnerability Title</Form.Label>
+                    <Form.Control required as='textarea' type="text" placeholder="Enter vulnerability title." />
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridVulnerabilityDescription">
+                    <Form.Label>Vulnerability Description</Form.Label>
+                    <Form.Control required as='textarea' type="text" placeholder="Enter vulnerability description." />
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridRiskDescription">
+                    <Form.Label>Risk Description</Form.Label>
+                    <Form.Control required as='textarea' type="text" placeholder="Enter risk description." />
+                </Form.Group>
+            </Row>
+
+            {classification === 'shortTerm' ?
+                <Row className="mb-3">
+                    <Form.Group as={Col} xs={12} md={6} controlId="formGridActionItem">
+                        <Form.Label>Action Item</Form.Label>
+                        {/* <Form.Control required type="text" placeholder="Enter item no." />
                                 <Form.Control required type="text" placeholder="Enter item no." className='mt-1 mb-1' />
                                 <Form.Control required type="text" placeholder="Enter item no." />
                                 <Form.Control required type="text" placeholder="Enter item no." className='mt-1 mb-1' />
                                 <Form.Control required type="text" placeholder="Enter item no." /> */}
-                                <Form.Control required as='textarea' type="text" placeholder="Enter action item." />
-                                <Form.Control required as='textarea' type="text" placeholder="Enter action item." className='mt-1 mb-1' />
-                                <Form.Control required as='textarea' type="text" placeholder="Enter action item." />
-                                <Form.Control required as='textarea' type="text" placeholder="Enter action item." className='mt-1 mb-1' />
-                                <Form.Control required as='textarea' type="text" placeholder="Enter action item." />
-                            </Form.Group>
-                            <Form.Group as={Col} xs={12} md={6} controlId="formGridActionOwner">
-                                <Form.Label>Action Owner</Form.Label>
-                                <Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
-                                    {/* <option>Green</option>
+                        <Form.Control required as='textarea' type="text" placeholder="Enter action item." />
+                        <Form.Control required as='textarea' type="text" placeholder="Enter action item." className='mt-1 mb-1' />
+                        <Form.Control required as='textarea' type="text" placeholder="Enter action item." />
+                        <Form.Control required as='textarea' type="text" placeholder="Enter action item." className='mt-1 mb-1' />
+                        <Form.Control required as='textarea' type="text" placeholder="Enter action item." />
+                    </Form.Group>
+                    <Form.Group as={Col} xs={12} md={6} controlId="formGridActionOwner">
+                        <Form.Label>Action Owner</Form.Label>
+                        <Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
+                            {/* <option>Green</option>
                         <option>...</option> */}
-                                </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
-                                    {/* <option>Green</option>
+                        </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
+                            {/* <option>Green</option>
                         <option>...</option> */}
-                                </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
-                                    {/* <option>Green</option>
+                        </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
+                            {/* <option>Green</option>
                         <option>...</option> */}
-                                </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
-                                    {/* <option>Green</option>
+                        </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
+                            {/* <option>Green</option>
                         <option>...</option> */}
-                                </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
-                                    {/* <option>Green</option>
+                        </Form.Select><Form.Select placeholder='Select Action Owner' required style={{ marginBottom: 17, height: 50 }}>
+                            {/* <option>Green</option>
                         <option>...</option> */}
-                                </Form.Select>
-                                {/* <Form.Control required type="text" placeholder="Enter owner." />
+                        </Form.Select>
+                        {/* <Form.Control required type="text" placeholder="Enter owner." />
                                 <Form.Control required type="text" placeholder="Enter owner." className='mt-1 mb-1' />
                                 <Form.Control required type="text" placeholder="Enter owner." />
                                 <Form.Control required type="text" placeholder="Enter owner." className='mt-1 mb-1' />
                                 <Form.Control required type="text" placeholder="Enter owner." /> */}
-                            </Form.Group>
-                        </Row>
-                        : null}
-                    <hr />
-                    <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridOtherRemarks">
-                            <Form.Label>Other Remarks</Form.Label>
-                            {/* <Form.Control required as='textarea' type="text" placeholder="Enter risk description." /> */}
-                            <Form.Group as={Col} xs={6} md={6} controlId="formGridOtherRemarks">
-                                <Form.Label>Upload Documents</Form.Label>
-                                <FileUpload />
-                            </Form.Group>
-                        </Form.Group>
-                    </Row>
-                    <Row className="mb-3">
-                        <FormUrl urls={urls} setUrls={setUrls} />
-                    </Row>
-                    <ButtonSubmit isSubmitting={isSubmitting} />
-                </Form>
-            )
-            }
-        </Formik >
-    );
+                    </Form.Group>
+                </Row>
+                : null}
+            <hr />
+            <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridOtherRemarks">
+                    <Form.Label>Other Remarks</Form.Label>
+                    {/* <Form.Control required as='textarea' type="text" placeholder="Enter risk description." /> */}
+                    <Form.Group as={Col} xs={6} md={6} controlId="formGridOtherRemarks">
+                        <Form.Label>Upload Documents</Form.Label>
+                        <FileUpload />
+                    </Form.Group>
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <FormUrl urls={urls} setUrls={setUrls} />
+            </Row>
+            <ButtonSubmit isSubmitting={false} />
+        </Form>
+    )
 }
 
 export default Forms;

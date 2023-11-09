@@ -22,7 +22,7 @@ const columns: TableColHead = [
         colHead: 'Systems',
     },
     {
-        colHead: 'Site',
+        colHead: 'Location',
     },
     {
         colHead: 'Sequence No.s',
@@ -125,7 +125,7 @@ function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
             </Row>
             <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridSite">
-                    <Form.Label>Site</Form.Label>
+                    <Form.Label>Location</Form.Label>
                     <Form.Select aria-label="Select site" placeholder='Select site'>
                         {/* {[10, 25, 50, 100].map(p => (
                     <option key={p} value={p}>{p}</option>

@@ -20,15 +20,16 @@ window.fetch = async (...[resource, config]: Parameters<typeof originalFetch>) =
 	const response = await originalFetch(resource, {
 		...config,
 		headers: {
-			'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')!)}`,
+			'Accept': 'application/json',
+			'Content-type': 'application/json',
+			// 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')!)}`,
 			...config?.headers
 		}
 	})
 
 	const data = await response.clone().json()
 
-	if (!(response.status >= 200 && response.status <= 205)) Promise.reject(data)
-
+	if (!(response.status >= 200 && response.status <= 205)) return Promise.reject(data)
 	response.json = () => data
 	return Promise.resolve(response);
 }
