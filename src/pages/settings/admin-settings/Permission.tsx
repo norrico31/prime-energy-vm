@@ -1,5 +1,4 @@
 import { Card, List, Switch } from 'antd'
-import React from 'react'
 
 const data = [
     {

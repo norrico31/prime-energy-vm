@@ -382,7 +382,7 @@ td.bg-red {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(37, 101, 185, 0.50), rgba(56,170,181,.50)), url(./shared/assets/loginbg.png);
+    background: linear-gradient(to bottom, rgba(37, 101, 185, 0.95), rgba(56,170,181,.70)), url(./shared/assets/loginbg.png);
 	  background-size: cover;
     background-position: center; 
   }

@@ -138,7 +138,7 @@ function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
             <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridDescription">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter description." />
+                    <Form.Control as="textarea" required type="text" placeholder="Enter description." />
                 </Form.Group>
             </Row>
             <Row>

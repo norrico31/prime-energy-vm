@@ -124,6 +124,18 @@ function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
                 </Form.Group>
             </Row>
             <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridName">
+                    <Form.Label>Equipment Tag</Form.Label>
+                    <Form.Control required type="text" placeholder="Enter equipment." />
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridName">
+                    <Form.Label>Equipment ID</Form.Label>
+                    <Form.Control required type="text" placeholder="Enter equipment." />
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridSite">
                     <Form.Label>Location</Form.Label>
                     <Form.Select aria-label="Select site" placeholder='Select site'>
@@ -143,16 +155,16 @@ function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
                     </Form.Select>
                 </Form.Group>
             </Row>
-            <Row className="mb-3">
+            {/* <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridSeq">
                     <Form.Label>Sequence No.</Form.Label>
                     <Form.Control required type="text" placeholder="Enter sequence no." />
                 </Form.Group>
-            </Row>
+            </Row> */}
             <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridDescription">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter description." />
+                    <Form.Control required as="textarea" type="text" placeholder="Enter description." />
                 </Form.Group>
             </Row>
             <Row>

@@ -2,8 +2,6 @@ import { Button, Input, Form, Col } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Container } from 'react-bootstrap';
 import Logo from '../shared/assets/logo.png'
-import LoginBG from '../shared/assets/loginbg.png'
-import styled from 'styled-components';
 
 type Form = {
     email: string; password: string
