@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Button, Input, Form, Col } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Container } from 'react-bootstrap';
@@ -10,10 +11,9 @@ type Form = {
 const { useForm } = Form
 
 function Login() {
-    const [form] = useForm<Form>();
-
+    const [form] = useForm<Form>()
+    const [errors, setErrors] = useState<Array<string>>([]);
     const onFinish = async (values: Form) => {
-        console.log('Finish:', values);
         try {
             const res = await fetch('https://vms.redcoresolutions.com/passthru/api/v1/login', {
                 method: 'POST',
@@ -22,20 +22,22 @@ function Login() {
                 })
             })
             const data = await res.json()
-
+            // GET TOKEN HERE AS GLOBAL
+            console.log(data)
             return data
-        } catch (error) {
-            console.log(error)
-            return error
+        } catch (err) {
+            const error = err as ApiError
+            setErrors(error?.errors.invalid_user_name_or_password as Array<string>)
+            return err
         }
     }
-
     return (
         <Container fluid className='login-container p-0'>
             <Form form={form} name="horizontal_login" onFinish={onFinish} className='px-3'>
                 <Col xs={24} sm={24} md={24} lg={24} className='d-flex align-items-center flex-column justify-content-center h-100 text-center'>
                     <img src={Logo} alt='brand-logo' style={{ width: 60 }} />
                     <h5 className='m-4'>Vulnerability Monitoring System</h5>
+                    <span className='error-text'>{errors[0]}</span>
                     <Form.Item
                         name="email"
                         rules={[{ required: true, message: 'Please input your email!', min: 5 }]}

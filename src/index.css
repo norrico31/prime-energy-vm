@@ -152,7 +152,7 @@ button.btn-print-report {
   display: grid;
   place-items: center;
   color: red;
-  margin-top: 10px;
+  margin: 10px 0;
 }
 /* [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled),
 :where(.css-dev-only-do-not-override-2i2tap).ant-form:not(.ant-form-inline) .ant-form-item,

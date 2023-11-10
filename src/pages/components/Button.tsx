@@ -25,7 +25,7 @@ function Button({ children, onClick, loading, disabled, className, variant = 'pr
             className={className}
             onClick={(e) => {
                 e.stopPropagation()
-                e.preventDefault()
+                // e.preventDefault()
                 onClick?.(e)
             }}
         >
