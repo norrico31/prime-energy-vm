@@ -14,7 +14,7 @@ body, #root {
   --color-gray: #3e3e3e;
 }
 
-button:not(.btn-close, .navbar-toggler) {
+button:not(.btn-close, .navbar-toggler, .ant-switch) {
   border: none !important;
   border-radius: 0 !important;
   box-sizing: border-box !important;
