@@ -33,32 +33,35 @@ function NestedCardItem({ to, cardIdx = 0, lists }: { to: string; cardIdx?: numb
         <NestedCardData {...data} to={to} />
         <NestedCardItem lists={lists} cardIdx={cardIdx + 1} to={to} />
     </Fragment>
-
 }
 
-export default function DataLists<T extends Partial<CardData>>({ to, dataList, idx = 0 }: { to: string; dataList: T, idx?: number }) {
+function DataItem({ to, data }: { to: string; data: CardData }) {
+    return <div className="card-item p-0" >
+        <div className="card-head text-color-white">
+            <OverlayTrigger key={data?.title} offset={[0, 10]} overlay={<Tooltip id={data?.title} className='position-fixed'>{data?.title}</Tooltip>} trigger={['hover', 'focus']}>
+                <div className='card-head-title'>
+                    <div className="d-flex card-head-title-ai">
+                        <h5>A</h5>
+                        <h5>I</h5>
+                    </div>
+                    <div className="card-item-row-2" >
+                        <h5 className='ml-auto d-inline text-truncate'>{data?.title}</h5>
+                    </div>
+                </div>
+            </OverlayTrigger>
+        </div>
+        <div className="card-body">
+            <NestedCardItem lists={data?.lists as CardItem[]} to={to} />
+        </div>
+    </div>
+}
+
+export default function DataLists<T extends Partial<CardData[]>>({ to, dataList, idx = 0 }: { to: string; dataList: T, idx?: number }) {
     if (idx === dataList?.length) return
     const data = dataList[idx!]
     return (
         <Fragment key={idx}>
-            <div className="card-item p-0" >
-                <div className="card-head text-color-white">
-                    <OverlayTrigger key={data?.title} offset={[0, 10]} overlay={<Tooltip id={data?.title} className='position-fixed'>{data?.title}</Tooltip>} trigger={['hover', 'focus']}>
-                        <div className='card-head-title'>
-                            <div className="d-flex card-head-title-ai">
-                                <h5>A</h5>
-                                <h5>I</h5>
-                            </div>
-                            <div className="card-item-row-2" >
-                                <h5 className='ml-auto d-inline text-truncate'>{data?.title}</h5>
-                            </div>
-                        </div>
-                    </OverlayTrigger>
-                </div>
-                <div className="card-body">
-                    <NestedCardItem lists={data?.lists as CardItem[]} to={to} />
-                </div>
-            </div>
+            <DataItem to={to} data={data!} />
             <DataLists to={to} dataList={dataList} idx={idx! + 1} />
         </Fragment>
     )

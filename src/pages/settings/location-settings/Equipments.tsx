@@ -36,12 +36,12 @@ const columns: TableColHead = [
 ]
 
 export default function Equipments() {
-    const [search, searchVal, inputChange] = useDebounceSearch()
+    // const [search, searchVal, inputChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1)
     // const [pageSize, setPageSize] = useState(10)
     const [showModal, setShowModal] = useState(false)
     const [showModalDelete, setShowModalDelete] = useState(false)
-    const { data, createData, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: 100 })
+    const { data, createData, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, page: currentPage, limit: 100 })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -70,15 +70,15 @@ export default function Equipments() {
                 <h4 className='mb-3'>Equipments</h4>
             </Row>
             <Row>
-                <Col >
-                    {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
+                {/* <Col >
+                    <PageSize value={pageSize} onChange={pageSizeChange} />
                     <InputGroup className='w-50'>
                         <Form.Control required type="text" placeholder="Search..." value={searchVal} onChange={inputChange} />
                         <InputGroup.Text>
                             <AiOutlineSearch />
                         </InputGroup.Text>
                     </InputGroup>
-                </Col>
+                </Col> */}
                 <Col className='d-flex justify-content-end align-items-center gap-2'>
                     <Button variant='success' title='Create' onClick={() => setShowModal(true)}>Create</Button>
                 </Col>

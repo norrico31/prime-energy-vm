@@ -1,12 +1,12 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Button } from './components'
 
 export default function Dashboard() {
-    return <Container>
+    return <>
         <Main />
         <Outlet />
-    </Container>
+    </>
 }
 
 function Main() {
