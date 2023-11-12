@@ -18,7 +18,7 @@ function Login() {
             const res = await fetch('https://vms.redcoresolutions.com/passthru/api/v1/login', {
                 method: 'POST',
                 body: JSON.stringify({
-                    ...form.getFieldsValue()
+                    ...values
                 })
             })
             const data = await res.json()

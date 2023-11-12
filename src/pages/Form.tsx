@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation, Link } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom'
 // import { CloseButton, Col, FloatingLabel, Form, Modal, Row, Table } from 'react-bootstrap'
-import { Row, Col, Table, Form, Input, DatePicker, Select } from 'antd'
-import { Button, FileUpload } from './components';
+import { Row, Col, Form, Input, DatePicker, Select } from 'antd'
+import { Button } from './components';
 
 const { useForm } = Form
 
@@ -28,7 +28,7 @@ function Forms() {
     }
 
 
-    const [urls, setUrls] = useState<typeof initDataRowState>([]);
+    // const [urls, setUrls] = useState<typeof initDataRowState>([]);
 
 
     return <>
@@ -176,124 +176,124 @@ function Forms() {
 
 export default Forms;
 
-function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: React.Dispatch<React.SetStateAction<{ id: string; url: string; }[]>> }) {
-    const [isModalVisible, setIsModalVisible] = useState(false)
-    const [urlList, setUrlList] = useState<typeof initDataRowState>(initDataRowState)
+// function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: React.Dispatch<React.SetStateAction<{ id: string; url: string; }[]>> }) {
+//     const [isModalVisible, setIsModalVisible] = useState(false)
+//     const [urlList, setUrlList] = useState<typeof initDataRowState>(initDataRowState)
 
-    useEffect(() => {
-        if (isModalVisible && urls.length) {
-            setUrlList(urls)
-        } else {
-            setTimeout(() => setUrlList(initDataRowState), 200)
-        }
-    }, [isModalVisible, urls])
+//     useEffect(() => {
+//         if (isModalVisible && urls.length) {
+//             setUrlList(urls)
+//         } else {
+//             setTimeout(() => setUrlList(initDataRowState), 200)
+//         }
+//     }, [isModalVisible, urls])
 
-    const addRow = () => setUrlList(prevUrl => [...prevUrl, { ...initDataRowState[0], id: Math.floor(Math.random() * 99999) + '', }])
+//     const addRow = () => setUrlList(prevUrl => [...prevUrl, { ...initDataRowState[0], id: Math.floor(Math.random() * 99999) + '', }])
 
-    const removeRow = (id: string) => {
-        const updatedRows = urlList.filter((url) => id !== url.id)
-        setUrlList(updatedRows)
-    }
+//     const removeRow = (id: string) => {
+//         const updatedRows = urlList.filter((url) => id !== url.id)
+//         setUrlList(updatedRows)
+//     }
 
-    const onHide = () => setIsModalVisible(false)
-
-
-    return <Form.Group as={Col} controlId="formGridOtherRemarks">
-        <div className='d-flex justify-content-between mb-2'>
-            <Form.Label>Upload URL</Form.Label>
-            <Button variant='primary' onClick={() => setIsModalVisible(true)}>Click to upload url</Button>
-        </div>
-        <Table bordered striped hover className='text-center'>
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">URL</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {urls?.map((d, idx) => (
-                    <tr key={idx}>
-                        <td>{idx + 1}</td>
-                        <td>
-                            <Link to={d.url}>{d.url}</Link>
-                        </td>
-                        <td >
-                            <Button variant='primary' onClick={() => {
-                                const filteredUrls = urls.filter(u => u.id !== d.id)
-                                setUrls([...filteredUrls])
-                            }}>Remove</Button>
-                        </td>
-                    </tr>
-
-                ))}
-            </tbody>
-        </Table>
-        <Modal
-            aria-labelledby="contained-modal-title-vcenter"
-            show={isModalVisible}
-            onHide={onHide}
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Upload URL
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Button variant='primary' className='mb-3' onClick={addRow}>Add Entry</Button>
-                {urlList.map((url, idx) => <Row className='d-flex align-items-center px-3' key={idx}>
-                    <Form.Group as={Col} controlId="formGridOtherRemarks">
-                        <FloatingLabel
-                            controlId="floatingInput"
-                            label="Add Link"
-                            className="mb-2"
-
-                        >
-                            <Form.Control type="text" placeholder="name@example.com" value={urlList[idx].url} onChange={(e) => {
-                                const urls = urlList.map((u) => u.id === url.id ? { ...url, url: e.target.value } : u)
-                                setUrlList(urls)
-                            }} />
-                        </FloatingLabel>
-                    </Form.Group>
-                    <CloseButton onClick={() => removeRow(url.id)} disabled={urlList.length === 1} />
-                </Row>
-                )}
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant='primary' onClick={() => {
-                    onHide()
-                    // setTimeout(() => setUrlList(initDataRowState), 500)
-                }}>Cancel</Button>
-                <Button
-                    variant='primary'
-                    disabled={Object.values(urlList).map(Object.values).flat().some(u => u === '')}
-                    onClick={() => {
-                        onHide()
-                        setTimeout(() => {
-                            setUrls(urlList)
-                            // setUrlList(initDataRowState)
-                        }, 500)
-                    }}>Upload</Button>
-            </Modal.Footer>
-        </Modal>
-    </Form.Group >
-}
-
-function ButtonSubmit() {
-    const { pathname } = useLocation()
-    return <div className={`d-flex justify-content-end gap-2`}>
-        <Button variant='danger' title='Close' onClick={() => alert('cancel')}>Cancel</Button>
-        <Button type="submit" variant={pathname.includes('edit') ? 'primary' : 'success'} title={pathname.includes('edit') ? 'Update' : 'Create'} >
-            {pathname.includes('edit') ? 'Update' : 'Submit'}
-        </Button>
-    </div>
-}
+//     const onHide = () => setIsModalVisible(false)
 
 
-const initDataRowState = [
-    {
-        id: Math.floor(Math.random() * 99999) + '',
-        url: ''
-    }
-]
+//     return <Form.Group as={Col} controlId="formGridOtherRemarks">
+//         <div className='d-flex justify-content-between mb-2'>
+//             <Form.Label>Upload URL</Form.Label>
+//             <Button variant='primary' onClick={() => setIsModalVisible(true)}>Click to upload url</Button>
+//         </div>
+//         <Table bordered striped hover className='text-center'>
+//             <thead>
+//                 <tr>
+//                     <th scope="col"></th>
+//                     <th scope="col">URL</th>
+//                     <th scope="col">Action</th>
+//                 </tr>
+//             </thead>
+//             <tbody>
+//                 {urls?.map((d, idx) => (
+//                     <tr key={idx}>
+//                         <td>{idx + 1}</td>
+//                         <td>
+//                             <Link to={d.url}>{d.url}</Link>
+//                         </td>
+//                         <td >
+//                             <Button variant='primary' onClick={() => {
+//                                 const filteredUrls = urls.filter(u => u.id !== d.id)
+//                                 setUrls([...filteredUrls])
+//                             }}>Remove</Button>
+//                         </td>
+//                     </tr>
+
+//                 ))}
+//             </tbody>
+//         </Table>
+//         <Modal
+//             aria-labelledby="contained-modal-title-vcenter"
+//             show={isModalVisible}
+//             onHide={onHide}
+//             centered
+//         >
+//             <Modal.Header closeButton>
+//                 <Modal.Title id="contained-modal-title-vcenter">
+//                     Upload URL
+//                 </Modal.Title>
+//             </Modal.Header>
+//             <Modal.Body>
+//                 <Button variant='primary' className='mb-3' onClick={addRow}>Add Entry</Button>
+//                 {urlList.map((url, idx) => <Row className='d-flex align-items-center px-3' key={idx}>
+//                     <Form.Group as={Col} controlId="formGridOtherRemarks">
+//                         <FloatingLabel
+//                             controlId="floatingInput"
+//                             label="Add Link"
+//                             className="mb-2"
+
+//                         >
+//                             <Form.Control type="text" placeholder="name@example.com" value={urlList[idx].url} onChange={(e) => {
+//                                 const urls = urlList.map((u) => u.id === url.id ? { ...url, url: e.target.value } : u)
+//                                 setUrlList(urls)
+//                             }} />
+//                         </FloatingLabel>
+//                     </Form.Group>
+//                     <CloseButton onClick={() => removeRow(url.id)} disabled={urlList.length === 1} />
+//                 </Row>
+//                 )}
+//             </Modal.Body>
+//             <Modal.Footer>
+//                 <Button variant='primary' onClick={() => {
+//                     onHide()
+//                     // setTimeout(() => setUrlList(initDataRowState), 500)
+//                 }}>Cancel</Button>
+//                 <Button
+//                     variant='primary'
+//                     disabled={Object.values(urlList).map(Object.values).flat().some(u => u === '')}
+//                     onClick={() => {
+//                         onHide()
+//                         setTimeout(() => {
+//                             setUrls(urlList)
+//                             // setUrlList(initDataRowState)
+//                         }, 500)
+//                     }}>Upload</Button>
+//             </Modal.Footer>
+//         </Modal>
+//     </Form.Group >
+// }
+
+// function ButtonSubmit() {
+//     const { pathname } = useLocation()
+//     return <div className={`d-flex justify-content-end gap-2`}>
+//         <Button variant='danger' title='Close' onClick={() => alert('cancel')}>Cancel</Button>
+//         <Button type="submit" variant={pathname.includes('edit') ? 'primary' : 'success'} title={pathname.includes('edit') ? 'Update' : 'Create'} >
+//             {pathname.includes('edit') ? 'Update' : 'Submit'}
+//         </Button>
+//     </div>
+// }
+
+
+// const initDataRowState = [
+//     {
+//         id: Math.floor(Math.random() * 99999) + '',
+//         url: ''
+//     }
+// ]

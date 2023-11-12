@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Layout, Menu as AntdMenu, theme, MenuProps } from 'antd';
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart } from 'react-icons/ai'
 import { FiSettings } from 'react-icons/fi'
 import { GiBrokenAxe } from 'react-icons/gi'
@@ -51,13 +51,7 @@ const App: React.FC = () => {
                         <img src={VMLogo} alt="" className='brand-logo' style={{ width: 100 }} />
                     }
                 </div>
-                <MenuContainer
-                    theme="dark"
-                    mode="inline"
-                    defaultSelectedKeys={['1']}
-                    onSelect={handleSelect}
-                    items={links}
-                />
+                <Sidebar handleSelect={handleSelect} />
             </Sider>
             <Layout >
                 <Header collapsed={collapsed} setCollapsed={setCollapsed} />
@@ -77,6 +71,33 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+function Sidebar({ handleSelect }: { handleSelect: () => void }) {
+    const { pathname } = useLocation()
+    const [locationKey] = useState(() => {
+        const location = pathname.split('/').filter(s => s !== '')[0]
+        const paths: Record<string, string> = {
+            'dashboard': '/dashboard',
+            'swp': '/swp',
+            'ogp': '/ogp',
+            'pipelines': '/pipelines',
+            'critical-equipment': '/critical-equipment',
+            'location-settings': '/location-settings',
+            'system-settings': '/system-settings',
+            'admin-settings': '/admin-settings',
+        }
+        return paths[location]
+    })
+
+    return <MenuContainer
+        theme="dark"
+        mode="inline"
+        activeKey={pathname}
+        defaultSelectedKeys={[locationKey]}
+        onSelect={handleSelect}
+        items={links}
+    />
+}
 
 const MenuContainer = styled(AntdMenu)`
     height: 100%;
@@ -170,7 +191,7 @@ const links = [
     ),
     getItemLinks(
         'Location Settings',
-        '/location-settings/systems',
+        '/location-settings',
         <MdLocationOn className='fs-4' />,
         [
             getItemLinks(
@@ -198,7 +219,7 @@ const links = [
         <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/system-settings/phase'>
             System Settings
         </NavLink>,
-        '/system-settings/phase',
+        '/system-settings',
         <FiSettings className='fs-4' />,
         undefined,
         true
@@ -207,7 +228,7 @@ const links = [
         <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/admin-settings/location'>
             Admin Settings
         </NavLink>,
-        '/admin-settings/location',
+        '/admin-settings',
         <MdAdminPanelSettings className='fs-4' />,
         undefined,
         true
