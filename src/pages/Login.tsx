@@ -3,6 +3,8 @@ import { Button, Input, Form, Col } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Container } from 'react-bootstrap';
 import Logo from '../shared/assets/logo.png'
+import { useAuthToken } from '../shared/contexts/AuthToken';
+import { Navigate } from 'react-router-dom';
 
 type Form = {
     email: string; password: string
@@ -12,7 +14,12 @@ const { useForm } = Form
 
 function Login() {
     const [form] = useForm<Form>()
-    const [errors, setErrors] = useState<Array<string>>([]);
+    const [errors, setErrors] = useState<Array<string>>([])
+    const { token, setToken } = useAuthToken()
+    console.log(token)
+
+    if (token) return <Navigate to='/' />
+
     const onFinish = async (values: Form) => {
         try {
             const res = await fetch('https://vms.redcoresolutions.com/passthru/api/v1/login', {
@@ -22,8 +29,8 @@ function Login() {
                 })
             })
             const data = await res.json()
-            // GET TOKEN HERE AS GLOBAL
-            console.log(data)
+            localStorage.setItem('token', JSON.stringify(data.data.token))
+            setToken(data.data.token)
             return data
         } catch (err) {
             const error = err as ApiError
