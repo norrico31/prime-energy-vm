@@ -1,5 +1,5 @@
 import { Row } from 'react-bootstrap'
-import { CardList } from '../components'
+import { DataLists } from '../components'
 
 // TODO: FETCH DATA HERE
 export default function OgpLists() {
@@ -113,7 +113,7 @@ export default function OgpLists() {
     ]
     return (
         <Row className='card-list justify-content-center'>
-            <CardList data={data} to='/ogp' />
+            <DataLists dataList={data} to='/ogp' />
         </Row>
     )
 }

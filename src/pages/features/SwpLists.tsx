@@ -1,5 +1,5 @@
 import { Row } from 'react-bootstrap'
-import { CardList } from '../components'
+import { DataLists } from '../components'
 
 // TODO: FETCH DATA HERE
 export default function SwpLists() {
@@ -91,7 +91,7 @@ export default function SwpLists() {
     ]
     return (
         <Row className='card-list'>
-            <CardList data={data} to='/swp' />
+            <DataLists dataList={data} to='/swp' />
         </Row>
     )
 }

@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom"
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Fragment } from "react"
 
-function CardItem(props: CardItem) {
+function NestedCardData(props: CardItem) {
     const navigate = useNavigate()
     const to = props.to + '/' + props.id
     return (
@@ -17,51 +18,48 @@ function CardItem(props: CardItem) {
                     <OverlayTrigger key={props.id} offset={[0, 10]} overlay={<Tooltip id={props.text} className='position-fixed'>{`View - ${props.text}`}</Tooltip>} trigger={['hover', 'focus']}>
                         <div className="card-item-row-2" onClick={() => navigate(to + '/view')}>
                             <h5 className='ml-auto text-truncate text-decoration-none'>{props.text}</h5>
-                            {/* <h5 className='ml-auto text-truncate text-decoration-none' onClick={() => setShow(!show)}>{props.text}</h5> */}
                         </div>
                     </OverlayTrigger>
                 </div >
             </Link>
-            {/* <Toast show={show} onClose={(e) => {
-                e?.stopPropagation()
-                setShow(p => !p)
-            }}>
-                <Toast.Header>
-                    <strong className="me-auto">Actions</strong>
-                </Toast.Header>
-                <Toast.Body className='d-flex justify-content-center'>
-                    <Button variant='success' onClick={() => navigate(to + '/form')}>Create</Button>
-                </Toast.Body>
-            </Toast> */}
         </>
     )
 }
 
-export default function CardList<T extends Partial<CardData>>({ to, data }: { to: string; data: T }) {
-    return data?.map((d) => {
-        return (
-            <div className="card-item p-0" key={d?.id} >
+function NestedCardItem({ to, cardIdx = 0, lists }: { to: string; cardIdx?: number; lists: CardItem[] }) {
+    if (cardIdx === lists?.length) return
+    const data = lists[cardIdx]
+    return <Fragment key={cardIdx}>
+        <NestedCardData {...data} to={to} />
+        <NestedCardItem lists={lists} cardIdx={cardIdx + 1} to={to} />
+    </Fragment>
+
+}
+
+export default function DataLists<T extends Partial<CardData>>({ to, dataList, idx = 0 }: { to: string; dataList: T, idx?: number }) {
+    if (idx === dataList?.length) return
+    const data = dataList[idx!]
+    return (
+        <Fragment key={idx}>
+            <div className="card-item p-0" >
                 <div className="card-head text-color-white">
-                    <OverlayTrigger key={d?.title} offset={[0, 10]} overlay={<Tooltip id={d?.title} className='position-fixed'>{d?.title}</Tooltip>} trigger={['hover', 'focus']}>
+                    <OverlayTrigger key={data?.title} offset={[0, 10]} overlay={<Tooltip id={data?.title} className='position-fixed'>{data?.title}</Tooltip>} trigger={['hover', 'focus']}>
                         <div className='card-head-title'>
                             <div className="d-flex card-head-title-ai">
                                 <h5>A</h5>
                                 <h5>I</h5>
                             </div>
                             <div className="card-item-row-2" >
-                                <h5 className='ml-auto d-inline text-truncate'>{d?.title}</h5>
+                                <h5 className='ml-auto d-inline text-truncate'>{data?.title}</h5>
                             </div>
                         </div>
                     </OverlayTrigger>
                 </div>
                 <div className="card-body">
-                    {d?.lists.map((l, idx) => {
-                        return (
-                            <CardItem key={idx} {...l} to={to} />
-                        )
-                    })}
+                    <NestedCardItem lists={data?.lists as CardItem[]} to={to} />
                 </div>
             </div>
-        )
-    })
+            <DataLists to={to} dataList={dataList} idx={idx! + 1} />
+        </Fragment>
+    )
 }

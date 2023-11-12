@@ -1,5 +1,5 @@
 import { Row } from 'react-bootstrap'
-import { CardList } from '../components'
+import { DataLists } from '../components'
 
 // TODO: FETCH DATA HERE
 export default function CriticalEquipmentList() {
@@ -18,7 +18,7 @@ export default function CriticalEquipmentList() {
     ]
     return (
         <Row className='card-list'>
-            <CardList data={data} to='/critical-equipment' />
+            <DataLists dataList={data} to='/critical-equipment' />
         </Row>
     )
 }
