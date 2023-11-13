@@ -47,6 +47,11 @@ type ParallelFetch = {
     paths: string[]
     k: string
 }
+type ApiParams = {
+    search?: string
+    page?: number
+    limit?: number
+}
 type RequestBody<T> = Record<string | number, string | number> & Partial<T>
 // ================================
 // ================================

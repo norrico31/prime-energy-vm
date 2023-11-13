@@ -10,7 +10,7 @@ async function crudApi<T>(reqUrl: string, requestInit?: RequestInit): Promise<T>
 }
 
 // TODO: USE CONTEXT
-export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries & Partial<ApiParams>) => {
+export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries & Partial<RequestInit & ApiParams>) => {
     const { data, isLoading, ...restQueries } = useQuery<Return<T>>({
         queryKey: [queryKey, restProps],
         queryFn: (): Promise<Return<T>> => crudApi(paths.get, { ...restProps, method: 'GET' }),
