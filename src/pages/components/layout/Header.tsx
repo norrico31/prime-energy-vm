@@ -48,10 +48,9 @@ function UserSettings() {
     const { token, setToken } = useAuthToken()
     const { user, setUser } = useAuthUser()
 
-
     useEffect(() => {
         const controller = new AbortController();
-        if (!user) {
+        if (!user && token) {
             (async () => {
                 try {
                     const res = await fetch(`/auth_user`, { signal: controller.signal, headers: { Authorization: `Bearer ${token}` } })
@@ -66,7 +65,7 @@ function UserSettings() {
         return () => {
             controller.abort()
         }
-    }, [user])
+    }, [user, token])
 
     if (token == null) return <Navigate to='/login' />;
 

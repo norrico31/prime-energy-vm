@@ -247,17 +247,13 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
             <Modal.Footer>
                 <Button variant='primary' onClick={() => {
                     onHide()
-                    // setTimeout(() => setUrlList(initDataRowState), 500)
                 }}>Cancel</Button>
                 <Button
                     variant='primary'
                     disabled={Object.values(urlList).map(Object.values).flat().some(u => u === '')}
                     onClick={() => {
                         onHide()
-                        setTimeout(() => {
-                            setUrls(urlList)
-                            // setUrlList(initDataRowState)
-                        }, 500)
+                        setTimeout(() => setUrls(urlList), 500)
                     }}>Upload</Button>
             </Modal.Footer>
         </Modal>
