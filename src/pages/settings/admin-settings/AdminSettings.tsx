@@ -1,7 +1,6 @@
-import Tab from 'react-bootstrap/Tab'
 import { Tabs as AntDTabs } from 'antd'
 import { useLocation, useNavigate, Outlet } from 'react-router-dom'
-import { Col, Nav, Row } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 
 const adminTabs = [
     {
@@ -45,18 +44,16 @@ function Tabs() {
     let { pathname } = useLocation()
     const navigate = useNavigate()
     pathname = pathname?.split('/')[2]
-    return (
-        <AntDTabs
-            destroyInactiveTabPane
-            activeKey={'/' + pathname}
-            tabPosition="left"
-            size='small'
-            onChange={(key) => navigate(`/admin-settings` + key)}
-            items={adminTabs.map((el) => ({
-                label: el.label,
-                key: el.key,
-                children: <Outlet />,
-            }))}
-        />
-    )
+    return <AntDTabs
+        destroyInactiveTabPane
+        activeKey={'/' + pathname}
+        tabPosition="left"
+        size='small'
+        onChange={(key) => navigate(`/admin-settings` + key)}
+        items={adminTabs.map((el) => ({
+            label: el.label,
+            key: el.key,
+            children: <Outlet />,
+        }))}
+    />
 }

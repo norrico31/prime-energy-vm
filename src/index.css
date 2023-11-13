@@ -140,8 +140,9 @@ body, #root {
 :where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-ink-bar {
   background-color: #f69a22;
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-  color: #f69a22;
+:where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
+:where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-tab-btn:hover {
+  color: #f69a22 !important;
   /* : #fff !important; */
 }
 .nav-pills .nav-link:hover,
