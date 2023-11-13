@@ -46,7 +46,7 @@ const App: React.FC = () => {
             <Sider trigger={null} collapsible collapsed={collapsed} width={280} breakpoint='md' collapsedWidth={collapsedWidth} onBreakpoint={onBreakpoint}>
                 <div style={{ height: 64, padding: '.3rem', background: '#fff', display: 'grid', placeItems: 'center' }}>
                     {collapsed ?
-                        <img src={Logo} alt="" className='brand-logo' style={{ width: 50 }} />
+                        <img src={Logo} alt="" className='brand-logo' style={{ width: 40 }} />
                         :
                         <img src={VMLogo} alt="" className='brand-logo' style={{ width: 100 }} />
                     }
@@ -109,13 +109,14 @@ const MenuContainer = styled(AntdMenu)`
         color: #9B3423 !important;
     }
     */
-    .ant-menu-title-content a {
+    .ant-menu-title-content > * {
         display: block;
+        text-decoration: none;
     }
     .ant-menu-item-selected,
     .ant-menu-item.ant-menu-item-active {
-        background-color: #fff;
-        color: #000;
+        background-color: #f69a22;
+        color: #fff;
     }
     .menu-item-icon {
         color: #00AEEF;
@@ -145,70 +146,70 @@ function getItemLinks(
 
 const links = [
     getItemLinks(
-        <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/dashboard'>
+        <NavLink className={`text-decoration-none`} to='/dashboard'>
             Dashboard
         </NavLink>,
         '/dashboard',
-        <MdOutlineDashboard className='fs-4' />,
+        <MdOutlineDashboard />,
         undefined,
         true
     ),
     getItemLinks(
-        <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/swp'>
+        <NavLink className={`text-decoration-none`} to='/swp'>
             SWP
         </NavLink>,
         '/swp',
-        <AiOutlineFolder className='fs-4' />,
+        <AiOutlineFolder />,
         undefined,
         true
     ),
     getItemLinks(
-        <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/ogp'>
+        <NavLink className={`text-decoration-none`} to='/ogp'>
             OGP
         </NavLink>,
         '/ogp',
-        <AiOutlineFileText className='fs-4' />,
+        <AiOutlineFileText />,
         undefined,
         true
     ),
     getItemLinks(
-        <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/pipelines'>
+        <NavLink className={`text-decoration-none`} to='/pipelines'>
             Pipelines
         </NavLink>,
         '/pipelines',
-        <AiOutlineLineChart className='fs-4' />,
+        <AiOutlineLineChart />,
         undefined,
         true
     ),
     getItemLinks(
-        <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/critical-equipment'>
+        <NavLink className={`text-decoration-none`} to='/critical-equipment'>
             Critical Equipment
         </NavLink>,
         '/critical-equipment',
-        <GiBrokenAxe className='fs-4' />,
+        <GiBrokenAxe />,
         undefined,
         true
     ),
     getItemLinks(
         'Location Settings',
         '/location-settings',
-        <MdLocationOn className='fs-4' />,
+        <MdLocationOn />,
         [
             getItemLinks(
-                <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/location-settings/systems'>
+                <NavLink className={`text-decoration-none`} to='/location-settings/systems'>
                     Systems
                 </NavLink>,
                 '/location-settings/systems',
-                <MdSystemUpdateAlt className='fs-4' />,
+                <MdSystemUpdateAlt />,
                 undefined,
                 true
             ),
             getItemLinks(
-                <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/location-settings/equipments'>
+                <NavLink className={`text-decoration-none`} to='/location-settings/equipments'>
                     Equipments
                 </NavLink>,
                 '/location-settings/equipments',
-                <TbSettingsCog className='fs-4' />,
+                <TbSettingsCog />,
                 undefined,
                 true
             ),
@@ -216,20 +217,20 @@ const links = [
         true
     ),
     getItemLinks(
-        <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/system-settings/phase'>
+        <NavLink className={`text-decoration-none`} to='/system-settings/phase'>
             System Settings
         </NavLink>,
         '/system-settings',
-        <FiSettings className='fs-4' />,
+        <FiSettings />,
         undefined,
         true
     ),
     getItemLinks(
-        <NavLink className={`d-flex align-items-center gap-3 fs-5 text-decoration-none`} to='/admin-settings/location'>
+        <NavLink className={`text-decoration-none`} to='/admin-settings/location'>
             Admin Settings
         </NavLink>,
         '/admin-settings',
-        <MdAdminPanelSettings className='fs-4' />,
+        <MdAdminPanelSettings />,
         undefined,
         true
     ),

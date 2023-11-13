@@ -31,7 +31,7 @@ export default function Header({ collapsed, setCollapsed }: Props) {
         <Container style={{ background: '#fff', paddingInline: 20 }}>
             <div className='d-flex align-items-center gap-2'>
                 {burgerMenu}
-                <h4 className={`m-0 fs-6`}>
+                <h4 className={`m-0 fs-6`} style={{ fontSize: '1.1rem' }}>
                     Vulnerability Monitoring System
                 </h4>
             </div>
@@ -100,6 +100,7 @@ function UserSettings() {
         <a onClick={e => e.preventDefault()}>
             <Space>
                 <UserName>{'ADMINISTRATOR'}</UserName>
+                {/* CHANGE ICON TO DROP */}
                 <FiSettings />
             </Space>
         </a>
@@ -114,7 +115,6 @@ const UserName = styled.span`
 
 const Container = styled(AntDHeader)`
     background: '#fff'  !important;
-import { useAuthToken } from './../../../shared/contexts/AuthToken';
 
     padding: 0;
     display: flex;

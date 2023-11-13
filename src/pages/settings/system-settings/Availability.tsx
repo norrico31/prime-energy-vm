@@ -91,7 +91,7 @@ export default function Availability() {
         </>
     )
 }
-
+// TODO: font size modal.title
 function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
     return <BootstrapModal show={show} onHide={onHide}>
         <BootstrapModal.Header closeButton>

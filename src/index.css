@@ -7,6 +7,7 @@ body, #root {
   min-height: 100vh;
   background: rgb(240, 240, 240);
 }
+/* table header bg #fafafa and not font bold */
 
 :root {
   --color-primary: #1e9aff;
@@ -124,8 +125,17 @@ body, #root {
 :where(.css-dev-only-do-not-override-2i2tap).ant-menu-light .ant-menu-submenu-selected >.ant-menu-submenu-title, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-light>.ant-menu .ant-menu-submenu-selected >.ant-menu-submenu-title {
   color: #0a3253;
 }
+:where(.css-dev-only-do-not-override-2i2tap).ant-menu-inline .ant-menu-item, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-vertical .ant-menu-item, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-inline .ant-menu-submenu-title, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-vertical .ant-menu-submenu-title {
+  margin-inline: 0px;
+  margin-block: 0px;
+  width: 100.4%;
+}
+:where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-item, :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-submenu, :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-submenu-title {
+  border-radius: 0;
+}
 .ant-menu-title-content {
-  font-size: 20px;
+  font-weight: 600;
+  font-size: 16px;
 }
 .nav-pills .nav-link:hover,
 .nav-tabs .nav-link:hover {
@@ -144,9 +154,10 @@ button.btn-print-report {
   font-weight: bold;
   color: #3d3d3d
 }
+:where(.css-dev-only-do-not-override-2i2tap).ant-menu-light .ant-menu-item-selected, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-light>.ant-menu .ant-menu-item-selected,
 .ant-menu-item:hover {
-  background-color: #fff !important;
-  color: #000 !important;
+  background-color: #f69a22 !important;
+  color: #fff !important;
 }
 .error-text {
   display: grid;
@@ -386,9 +397,5 @@ td.bg-red {
 	  background-size: cover;
     background-position: center; 
   }
-  ::after {
-    
-  }
-
   /* background-position: center; */
 }
