@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Col, Row, Form } from 'react-bootstrap';
+import { Col, Row, Form, InputGroup } from 'react-bootstrap';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
 import { Table, Button } from '../../components';
+import { AiOutlineSearch } from 'react-icons/ai';
 
 type Payload = {
     name: string
@@ -37,6 +38,7 @@ const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time
 export default function AuditLogs() {
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1);
+    const [, setShowModal] = useState(false);
     // const [pageSize, setPageSize] = useState(10);
 
     const { data } = useDataResource<ApiSuccess<AuditLogs[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: 10 })
@@ -58,12 +60,17 @@ export default function AuditLogs() {
         <>
             <h3 className='text-color-gray mb-2'>Audit Logs</h3>
             <Row>
-                <Col >
+                <Col xs={8} sm={7} md={6} lg={4}>
                     {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
+                    <InputGroup>
+                        <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
+                        <InputGroup.Text style={{ borderRadius: 0 }}>
+                            <AiOutlineSearch />
+                        </InputGroup.Text>
+                    </InputGroup>
                 </Col>
-                <Col className='d-flex justify-content-end align-items-center gap-2'>
-                    <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
-                    <Button variant='dark' title='Download module'>Download</Button>
+                <Col className='d-flex justify-content-end align-items-center'>
+                    <Button variant='success' title='Create' onClick={() => setShowModal(true)}>Create</Button>
                 </Col>
             </Row>
             <Table

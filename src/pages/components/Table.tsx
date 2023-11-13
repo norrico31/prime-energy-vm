@@ -43,8 +43,8 @@ const mainColumns: TableColHead = [
 export default function Table({ columns, loading, pageProps, children }: PropsWithChildren<Table>) {
     const renderCols = columns !== undefined ? columns : mainColumns
     return loading ? <Spinner animation="border" />
-        : <div className='p-3 text-center'>
-            <BootstrapTable responsive="sm" bordered size='sm' variant={undefined} className='table-component-bg'>
+        : <div className='text-center'>
+            <BootstrapTable responsive="sm" size='sm' variant={undefined} className='table-component-bg mt-3'>
                 <thead>
                     <tr>
                         {renderCols.map((c, idx) => (

@@ -137,6 +137,13 @@ body, #root {
   font-weight: 600;
   font-size: 16px;
 }
+:where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-ink-bar {
+  background-color: #f69a22;
+}
+:where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #f69a22;
+  /* : #fff !important; */
+}
 .nav-pills .nav-link:hover,
 .nav-tabs .nav-link:hover {
   background: #236396;
@@ -365,7 +372,7 @@ td.bg-red {
   font-size: 12px;
 }
 .table-component-bg th {
-  background: #cccccc;
+  background: #fafafa;
   color: #000;
 }
 

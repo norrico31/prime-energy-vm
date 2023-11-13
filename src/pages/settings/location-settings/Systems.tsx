@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { Col, Row, Form, Modal as BootstrapModal } from 'react-bootstrap';
+import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-bootstrap';
+import { AiOutlineSearch } from 'react-icons/ai';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
 import { Table, ButtonActions, Button } from '../../components';
+import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 
 type Payload = {
     name: string
@@ -31,13 +33,13 @@ const columns: TableColHead = [
 ]
 
 export default function Systems() {
-    // const [search, searchVal, inputChange] = useDebounceSearch()
+    const [search, searchVal, inputChange] = useDebounceSearch()
     const [currentPage, setCurrentPage] = useState(1);
     // const [pageSize, setPageSize] = useState(10);
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
 
-    const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, page: currentPage, limit: 10 })
+    const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: 10 })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -66,16 +68,16 @@ export default function Systems() {
                 <h4 className='mb-3'>Systems</h4>
             </Row>
             <Row>
-                <Col >
+                <Col xs={8} sm={7} md={6} lg={4}>
                     {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
-                    {/* <InputGroup className='w-50'>
-                        <Form.Control required type="text" placeholder="Search..." value={searchVal} onChange={inputChange} />
-                        <InputGroup.Text>
+                    <InputGroup>
+                        <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
+                        <InputGroup.Text style={{ borderRadius: 0 }}>
                             <AiOutlineSearch />
                         </InputGroup.Text>
-                    </InputGroup> */}
+                    </InputGroup>
                 </Col>
-                <Col className='d-flex justify-content-end align-items-center gap-2'>
+                <Col className='d-flex justify-content-end align-items-center'>
                     <Button variant='success' title='Create' onClick={() => setShowModal(true)}>Create</Button>
                 </Col>
             </Row>

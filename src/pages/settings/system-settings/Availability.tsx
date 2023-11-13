@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Col, Row, Form, Modal as BootstrapModal } from 'react-bootstrap';
+import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-bootstrap';
+import { AiOutlineSearch } from 'react-icons/ai';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
 import { Table, ButtonActions, Button } from '../../components';
@@ -59,11 +60,16 @@ export default function Availability() {
         <>
             <h3 className='text-color-gray mb-2'>Availability</h3>
             <Row className='d-flex justify-content-between'>
-                <Col>
+                <Col xs={8} sm={7} md={6} lg={4}>
                     {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
+                    <InputGroup>
+                        <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
+                        <InputGroup.Text style={{ borderRadius: 0 }}>
+                            <AiOutlineSearch />
+                        </InputGroup.Text>
+                    </InputGroup>
                 </Col>
-                <Col className='d-flex justify-content-end align-items-center gap-2 p-0'>
-                    <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} />
+                <Col className='d-flex justify-content-end align-items-center'>
                     <Button variant='success' title='Create' onClick={() => setShowModal(true)}>Create</Button>
                 </Col>
             </Row>
