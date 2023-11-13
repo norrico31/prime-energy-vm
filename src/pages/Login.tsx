@@ -22,7 +22,7 @@ function Login() {
 
     const onFinish = async (values: Form) => {
         try {
-            const res = await fetch('https://vms.redcoresolutions.com/passthru/api/v1/login', {
+            const res = await fetch('/login', {
                 method: 'POST',
                 body: JSON.stringify({
                     ...values

@@ -15,15 +15,17 @@ const queryClient = new QueryClient({
 	}
 })
 
+
 const { fetch: originalFetch } = window;
-window.fetch = async (...[resource, config]: Parameters<typeof originalFetch>) => {
+window.fetch = async (...[resource, config]: Parameters<typeof originalFetch>): Promise<Response> => {
+	const url = resource.toString().toLocaleLowerCase().includes('download')
+	resource = appUrl(resource as string, url ? 'DOWNLOAD' : 'CORE')
 	const response = await originalFetch(resource, {
-		...config,
+		...(config || {}),
 		headers: {
 			'Accept': 'application/json',
 			'Content-type': 'application/json',
-			// 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token')!)}`,
-			...config?.headers
+			...(config?.headers || {})
 		}
 	})
 
@@ -39,3 +41,12 @@ createRoot(document.getElementById('root')!).render(
 		<App />
 	</QueryClientProvider>
 )
+
+function appUrl(path: string, baseUrl: 'CORE' | 'DOWNLOAD' = 'CORE'): string {
+	const APP_VERSION = 'v1'
+	const APP_URL: Record<string, string> = {
+		'CORE': `https://vms.redcoresolutions.com/passthru/api/${APP_VERSION}`,
+		'DOWNLOAD': `https://hrportal.redcoresolutions.com/passthru/api/backend`
+	}
+	return APP_URL[baseUrl] + path
+}
