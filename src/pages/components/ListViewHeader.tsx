@@ -1,4 +1,5 @@
 import { Col, Container, Row, Form } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
 import useWindowSize from "../../shared/hooks/useWindowResize"
 import { Button } from "."
 
@@ -56,7 +57,6 @@ export default function ListViewHeader(props: Props) {
             </Col>
             {/* xs={2 && 10} */}
             <ListViewColEnd
-                handleClose={props?.handleClose ?? (() => null)}
                 handlePrint={props?.handlePrint ?? (() => null)}
                 handleCreate={props?.handleCreate ?? (() => null)}
             />
@@ -65,15 +65,15 @@ export default function ListViewHeader(props: Props) {
 }
 
 type ListViewColEndProps = {
-    handleClose: () => void
     handlePrint: () => void
     handleCreate: () => void
 }
 
 function ListViewColEnd(props: ListViewColEndProps) {
+    const navigate = useNavigate()
     const { width } = useWindowSize()
     return <Col xs={width > 768 ? 2 : 10} className={`d-flex align-items-end ${width > 768 ? 'flex-column' : ''} gap-3`}>
-        <Button variant='primary' onClick={props.handleClose}>Close</Button>
+        <Button variant='primary' onClick={() => navigate(-1)}>Close</Button>
         <Button variant='primary' onClick={props.handlePrint}>Print</Button>
         <Button variant='primary' onClick={props.handleCreate}>Add New</Button>
     </Col>

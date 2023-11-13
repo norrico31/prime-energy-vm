@@ -95,7 +95,6 @@ export default function OgpView() {
             <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/ogp')}>Back to OGP</Button>
             <ListViewHeader
                 handleCreate={() => navigate(`/ogp/${ogpId}/form`)}
-                handleClose={() => navigate('/ogp')}
             />
             <Table
                 loading={false}

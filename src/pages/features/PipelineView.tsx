@@ -93,7 +93,6 @@ export default function PipelineView() {
         <>
             <ListViewHeader
                 handleCreate={() => navigate(`/pipelines/${pipelineId}/form`)}
-                handleClose={() => navigate('/pipelines')}
             />
             <Table
                 loading={false}

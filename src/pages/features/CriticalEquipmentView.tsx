@@ -95,7 +95,6 @@ export default function CriticalEquipmentView() {
             <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/critical-equipment')}>Back to Critical Equipments</Button>
             <ListViewHeader
                 handleCreate={() => navigate(`/critical-equipment/${criticalEquipmentId}/form`)}
-                handleClose={() => navigate('/critical-equipment')}
             />
             <Table
                 loading={false}

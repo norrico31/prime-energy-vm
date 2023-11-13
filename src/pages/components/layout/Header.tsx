@@ -2,7 +2,7 @@ import { useEffect, createElement } from 'react'
 import { Layout, Dropdown, Space, MenuProps, Row } from 'antd'
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { FiSettings } from 'react-icons/fi'
 import { useAuthUser } from '../../../shared/contexts/AuthUser'
 import { useAuthToken } from '../../../shared/contexts/AuthToken'
@@ -45,8 +45,9 @@ export default function Header({ collapsed, setCollapsed }: Props) {
 }
 
 function UserSettings() {
-    const { token } = useAuthToken()
+    const { token, setToken } = useAuthToken()
     const { user, setUser } = useAuthUser()
+
 
     useEffect(() => {
         const controller = new AbortController();
@@ -55,7 +56,7 @@ function UserSettings() {
                 try {
                     const res = await fetch(`/auth_user`, { signal: controller.signal, headers: { Authorization: `Bearer ${token}` } })
                     const data = await res.json()
-                    console.log(data)
+                    setUser(data.data)
                     return data
                 } catch (error) {
                     return error
@@ -66,6 +67,8 @@ function UserSettings() {
             controller.abort()
         }
     }, [user])
+
+    if (token == null) return <Navigate to='/login' />;
 
     const items: MenuProps['items'] = [
         {
@@ -86,12 +89,12 @@ function UserSettings() {
     function logout(evt: React.MouseEvent) {
         evt.stopPropagation()
         evt.preventDefault()
-        // GET(LOGOUT)
-        //     .then(() => {
-        //         localStorage.clear()
-        //         setUser(undefined)
-        //         setToken(undefined)
-        //     })
+        fetch('/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
+            .then(() => {
+                setUser(undefined)
+                setToken(null)
+                localStorage.clear()
+            })
     }
 
     return <Dropdown menu={{ items }}>
@@ -112,6 +115,7 @@ const UserName = styled.span`
 
 const Container = styled(AntDHeader)`
     background: '#fff'  !important;
+import { useAuthToken } from './../../../shared/contexts/AuthToken';
 
     padding: 0;
     display: flex;

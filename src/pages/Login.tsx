@@ -16,9 +16,8 @@ function Login() {
     const [form] = useForm<Form>()
     const [errors, setErrors] = useState<Array<string>>([])
     const { token, setToken } = useAuthToken()
-    console.log(token)
 
-    if (token) return <Navigate to='/' />
+    if (token) return <Navigate to='/dashboard/swp' />
 
     const onFinish = async (values: Form) => {
         try {
@@ -38,6 +37,7 @@ function Login() {
             return err
         }
     }
+
     return (
         <Container fluid className='login-container p-0'>
             <Form form={form} name="horizontal_login" onFinish={onFinish} className='px-3'>

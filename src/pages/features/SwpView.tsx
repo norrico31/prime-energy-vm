@@ -94,7 +94,6 @@ export default function SwpView() {
         <>
             <ListViewHeader
                 handleCreate={() => navigate(`/swp/${swpId}/form`)}
-                handleClose={() => navigate('/swp')}
             />
             <Table
                 loading={false}
