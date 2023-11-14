@@ -1,8 +1,9 @@
 import { useQuery, useMutation as ReactQueryMutation, useQueries, useQueryClient } from "@tanstack/react-query"
+import { notification } from "antd"
 
 type Return<D> = Awaited<ReturnType<typeof crudApi<D>>>
 
-async function crudApi<T>(reqUrl: string, requestInit?: RequestInit, params?: ApiParams): Promise<T> {
+export async function crudApi<T>(reqUrl: string, requestInit?: RequestInit, params?: ApiParams): Promise<T> {
     const url = urlParams(reqUrl, params)
     const res = await fetch(url, { ...requestInit, headers: { ...requestInit?.headers } })
     if (!res.ok) return Promise.reject(res.json()) as T
@@ -15,11 +16,12 @@ export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries
         queryFn: (): Promise<Return<T>> => crudApi(paths.get, { method: 'GET' }, { ...restProps }),
     })
 
-    const { mutate: createData, error: errorCreate, isLoading: loadingCreate } = useMutation<P & Partial<{ '_method': 'PUT' }>>({
+    const { mutate: createData, error: errorCreate, isLoading: loadingCreate, status: statusCreate } = useMutation<P & Partial<{ '_method': 'PUT' }>>({
         queryKey,
-        mutationFn: async (data: P & Partial<{ '_method': 'PUT' }>) => await crudApi(paths?.post ?? '', { method: 'POST', body: JSON.stringify(data) })
+        mutationFn: async (data: P & Partial<{ '_method': 'PUT' }>) => await crudApi(paths?.post ?? '', { method: 'POST', body: JSON.stringify(data) }),
     })
-    const { mutate: editData, error: errorEdit, isLoading: loadingEdit } = useMutation<P & Partial<{ id: string }>>({
+
+    const { mutate: editData, error: errorEdit, isLoading: loadingEdit, status: statusEdit } = useMutation<P & Partial<{ id: string }>>({
         queryKey,
         mutationFn: async (data: P & Partial<{ id: string }>) => await crudApi(paths?.put ?? '' + data.id, { method: 'POST', body: JSON.stringify(data) })
     })
@@ -34,7 +36,7 @@ export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries
         },
     })
 
-    return { createData, editData, removeData, data, isLoading: isLoading || loadingCreate || loadingEdit || loadingRemove, ...restQueries, error: errorEdit || errorCreate || errorRemove as ApiError, download }
+    return { createData, editData, removeData, data, isLoading: isLoading || loadingCreate || loadingEdit || loadingRemove, ...restQueries, error: (errorEdit || errorCreate || errorRemove) as ApiError, download, statusCreate, statusEdit }
 }
 
 export const useParallelFetch = ({ paths, k }: ParallelFetch) => useQueries({
@@ -55,7 +57,15 @@ const useMutation = <T,>({ queryKey, mutationFn }: { queryKey: string, mutationF
             queryClient.setQueryData([queryKey], prevData)
             return prevData
         },
-        onSuccess: () => queryClient.invalidateQueries([queryKey])
+        onSuccess: (data) => {
+            console.log('onSuccess return: ', data)
+            queryClient.invalidateQueries([queryKey])
+            const message = (data as { message?: string })?.message
+            notification.open({
+                message: (message?.toLocaleLowerCase()?.includes('create') ? 'Create' : 'Edit') + ' Successfully',
+                description: message,
+            });
+        }
     })
     return { ...mutation }
 }

@@ -38,7 +38,6 @@ export default function Systems() {
     const [showModalDelete, setShowModalDelete] = useState(false);
 
     const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'system', paths: { get: '/systems', post: '/systems' }, search, page: currentPage, limit: 10 })
-    console.log(data?.data.data)
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,

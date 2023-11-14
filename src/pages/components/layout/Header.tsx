@@ -6,6 +6,7 @@ import { Link, Navigate } from 'react-router-dom'
 import { IoMdArrowDropdown } from 'react-icons/io'
 import { useAuthUser } from '../../../shared/contexts/AuthUser'
 import { useAuthToken } from '../../../shared/contexts/AuthToken'
+import { crudApi } from '../../../shared/hooks/useDataResource'
 
 const { Header: AntDHeader } = Layout
 
@@ -53,9 +54,9 @@ function UserSettings() {
         if (!user && token) {
             (async () => {
                 try {
-                    const res = await fetch(`/auth_user`, { signal: controller.signal, headers: { Authorization: `Bearer ${token}` } })
-                    const data = await res.json()
-                    setUser(data.data)
+                    const data = await crudApi<{ data: User }>(`/auth_user`, { signal: controller.signal, headers: { Authorization: `Bearer ${token}` } })
+                    console.log('user: ', data.data)
+                    setUser(data?.data)
                     return data
                 } catch (error) {
                     return error
@@ -88,7 +89,7 @@ function UserSettings() {
     function logout(evt: React.MouseEvent) {
         evt.stopPropagation()
         evt.preventDefault()
-        fetch('/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
+        crudApi('/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
             .then(() => {
                 setUser(undefined)
                 setToken(null)
@@ -99,7 +100,7 @@ function UserSettings() {
     return <Dropdown menu={{ items }}>
         <a onClick={e => e.preventDefault()}>
             <Space>
-                <UserName>{'ADMINISTRATOR'}</UserName>
+                <UserName>{user?.full_name}</UserName>
                 <IoMdArrowDropdown style={{ fontSize: 30 }} />
             </Space>
         </a>

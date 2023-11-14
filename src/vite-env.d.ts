@@ -108,6 +108,10 @@ type ButtonActionProps = {
 // ================================
 // ================================
 //* Modules
+type TCredentials = {
+    data: { token: string; user: User }
+    message: string
+}
 type Common = {
     id: string;
     user_id: string;
@@ -143,23 +147,19 @@ type Schedule = Common & {
 }
 
 type User = {
-    first_name: string;
-    middle_name: string;
-    account_type: string
-    last_name: string;
-    email: string;
-    internal: number;
-    employee_id: string;
-    is_active: number;
-    role_id: string;
-    department_id: string;
-    team_id: string;
-    full_name: string;
-    department_name: string;
-    role: Role;
-    teams: Team[];
-    department: Department;
-} & Common
+    // activity_logs:[{…}]
+    department: string | null
+    email: string
+    first_name: string
+    full_name: string
+    id: string
+    is_active: string
+    is_admin: true
+    job_level: string | null
+    last_name: string
+    middle_name: string
+    position: null
+}
 
 type AuditLogs = Common & {
     account_type: string

@@ -5,6 +5,7 @@ import { Container } from 'react-bootstrap';
 import Logo from '../shared/assets/logo.png'
 import { useAuthToken } from '../shared/contexts/AuthToken';
 import { Navigate } from 'react-router-dom';
+import { crudApi } from '../shared/hooks/useDataResource';
 
 type Form = {
     email: string; password: string
@@ -20,14 +21,14 @@ function Login() {
     if (token) return <Navigate to='/dashboard/swp' />
 
     const onFinish = async (values: Form) => {
+        setErrors([])
         try {
-            const res = await fetch('/login', {
+            const data = await crudApi<TCredentials>('/login', {
                 method: 'POST',
                 body: JSON.stringify({
                     ...values
                 })
             })
-            const data = await res.json()
             localStorage.setItem('token', JSON.stringify(data.data.token))
             setToken(data.data.token)
             return data

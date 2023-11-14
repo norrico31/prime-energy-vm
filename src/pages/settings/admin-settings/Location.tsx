@@ -48,12 +48,12 @@ export default function Location() {
 
     const onHide = () => {
         setShowModal(false)
+        setSelectedData(undefined)
     }
 
     const onHideDelete = () => {
         setShowModalDelete(false)
     }
-    console.log(isLoading)
     return (
         <>
             <h3 className='text-color-gray mb-2'>Location Management</h3>
@@ -93,7 +93,7 @@ export default function Location() {
                     </tr>
                 })}
             </Table>
-            <Modal isLoading={isLoading} show={showModal} onHide={onHide} createData={createData} editData={editData} selectedData={selectedData} />
+            <Modal show={showModal} onHide={onHide} createData={createData} editData={editData} selectedData={selectedData} />
             <ModalDelete show={showModalDelete} onHide={onHideDelete} />
         </>
     )
@@ -102,7 +102,6 @@ export default function Location() {
 type ModalProps = {
     show: boolean;
     onHide: () => void
-    isLoading: boolean
     selectedData?: TLocation
     createData: UseMutateFunction<Payload & Partial<{
         id: string;
@@ -116,32 +115,55 @@ type ModalProps = {
     }>, unknown>
 }
 
-function Modal({ isLoading, show, onHide, createData, editData, selectedData }: ModalProps) {
+function Modal({ show, onHide, createData, editData, selectedData }: ModalProps) {
     const [form] = AntDForm.useForm<Payload>()
+    const [error, setError] = useState<string | undefined>(undefined);
 
     useEffect(() => {
-        if (selectedData) {
-            form.setFieldsValue({ ...selectedData })
+        if (show) {
+            if (selectedData) {
+                form.setFieldsValue({ ...selectedData })
+            } else {
+                form.resetFields()
+            }
         }
-    }, [selectedData])
+    }, [selectedData, show])
 
     const onFinish = (v: Payload) => {
-        // hit endpoint for create/edit
         if (selectedData) {
-            editData(v)
+            setError(undefined)
+            editData(v, {
+                onError: (err) => {
+                    const error = (err as { message?: string })?.message;
+                    setError(error)
+                },
+                onSuccess: () => {
+                    onHide()
+                    form.resetFields()
+                }
+            })
         } else {
-            createData(v)
-        }
-        if (!isLoading) {
-            setTimeout(onHide, 200)
-            form.resetFields()
+            createData(v, {
+                onSuccess: () => {
+                    onHide()
+                    form.resetFields()
+                },
+                onError: (err) => {
+                    const error = (err as { message?: string })?.message;
+                    setError(error)
+                },
+            })
         }
     }
+
     return <BootstrapModal show={show} onHide={onHide}>
         <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Location - Edit</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
+            {error && (
+                <span className='error-text'>{error}</span>
+            )}
             <AntDForm form={form} onFinish={onFinish} layout='vertical'>
                 <AntDForm.Item label='Location Name' name="name" rules={[{ required: true }]}>
                     <Input type="text" placeholder="Enter location name." />
