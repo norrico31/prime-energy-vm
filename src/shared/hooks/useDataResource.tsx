@@ -23,11 +23,14 @@ export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries
 
     const { mutate: editData, error: errorEdit, isLoading: loadingEdit, status: statusEdit } = useMutation<P & Partial<{ id: string }>>({
         queryKey,
-        mutationFn: async (data: P & Partial<{ id: string }>) => await crudApi(paths?.put ?? '' + data.id, { method: 'POST', body: JSON.stringify(data) })
+        mutationFn: async (data: P & Partial<{ id: string }>) => {
+            console.log('useMutate data: ', data)
+            return await crudApi(paths?.put + data.id!, { method: 'PUT', body: JSON.stringify(data) })
+        }
     })
     const { mutate: removeData, error: errorRemove, isLoading: loadingRemove } = useMutation<string>({
         queryKey,
-        mutationFn: async (id: string) => await crudApi(paths?.delete + id, { method: 'POST', body: JSON.stringify(id) })
+        mutationFn: async (id: string) => await crudApi(paths?.delete + id, { method: 'DELETE', body: JSON.stringify(id) })
     })
     const download = () => crudApi(paths?.download ?? '', {
         headers: {

@@ -132,7 +132,7 @@ function Modal({ show, onHide, createData, editData, selectedData }: ModalProps)
     const onFinish = (v: Payload) => {
         if (selectedData) {
             setError(undefined)
-            editData(v, {
+            editData({ ...v, id: selectedData.id }, {
                 onError: (err) => {
                     const error = (err as { message?: string })?.message;
                     setError(error)
