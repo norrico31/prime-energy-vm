@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Form as AntDForm, Input, Select, Row as AntDRow, Space, Switch } from 'antd';
 import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-bootstrap';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
@@ -10,9 +11,6 @@ type Payload = {
     age: number
     gender: string
 }
-
-const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
-const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
 
 const columns: TableColHead = [
     {
@@ -39,7 +37,8 @@ export default function Systems() {
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
 
-    const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: 10 })
+    const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'system', paths: { get: '/systems', post: '/systems' }, search, page: currentPage, limit: 10 })
+    console.log(data?.data.data)
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -107,60 +106,47 @@ export default function Systems() {
 }
 
 function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
-    return <BootstrapModal show={show} onHide={onHide}>
+    const [form] = AntDForm.useForm()
+    const onFinish = (v: unknown) => {
+        // hit endpoint for create/edit
+        console.log(v)
+    }
+    return <BootstrapModal show={show} onHide={onHide} footer={null}>
         <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>System - Create</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
-            <Row className="mb-3">
-                <Form.Group as={Col} controlId="formGridSystems">
-                    <Form.Label>System</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter system." />
-
-                </Form.Group>
-            </Row>
-            <Row className="mb-3">
-                <Form.Group as={Col} controlId="formGridSite">
-                    <Form.Label>Location</Form.Label>
-                    <Form.Select aria-label="Select site" placeholder='Select site'>
-                        {/* {[10, 25, 50, 100].map(p => (
-                    <option key={p} value={p}>{p}</option>
-                ))} */}
-                    </Form.Select>
-                </Form.Group>
-            </Row>
-            <Row className="mb-3">
-                <Form.Group as={Col} controlId="formGridSeq">
-                    <Form.Label>Sequence No.</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter sequence no." />
-                </Form.Group>
-            </Row>
-            <Row className="mb-3">
-                <Form.Group as={Col} controlId="formGridDescription">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" required type="text" placeholder="Enter description." />
-                </Form.Group>
-            </Row>
-            <Row>
-                <Form.Group as={Col} controlId="formGridDisable" className='d-flex justify-content-start'>
-                    <Form.Check // prettier-ignore
-                        reverse
-                        type="switch"
-                        // id="custom-switch"
-                        label="Disable"
-                    />
-                </Form.Group>
-            </Row>
+            <AntDForm form={form} onFinish={onFinish} layout='vertical'>
+                <AntDForm.Item label='System Name' name="name" rules={[{ required: true }]}>
+                    <Input type="text" placeholder="Enter system name." />
+                </AntDForm.Item>
+                <AntDForm.Item label="Location" name='site_id'>
+                    <Select placeholder='Select Location' optionFilterProp="children" >
+                        {/* <Select.Option value="short_term">Short Term</Select.Option> */}
+                    </Select>
+                </AntDForm.Item>
+                <AntDForm.Item label='Sequence No.' name="sequence_no" rules={[{ required: true }]}>
+                    <Input type="text" placeholder="Enter sequence no." />
+                </AntDForm.Item>
+                <AntDForm.Item label='Description' name="description" >
+                    <Input.TextArea placeholder="Enter sequence no." />
+                </AntDForm.Item>
+                <AntDForm.Item label='Disable' name="is_active" >
+                    <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
+                </AntDForm.Item>
+                <AntDRow justify='end' >
+                    <Space>
+                        <Button variant="secondary" onClick={onHide}>
+                            Cancel
+                        </Button>
+                        <Button variant="primary" type='submit'>
+                            Save
+                        </Button>
+                    </Space>
+                </AntDRow>
+            </AntDForm>
         </BootstrapModal.Body>
-        <BootstrapModal.Footer>
-            <Button variant="secondary" onClick={onHide}>
-                Cancel
-            </Button>
-            <Button variant="primary" onClick={() => alert('Create')}>
-                Save
-            </Button>
-        </BootstrapModal.Footer>
-    </BootstrapModal>
+    </BootstrapModal >
 }
 
 function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {

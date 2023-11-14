@@ -40,7 +40,7 @@ function Login() {
 
     return (
         <Container fluid className='login-container p-0'>
-            <Form form={form} name="horizontal_login" onFinish={onFinish} className='px-3'>
+            <Form form={form} onFinish={onFinish} className='px-3'>
                 <Col xs={24} sm={24} md={24} lg={24} className='d-flex align-items-center flex-column justify-content-center h-100 text-center'>
                     <img src={Logo} alt='brand-logo' style={{ width: 60 }} />
                     <h5 className='m-4'>Vulnerability Monitoring System</h5>

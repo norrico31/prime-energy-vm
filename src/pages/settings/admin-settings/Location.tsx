@@ -1,30 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Form as AntDForm, Row as AntDRow, Input, Select, Space, Switch } from 'antd';
 import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-bootstrap';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { useDataResource } from '../../../shared/hooks/useDataResource';
 import { Table, ButtonActions, Button } from '../../components';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { UseMutateFunction } from '@tanstack/react-query';
 
 type Payload = {
     name: string
-    age: number
-    gender: string
-}
+    description: string | null
+} & Partial<{ id: string }>
 
-const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
-const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
-
-// const columns: TableColHead = [
-//     {
-//         colHead: 'Location',
-//     },
-//     {
-//         colHead: 'Description',
-//     },
-//     {
-//         colHead: 'Action',
-//     },
-// ]
+const columns: TableColHead = [
+    {
+        colHead: 'Location',
+    },
+    {
+        colHead: 'Description',
+    },
+    {
+        colHead: 'Action',
+    },
+]
 
 export default function Location() {
     const [search, searchVal, inputChange] = useDebounceSearch()
@@ -32,8 +30,8 @@ export default function Location() {
     // const [pageSize, setPageSize] = useState(10);
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
-
-    const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: 10 })
+    const [selectedData, setSelectedData] = useState<TLocation | undefined>(undefined);
+    const { data, isLoading, createData, editData } = useDataResource<ApiSuccess<TLocation[]>, Payload>({ queryKey: 'location', paths: { get: '/sites', post: '/sites', put: '/sites/' }, search, page: currentPage, limit: 10 })
 
     const paginationProps: PageProps = {
         active: data?.data?.current_page ?? 0,
@@ -55,7 +53,7 @@ export default function Location() {
     const onHideDelete = () => {
         setShowModalDelete(false)
     }
-
+    console.log(isLoading)
     return (
         <>
             <h3 className='text-color-gray mb-2'>Location Management</h3>
@@ -76,55 +74,93 @@ export default function Location() {
             <Table
                 loading={false}
                 pageProps={paginationProps}
-            // columns={columns}
+                columns={columns}
             >
                 {data?.data.data.map(d => {
                     return <tr key={d.id}>
-                        <td >{d.user.full_name}</td>
-                        <td >{d.time_keeping_date}</td>
+                        <td >{d.name}</td>
+                        <td >{d.description}</td>
                         <td className='d-flex justify-content-center gap-1'>
                             <ButtonActions
                                 loading={isLoading}
-                                // editData={() => createData({ name: 'gerald' })}
-                                disabled={() => setShowModalDelete(true)}
+                                editData={() => {
+                                    setShowModal(true)
+                                    setSelectedData(d)
+                                }}
+                            // disabled={() => setShowModalDelete(true)}
                             />
                         </td>
                     </tr>
                 })}
             </Table>
-            <Modal show={showModal} onHide={onHide} />
+            <Modal isLoading={isLoading} show={showModal} onHide={onHide} createData={createData} editData={editData} selectedData={selectedData} />
             <ModalDelete show={showModalDelete} onHide={onHideDelete} />
         </>
     )
 }
 
-function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
+type ModalProps = {
+    show: boolean;
+    onHide: () => void
+    isLoading: boolean
+    selectedData?: TLocation
+    createData: UseMutateFunction<Payload & Partial<{
+        id: string;
+    }>, unknown, Payload & Partial<{
+        id: string;
+    }>, unknown>;
+    editData: UseMutateFunction<Payload & Partial<{
+        id: string;
+    }>, unknown, Payload & Partial<{
+        id: string;
+    }>, unknown>
+}
+
+function Modal({ isLoading, show, onHide, createData, editData, selectedData }: ModalProps) {
+    const [form] = AntDForm.useForm<Payload>()
+
+    useEffect(() => {
+        if (selectedData) {
+            form.setFieldsValue({ ...selectedData })
+        }
+    }, [selectedData])
+
+    const onFinish = (v: Payload) => {
+        // hit endpoint for create/edit
+        if (selectedData) {
+            editData(v)
+        } else {
+            createData(v)
+        }
+        if (!isLoading) {
+            setTimeout(onHide, 200)
+            form.resetFields()
+        }
+    }
     return <BootstrapModal show={show} onHide={onHide}>
         <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Location - Edit</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
-            <Row className="mb-3">
-                <Form.Group as={Col} controlId="formGridEmail">
-                    <Form.Label>Location Name</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter site name." />
-                </Form.Group>
-            </Row>
-            <Row>
-                <Form.Group as={Col} controlId="formGridPassword">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter description." />
-                </Form.Group>
-            </Row>
+            <AntDForm form={form} onFinish={onFinish} layout='vertical'>
+                <AntDForm.Item label='Location Name' name="name" rules={[{ required: true }]}>
+                    <Input type="text" placeholder="Enter location name." />
+                </AntDForm.Item>
+                <AntDForm.Item label='Description' name="description" >
+                    <Input.TextArea placeholder="Enter sequence no." />
+                </AntDForm.Item>
+                <AntDRow justify='end' >
+                    <Space>
+                        <Button variant="secondary" onClick={onHide}>
+                            Cancel
+                        </Button>
+                        <Button variant="primary" type='submit'>
+                            Save
+                        </Button>
+                    </Space>
+                </AntDRow>
+            </AntDForm>
         </BootstrapModal.Body>
-        <BootstrapModal.Footer>
-            <Button variant="secondary" onClick={onHide}>
-                Cancel
-            </Button>
-            <Button variant="primary" onClick={() => alert('Update')}>
-                Update
-            </Button>
-        </BootstrapModal.Footer>
     </BootstrapModal>
 }
 

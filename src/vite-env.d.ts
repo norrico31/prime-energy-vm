@@ -202,6 +202,13 @@ type CardData = {
         text: string;
     }[];
 }
+type TLocation = {
+    created_at: string
+    description: string | null
+    id: string
+    name: string
+    updated_at: string
+}
 // ================================
 // ================================
 

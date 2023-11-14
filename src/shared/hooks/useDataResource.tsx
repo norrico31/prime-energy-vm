@@ -2,19 +2,17 @@ import { useQuery, useMutation as ReactQueryMutation, useQueries, useQueryClient
 
 type Return<D> = Awaited<ReturnType<typeof crudApi<D>>>
 
-async function crudApi<T>(reqUrl: string, requestInit?: RequestInit): Promise<T> {
-    //! INSERT TOKEN IN HEADERS
-    const url = urlParams(reqUrl, requestInit)
+async function crudApi<T>(reqUrl: string, requestInit?: RequestInit, params?: ApiParams): Promise<T> {
+    const url = urlParams(reqUrl, params)
     const res = await fetch(url, { ...requestInit, headers: { ...requestInit?.headers } })
     if (!res.ok) return Promise.reject(res.json()) as T
     return Promise.resolve(res.json())
 }
 
-// TODO: USE CONTEXT
-export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries & Partial<RequestInit & ApiParams>) => {
+export const useDataResource = <T, P>({ queryKey, paths, ...restProps }: Queries & Partial<ApiParams>) => {
     const { data, isLoading, ...restQueries } = useQuery<Return<T>>({
         queryKey: [queryKey, restProps],
-        queryFn: (): Promise<Return<T>> => crudApi(paths.get, { ...restProps, method: 'GET' }),
+        queryFn: (): Promise<Return<T>> => crudApi(paths.get, { method: 'GET' }, { ...restProps }),
     })
 
     const { mutate: createData, error: errorCreate, isLoading: loadingCreate } = useMutation<P & Partial<{ '_method': 'PUT' }>>({
@@ -62,10 +60,24 @@ const useMutation = <T,>({ queryKey, mutationFn }: { queryKey: string, mutationF
     return { ...mutation }
 }
 
-function urlParams(reqUrl: string, params?: RequestInit) {
-    const url = new URL(reqUrl)
+function urlParams(reqUrl: string, params?: ApiParams) {
+    const url = reqUrl.toString().toLocaleLowerCase().includes('download')
+    reqUrl = appUrl(reqUrl, url ? 'DOWNLOAD' : 'CORE')
+    const baseUrl = new URL(reqUrl)
     params && Object.entries(params).forEach(([k, v]) => {
-        k != undefined && v != undefined && url.searchParams.append(k, v + '')
+        k != undefined && v != undefined && baseUrl.searchParams.append(k, v + '')
     })
-    return url.toString()
+    return baseUrl.toString()
 }
+
+
+function appUrl(path: string, baseUrl: 'CORE' | 'DOWNLOAD' = 'CORE'): string {
+    const APP_VERSION = 'v1'
+    const APP_URL: Record<string, string> = {
+        'CORE': `https://vms.redcoresolutions.com/passthru/api/${APP_VERSION}`,
+        'DOWNLOAD': `https://hrportal.redcoresolutions.com/passthru/api/backend`
+    }
+    return APP_URL[baseUrl] + path
+}
+
+
