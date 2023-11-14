@@ -15,7 +15,6 @@ const queryClient = new QueryClient({
 	}
 })
 
-
 const { fetch: originalFetch } = window;
 window.fetch = async (...[resource, config]: Parameters<typeof originalFetch>): Promise<Response> => {
 	const url = resource.toString().toLocaleLowerCase().includes('download')

@@ -48,7 +48,7 @@ export default function Table({ columns, loading, pageProps, children }: PropsWi
                 <thead>
                     <tr>
                         {renderCols.map((c, idx) => (
-                            <th key={idx}>{c.colHead}</th>
+                            <th key={idx} style={{ fontWeight: 'normal' }}>{c.colHead}</th>
                         ))}
                     </tr>
                 </thead>

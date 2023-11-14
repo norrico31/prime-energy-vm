@@ -91,7 +91,7 @@ body, #root {
   /* background-color: #000 !important; */
 }
 .dashboard-nav-links {
-  font-weight: bold;
+  /* font-weight: bold; */
   text-decoration: none;
   color: #777777;
 }
@@ -122,6 +122,9 @@ body, #root {
   color: #fff;
   background: #1e9aff;
 }
+.modal-title {
+  font-size: 1.2rem !important;
+}
 :where(.css-dev-only-do-not-override-2i2tap).ant-menu-light .ant-menu-submenu-selected >.ant-menu-submenu-title, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-light>.ant-menu .ant-menu-submenu-selected >.ant-menu-submenu-title {
   color: #0a3253;
 }
@@ -134,9 +137,11 @@ body, #root {
   border-radius: 0;
 }
 .ant-menu-title-content {
-  font-weight: 600;
+  /* font-weight: 600; */
   font-size: 16px;
 }
+:where(.css-dev-only-do-not-override-2i2tap).ant-switch.ant-switch-checked,
+:where(.css-dev-only-do-not-override-2i2tap).ant-switch.ant-switch-checked,
 :where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-ink-bar {
   background-color: #f69a22;
 }
@@ -154,7 +159,7 @@ button.btn-print-report {
   box-shadow: none;
   background: none !important;
   color: rgb(230, 150, 0) !important;
-  font-weight: bold;
+  /* font-weight: bold; */
   padding: 0 !important;
   margin: 0 !important;
 }

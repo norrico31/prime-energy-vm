@@ -48,10 +48,11 @@ function Tabs() {
     let { pathname } = useLocation()
     const navigate = useNavigate()
     pathname = pathname?.split('/')[2]
+    // window size (mobile and tablet)
     return <AntDTabs
         destroyInactiveTabPane
         activeKey={'/' + pathname}
-        tabPosition="left"
+        tabPosition="top"
         size='small'
         onChange={(key) => navigate(`/system-settings` + key)}
         items={systemTabs.map((el) => ({

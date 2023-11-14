@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Layout, Menu as AntdMenu, theme, MenuProps } from 'antd';
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart } from 'react-icons/ai'
 import { FiSettings } from 'react-icons/fi'
 import { GiBrokenAxe } from 'react-icons/gi'
@@ -146,45 +146,45 @@ function getItemLinks(
 
 const links = [
     getItemLinks(
-        <NavLink className={`text-decoration-none`} to='/dashboard'>
+        <Link className={`text-decoration-none`} to='/dashboard'>
             Dashboard
-        </NavLink>,
+        </Link>,
         '/dashboard',
         <MdOutlineDashboard />,
         undefined,
         true
     ),
     getItemLinks(
-        <NavLink className={`text-decoration-none`} to='/swp'>
+        <Link className={`text-decoration-none`} to='/swp'>
             SWP
-        </NavLink>,
+        </Link>,
         '/swp',
         <AiOutlineFolder />,
         undefined,
         true
     ),
     getItemLinks(
-        <NavLink className={`text-decoration-none`} to='/ogp'>
+        <Link className={`text-decoration-none`} to='/ogp'>
             OGP
-        </NavLink>,
+        </Link>,
         '/ogp',
         <AiOutlineFileText />,
         undefined,
         true
     ),
     getItemLinks(
-        <NavLink className={`text-decoration-none`} to='/pipelines'>
+        <Link className={`text-decoration-none`} to='/pipelines'>
             Pipelines
-        </NavLink>,
+        </Link>,
         '/pipelines',
         <AiOutlineLineChart />,
         undefined,
         true
     ),
     getItemLinks(
-        <NavLink className={`text-decoration-none`} to='/critical-equipment'>
+        <Link className={`text-decoration-none`} to='/critical-equipment'>
             Critical Equipment
-        </NavLink>,
+        </Link>,
         '/critical-equipment',
         <GiBrokenAxe />,
         undefined,
@@ -196,18 +196,18 @@ const links = [
         <MdLocationOn />,
         [
             getItemLinks(
-                <NavLink className={`text-decoration-none`} to='/location-settings/systems'>
+                <Link className={`text-decoration-none`} to='/location-settings/systems'>
                     Systems
-                </NavLink>,
+                </Link>,
                 '/location-settings/systems',
                 <MdSystemUpdateAlt />,
                 undefined,
                 true
             ),
             getItemLinks(
-                <NavLink className={`text-decoration-none`} to='/location-settings/equipments'>
+                <Link className={`text-decoration-none`} to='/location-settings/equipments'>
                     Equipments
-                </NavLink>,
+                </Link>,
                 '/location-settings/equipments',
                 <TbSettingsCog />,
                 undefined,
@@ -217,18 +217,18 @@ const links = [
         true
     ),
     getItemLinks(
-        <NavLink className={`text-decoration-none`} to='/system-settings/phase'>
+        <Link className={`text-decoration-none`} to='/system-settings/phase'>
             System Settings
-        </NavLink>,
+        </Link>,
         '/system-settings',
         <FiSettings />,
         undefined,
         true
     ),
     getItemLinks(
-        <NavLink className={`text-decoration-none`} to='/admin-settings/location'>
+        <Link className={`text-decoration-none`} to='/admin-settings/location'>
             Admin Settings
-        </NavLink>,
+        </Link>,
         '/admin-settings',
         <MdAdminPanelSettings />,
         undefined,

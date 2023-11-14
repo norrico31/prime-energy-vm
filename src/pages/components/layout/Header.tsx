@@ -3,7 +3,7 @@ import { Layout, Dropdown, Space, MenuProps, Row } from 'antd'
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 import { Link, Navigate } from 'react-router-dom'
-import { FiSettings } from 'react-icons/fi'
+import { IoMdArrowDropdown } from 'react-icons/io'
 import { useAuthUser } from '../../../shared/contexts/AuthUser'
 import { useAuthToken } from '../../../shared/contexts/AuthToken'
 
@@ -100,8 +100,7 @@ function UserSettings() {
         <a onClick={e => e.preventDefault()}>
             <Space>
                 <UserName>{'ADMINISTRATOR'}</UserName>
-                {/* CHANGE ICON TO DROP */}
-                <FiSettings />
+                <IoMdArrowDropdown style={{ fontSize: 30 }} />
             </Space>
         </a>
     </Dropdown>

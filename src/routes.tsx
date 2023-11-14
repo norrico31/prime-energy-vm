@@ -220,10 +220,6 @@ export const routes = createBrowserRouter([
                 path: '/vulnerabilities',
                 element: <Suspense><Vulnerabilities /></Suspense>
             },
-            // {
-            //     path: '/form',
-            //     element: <Suspense><Form /></Suspense>
-            // },
             {
                 path: '/Location-settings/systems',
                 element: <Suspense><LocationSystems /></Suspense>,

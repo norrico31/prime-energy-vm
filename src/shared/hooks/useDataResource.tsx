@@ -3,6 +3,7 @@ import { useQuery, useMutation as ReactQueryMutation, useQueries, useQueryClient
 type Return<D> = Awaited<ReturnType<typeof crudApi<D>>>
 
 async function crudApi<T>(reqUrl: string, requestInit?: RequestInit): Promise<T> {
+    //! INSERT TOKEN IN HEADERS
     const url = urlParams(reqUrl, requestInit)
     const res = await fetch(url, { ...requestInit, headers: { ...requestInit?.headers } })
     if (!res.ok) return Promise.reject(res.json()) as T
