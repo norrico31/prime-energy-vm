@@ -1,152 +1,161 @@
-import { useState } from 'react'
-import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-bootstrap';
-import { AiOutlineSearch } from 'react-icons/ai';
+import { useEffect, useState } from 'react'
+import { Input, Row, Col, Space, Modal, Form } from 'antd';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
-import { useDataResource } from '../../../shared/utils/fetch';
 import { Table, ButtonActions, Button } from '../../components';
 
-type Payload = {
-    name: string
-    age: number
-    gender: string
-}
-
-const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
-const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
-
-const columns: TableColHead = [
-    {
-        colHead: 'Integrity',
-    },
-    {
-        colHead: 'Description',
-    },
-    {
-        colHead: 'Action',
-    },
-]
+import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
+import { ColumnsType } from 'antd/es/table';
 
 export default function Integrity() {
     const [search, searchVal, inputChange] = useDebounceSearch()
-    const [currentPage, setCurrentPage] = useState(1);
-    // const [pageSize, setPageSize] = useState(10);
-    const [showModal, setShowModal] = useState(false);
-    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [isModalShow, setIsModalShow] = useState(false);
+    const [selectedData, setSelectedData] = useState<TIntegrity | undefined>(undefined);
+    const [loading, setLoading] = useState(true)
+    const [dataSource, setDataSource] = useState<TIntegrity[]>([])
 
-    const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: 10 })
+    useEffect(() => {
+        const controller = new AbortController();
+        fetchData(controller.signal)
+        return () => controller.abort()
+    }, [search])
 
-    const pageProps: PageProps = {
-        active: data?.data?.current_page ?? 0,
-        total: data?.data?.total ?? 0,
-        perPage: data?.data?.per_page ?? 0,
-        lastPage: data?.data?.last_page ?? 0,
-        setCurrentPage
+    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
+        setLoading(true)
+        try {
+            const res = await GET<ApiSuccess<TIntegrity[]>>('/integrity', signal!, params)
+            setDataSource(res.data.data)
+            return res
+        } catch (error) {
+            return error
+        } finally {
+            setLoading(false)
+        }
     }
 
-    // const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
-    //     setCurrentPage(1)
-    //     setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
-    // }
+    const columns: ColumnsType<TIntegrity> = [
+        {
+            title: 'Integrity',
+            dataIndex: 'name',
+            key: 'name',
+            // width: 120
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+            // width: 200,
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            align: 'center',
+            render: (_, record) => (
+                <Space>
+                    <div></div>
+                    <ButtonActions
+                        loading={loading}
+                        editData={() => {
+                            setIsModalShow(true)
+                            setSelectedData(record)
+                        }}
+                        deleteData={() => DELETE('/integrity/' + record.id).finally((fetchData))}
+                        dataTitle={record.name}
+                        dataDescription={record.description!}
+                    />
+                </Space>
+            ),
+        },
+    ]
 
-    const onHide = () => {
-        setShowModal(false)
-    }
-
-    const onHideDelete = () => {
-        setShowModalDelete(false)
+    const onCancel = () => {
+        setIsModalShow(false)
+        setSelectedData(undefined)
     }
 
     return (
         <>
-            <h3 className='text-color-gray mb-2'>Integrity</h3>
-            <Row className='d-flex justify-content-between'>
-                <Col xs={8} sm={7} md={6} lg={4}>
-                    {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
-                    <InputGroup>
-                        <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
-                        <InputGroup.Text style={{ borderRadius: 0 }}>
-                            <AiOutlineSearch />
-                        </InputGroup.Text>
-                    </InputGroup>
+            <h3 className='text-color-gray mb-2'>Integrity Management</h3>
+            <Row wrap justify='space-between' style={{ marginBottom: 10 }}>
+                <Col xs={12} sm={12} md={12} lg={8}>
+                    <Input.Search type="text" placeholder="Search..." value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center'>
-                    <Button variant='success' title='Create' onClick={() => setShowModal(true)}>Create</Button>
+                    <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
                 </Col>
             </Row>
-            <Table
-                loading={false}
-                pageProps={pageProps}
-                columns={columns}
-            >
-                {data?.data.data.map(d => {
-                    return <tr key={d.id}>
-                        <td >{d.user.full_name}</td>
-                        <td >{d.time_keeping_date}</td>
-                        <td className='d-flex justify-content-center gap-1'>
-                            <ButtonActions
-                                loading={isLoading}
-                                // editData={() => createData()}
-                                disabled={() => setShowModalDelete(true)}
-                            />
-                        </td>
-                    </tr>
-                })}
-            </Table>
-            <Modal show={showModal} onHide={onHide} />
-            <ModalDelete show={showModalDelete} onHide={onHideDelete} />
+            <Table<TIntegrity> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
+            <ModalInput open={isModalShow} onCancel={onCancel} selectedData={selectedData} fetchData={fetchData} />
         </>
     )
 }
 
-function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
-    return <BootstrapModal show={show} onHide={onHide}>
-        <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Integrity - Create</BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <BootstrapModal.Body>
-            <Row className="mb-3">
-                <Form.Group as={Col} controlId="formGridEmail">
-                    <Form.Label>Integrity Name</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter integrity name." />
-                </Form.Group>
-            </Row>
-            <Row>
-                <Form.Group as={Col} controlId="formGridPassword">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter description." />
-                </Form.Group>
-            </Row>
-        </BootstrapModal.Body>
-        <BootstrapModal.Footer>
-            <Button variant="secondary" onClick={onHide}>
-                Cancel
-            </Button>
-            <Button variant="primary" onClick={() => alert('Create')}>
-                Save
-            </Button>
-        </BootstrapModal.Footer>
-    </BootstrapModal>
+
+type ModalProps = {
+    open: boolean;
+    onCancel: () => void
+    fetchData(signal?: AbortSignal): Promise<unknown>
+    selectedData?: TIntegrity
 }
 
-function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
-    return <BootstrapModal
-        show={show}
-        onHide={onHide}
-        centered
-    >
-        <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title id="example-modal-sizes-title-sm">
-                Disable Integrity
-            </BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <BootstrapModal.Body>Disable Integrity?</BootstrapModal.Body>
-        <BootstrapModal.Footer>
-            <Button variant="secondary" onClick={onHide} title='Cancel'>
-                Cancel
-            </Button>
-            <Button variant="danger" onClick={() => alert('Delete')} title='Disabled'>
-                Disable
-            </Button>
-        </BootstrapModal.Footer>
-    </BootstrapModal>
+type Payload = {
+    name: string
+    description: string | null
+}
+
+function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
+    const [form] = Form.useForm<Payload>()
+    const [error, setError] = useState<string | undefined>(undefined);
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (open) {
+            if (selectedData) {
+                form.setFieldsValue({ ...selectedData })
+            } else {
+                form.resetFields()
+            }
+        }
+    }, [selectedData, open])
+
+    const onFinish = (v: Payload) => {
+        setLoading(true)
+        const result = !selectedData ? POST<Payload, ApiSuccess<TIntegrity>>('/integrity/', v) : PUT<Payload, ApiSuccess<TIntegrity>>('/integrity/' + selectedData.id, v);
+        result.then(() => {
+            setError(undefined)
+            form.resetFields()
+            onCancel()
+        })
+            .catch((err) => {
+                setError(err.message)
+            })
+            .finally(() => {
+                fetchData()
+                setLoading(false)
+            })
+    }
+    return <Modal open={open} onCancel={onCancel} footer={null} title={`Integrity - ${selectedData ? 'Edit' : 'Create'}`} forceRender>
+        <Form form={form} onFinish={onFinish} layout='vertical' disabled={loading}>
+            {error && (
+                <span className='error-text'>{error}</span>
+            )}
+            <Form.Item label='Integrity Name' name="name" rules={[{ required: true }]}>
+                <Input type="text" placeholder="Enter integrity name." />
+            </Form.Item>
+
+            <Form.Item label='Description' name="description" >
+                <Input.TextArea placeholder="Enter description." />
+            </Form.Item>
+
+            <Row justify='end'>
+                <Space>
+                    <Button variant="secondary" onClick={onCancel}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" type='submit' disabled={loading}>
+                        Save
+                    </Button>
+                </Space>
+            </Row>
+        </Form>
+    </Modal>
 }

@@ -180,7 +180,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             <FormItemLocation name='site_id' />
             <FormItemSystem name='system_id' />
             <Form.Item label='Description' name="description" >
-                <Input.TextArea placeholder="Enter sequence no." />
+                <Input.TextArea placeholder="Enter description" />
             </Form.Item>
 
             <Form.Item label='Disable' name="is_active" valuePropName="checked">

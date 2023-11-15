@@ -211,6 +211,18 @@ type TPhase = {
     updated_at: string
     description: string | null
 } & Common
+type TAvailability = {
+    is_active: string
+    name: string
+    updated_at: string
+    description: string | null
+} & Common
+type TIntegrity = {
+    is_active: string
+    name: string
+    updated_at: string
+    description: string | null
+} & Common
 // ================================
 // ================================
 

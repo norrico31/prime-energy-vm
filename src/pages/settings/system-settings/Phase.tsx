@@ -58,7 +58,7 @@ export default function Phase() {
                             setIsModalShow(true)
                             setSelectedData(record)
                         }}
-                        deleteData={() => DELETE('/systems/' + record.id).finally((fetchData))}
+                        deleteData={() => DELETE('/phases/' + record.id).finally((fetchData))}
                         dataTitle={record.name}
                         dataDescription={record.description!}
                     />
@@ -77,7 +77,6 @@ export default function Phase() {
             <h3 className='text-color-gray mb-2'>Phase Management</h3>
             <Row wrap justify='space-between' style={{ marginBottom: 10 }}>
                 <Col xs={12} sm={12} md={12} lg={8}>
-                    {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
                     <Input.Search type="text" placeholder="Search..." value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center'>
@@ -100,7 +99,7 @@ type ModalProps = {
 
 type Payload = {
     name: string
-    description: string
+    description: string | null
 }
 
 function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
@@ -134,7 +133,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
                 setLoading(false)
             })
     }
-    return <Modal open={open} onCancel={onCancel} footer={null} title={`Equipment - ${selectedData ? 'Edit' : 'Create'}`} forceRender>
+    return <Modal open={open} onCancel={onCancel} footer={null} title={`Phase - ${selectedData ? 'Edit' : 'Create'}`} forceRender>
         <Form form={form} onFinish={onFinish} layout='vertical' disabled={loading}>
             {error && (
                 <span className='error-text'>{error}</span>
@@ -144,7 +143,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             </Form.Item>
 
             <Form.Item label='Description' name="description" >
-                <Input.TextArea placeholder="Enter sequence no." />
+                <Input.TextArea placeholder="Enter description." />
             </Form.Item>
 
             <Row justify='end'>

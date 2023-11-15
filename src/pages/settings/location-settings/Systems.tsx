@@ -167,7 +167,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
                 <Input type="text" placeholder="Enter sequence no." />
             </Form.Item>
             <Form.Item label='Description' name="description" >
-                <Input.TextArea placeholder="Enter sequence no." />
+                <Input.TextArea placeholder="Enter description" />
             </Form.Item>
             <Form.Item label='Disable' name="is_active" valuePropName="checked">
                 <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
