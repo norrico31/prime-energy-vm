@@ -5,6 +5,7 @@ import { Table, ButtonActions, Button } from '../../components';
 
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 import { ColumnsType } from 'antd/es/table';
+import { FormItemLocation, FormItemSystem } from './Systems';
 
 export default function Equipments() {
     const [search, searchVal, inputChange] = useDebounceSearch()
@@ -134,7 +135,6 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     const [form] = Form.useForm<Payload>()
     const [error, setError] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false)
-    const [{ locations, systems }, setLists] = useState<{ locations: TLocation[]; systems: TSystems[] }>({ locations: [], systems: [] })
 
     useEffect(() => {
         if (open) {
@@ -146,26 +146,6 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             }
         }
     }, [selectedData, open])
-
-
-    useEffect(() => {
-        const controller = new AbortController();
-        (async () => {
-            try {
-                const promiseLocs = GET<ApiSuccess<TLocation[]>>('/sites', controller.signal)
-                const promiseSys = GET<ApiSuccess<TSystems[]>>('/systems', controller.signal)
-                const locRes = await promiseLocs
-                const sysRes = await promiseSys
-                setLists({
-                    locations: locRes.data.data,
-                    systems: sysRes.data.data
-                })
-            } catch (error) {
-                return error
-            }
-        })()
-        return () => controller.abort()
-    }, [])
 
     const onFinish = (v: Payload) => {
         setLoading(true)
@@ -199,24 +179,8 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             <Form.Item label='Equipment ID' name="equipment_id" rules={[{ required: true }]}>
                 <Input type="text" placeholder="Enter equipment id." />
             </Form.Item>
-            <Form.Item label="Location" name='site_id'>
-                <Select placeholder='Select Location' optionFilterProp="children" showSearch allowClear>
-                    {locations.map((loc) => (
-                        <Select.Option value={loc.id} key={loc.id}>
-                            {loc.name}
-                        </Select.Option>
-                    ))}
-                </Select>
-            </Form.Item>
-            <Form.Item label="Systems" name='system_id'>
-                <Select placeholder='Select System' optionFilterProp="children" showSearch allowClear>
-                    {systems.map((sys) => (
-                        <Select.Option value={sys.id} key={sys.id}>
-                            {sys.name}
-                        </Select.Option>
-                    ))}
-                </Select>
-            </Form.Item>
+            <FormItemLocation name='site_id' />
+            <FormItemSystem name='system_id' />
             <Form.Item label='Description' name="description" >
                 <Input.TextArea placeholder="Enter sequence no." />
             </Form.Item>

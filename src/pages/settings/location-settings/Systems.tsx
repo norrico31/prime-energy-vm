@@ -124,7 +124,6 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     const [form] = Form.useForm<Payload>()
     const [error, setError] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false)
-    const [locations, setLocations] = useState<TLocation[]>([])
 
     useEffect(() => {
         if (open) {
@@ -137,19 +136,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
         }
     }, [selectedData, open])
 
-    useEffect(() => {
-        const controller = new AbortController();
-        (async () => {
-            try {
-                const res = await GET<ApiSuccess<TLocation[]>>('/sites', controller.signal)
-                setLocations(res.data.data)
-                return res
-            } catch (error) {
-                return error
-            }
-        })()
-        return () => controller.abort()
-    }, [])
+
 
     const onFinish = (v: Payload) => {
         setLoading(true)
@@ -176,15 +163,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             <Form.Item label='System Name' name="name" rules={[{ required: true }]}>
                 <Input type="text" placeholder="Enter system name." />
             </Form.Item>
-            <Form.Item label="Location" name='site_id'>
-                <Select placeholder='Select Location' optionFilterProp="children" showSearch allowClear>
-                    {locations.map((loc) => (
-                        <Select.Option value={loc.id} key={loc.id}>
-                            {loc.name}
-                        </Select.Option>
-                    ))}
-                </Select>
-            </Form.Item>
+            <FormItemLocation name='site_id' />
             <Form.Item label='Sequence No.' name="sequence_no" rules={[{ required: true }]}>
                 <Input type="text" placeholder="Enter sequence no." />
             </Form.Item>
@@ -206,4 +185,57 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             </Row>
         </Form>
     </Modal >
+}
+
+export function FormItemLocation({ name }: { name: string }) {
+    const [locations, setLocations] = useState<TLocation[]>([])
+    useEffect(() => {
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiSuccess<TLocation[]>>('/sites', controller.signal)
+                setLocations(res.data.data)
+                return res
+            } catch (error) {
+                return error
+            }
+        })()
+        return () => controller.abort()
+    }, [])
+    return <Form.Item label="Location" name={name}>
+        <Select placeholder='Select Location' optionFilterProp="children" showSearch allowClear>
+            {locations.map((loc) => (
+                <Select.Option value={loc.id} key={loc.id}>
+                    {loc.name}
+                </Select.Option>
+            ))}
+        </Select>
+    </Form.Item>
+}
+
+export function FormItemSystem({ name }: { name: string }) {
+    const [systems, setLists] = useState<TSystems[]>([])
+    useEffect(() => {
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiSuccess<TSystems[]>>('/systems', controller.signal)
+                setLists(res.data.data)
+                return res
+            } catch (error) {
+                return error
+            }
+        })()
+        return () => controller.abort()
+    }, [])
+
+    return <Form.Item label="Systems" name={name}>
+        <Select placeholder='Select System' optionFilterProp="children" showSearch allowClear>
+            {systems.map((sys) => (
+                <Select.Option value={sys.id} key={sys.id}>
+                    {sys.name}
+                </Select.Option>
+            ))}
+        </Select>
+    </Form.Item>
 }
