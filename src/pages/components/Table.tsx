@@ -1,61 +1,37 @@
-import { PropsWithChildren } from 'react'
-import BootstrapTable from 'react-bootstrap/Table'
-import Spinner from 'react-bootstrap/Spinner'
-import { Pagination } from '.'
+import { ReactNode } from 'react'
+import { Table as AntDTable } from 'antd'
+import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
-type Table = {
+type Props<T> = {
     loading: boolean
-    columns?: TableColHead
-    pageProps: PageProps
+    columns: ColumnsType<T>;
+    dataSource: Array<T>
+
+} & Partial<{
+    isSizeChanger: boolean;
+    tableParams: TableParams<TablePaginationConfig>;
+    onChange: (pagination: TablePaginationConfig) => void
+}>
+
+export default function Table<D extends Partial<Common>>({ loading, columns, dataSource, tableParams, isSizeChanger, onChange }: Props<D>) {
+    return <AntDTable
+        loading={loading}
+        columns={columns as ColumnsType<D>}
+        dataSource={dataSource ?? []}
+        rowKey={d => d?.id as string} scroll={{ x: 100, }}
+        onChange={onChange}
+        pagination={tableParams ? {
+            ...tableParams?.pagination,
+            showSizeChanger: isSizeChanger,
+            position: ['bottomCenter'],
+            showTotal: (number: number) => <p style={{ marginRight: '1rem' }}>Total: {number}</p>,
+            itemRender: ItemRender,
+        } : false}
+    />
 }
 
-
-const mainColumns: TableColHead = [
-    {
-        colHead: 'Ref No.',
-    },
-    {
-        colHead: 'Data Added',
-    },
-    {
-        colHead: 'Vulnerability Title',
-    },
-    {
-        colHead: 'Availability',
-    },
-    {
-        colHead: 'Integrity',
-    },
-    {
-        colHead: 'Threat Classification',
-    },
-    {
-        colHead: 'Threat Owner',
-    },
-    {
-        colHead: 'Status',
-    },
-    {
-        colHead: 'Action',
-    },
-]
-
-export default function Table({ columns, loading, pageProps, children }: PropsWithChildren<Table>) {
-    const renderCols = columns !== undefined ? columns : mainColumns
-    return loading ? <Spinner animation="border" />
-        : <div className='text-center'>
-            <BootstrapTable responsive="sm" size='sm' variant={undefined} className='table-component-bg mt-3'>
-                <thead>
-                    <tr>
-                        {renderCols.map((c, idx) => (
-                            <th key={idx} style={{ fontWeight: 'normal' }}>{c.colHead}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {children}
-                </tbody>
-            </BootstrapTable>
-            <Pagination {...pageProps} />
-        </div>
+function ItemRender(_: number, type: string, originalElement: ReactNode) {
+    if (type === 'prev') return <a id='#pagination'>Previous</a>
+    if (type === 'next') return <a id='#pagination'>Next</a>
+    return originalElement
 }

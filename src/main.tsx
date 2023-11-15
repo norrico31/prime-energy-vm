@@ -1,19 +1,7 @@
 import { createRoot } from 'react-dom/client'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App.tsx'
 import './index.css'
-
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			keepPreviousData: true,
-			staleTime: 0,
-			cacheTime: 0,
-			refetchOnWindowFocus: false
-		}
-	}
-})
 
 const { fetch: originalFetch } = window;
 window.fetch = async (...[resource, config]: Parameters<typeof originalFetch>): Promise<Response> => {
@@ -36,7 +24,5 @@ window.fetch = async (...[resource, config]: Parameters<typeof originalFetch>): 
 }
 
 createRoot(document.getElementById('root')!).render(
-	<QueryClientProvider client={queryClient}>
-		<App />
-	</QueryClientProvider>
+	<App />
 )

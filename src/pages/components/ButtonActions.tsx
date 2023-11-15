@@ -1,9 +1,10 @@
 import Button from './Button'
+import { Popconfirm, Space } from 'antd';
 import { BsTrash, BsEye } from 'react-icons/bs';
 import { AiOutlineEdit, AiOutlineDownload, AiOutlineLock } from 'react-icons/ai'
 
-export default function ButtonActions({ loading, editData, viewData, deleteData, download, disabled }: ButtonActionProps) {
-    return <>
+export default function ButtonActions({ loading, editData, viewData, deleteData, download, disabled, dataTitle, dataDescription }: ButtonActionProps) {
+    return <Space>
         {viewData && (
             <Button variant="info" loading={loading} title='View' onClick={viewData}>
                 <BsEye />
@@ -15,9 +16,17 @@ export default function ButtonActions({ loading, editData, viewData, deleteData,
             </Button>
         )}
         {deleteData && (
-            <Button variant="danger" loading={loading} title='Delete' onClick={deleteData}>
-                <BsTrash />
-            </Button>
+            <Popconfirm
+                title={`Delete the ${dataTitle?.toLocaleUpperCase()}`}
+                description={`Are you sure to delete this ${dataDescription}?`}
+                okText='Delete'
+                cancelText="No"
+                onConfirm={deleteData}
+            >
+                <Button variant="danger" loading={loading} title='Delete'>
+                    <BsTrash />
+                </Button>
+            </Popconfirm>
         )}
         {download && (
             <Button variant="success" loading={loading} title='Download' onClick={download}>
@@ -29,5 +38,5 @@ export default function ButtonActions({ loading, editData, viewData, deleteData,
                 <AiOutlineLock />
             </Button>
         )}
-    </>
+    </Space>
 }

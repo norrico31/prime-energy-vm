@@ -6,7 +6,7 @@ import { Link, Navigate } from 'react-router-dom'
 import { IoMdArrowDropdown } from 'react-icons/io'
 import { useAuthUser } from '../../../shared/contexts/AuthUser'
 import { useAuthToken } from '../../../shared/contexts/AuthToken'
-import { crudApi } from '../../../shared/hooks/useDataResource'
+import { crudApi } from '../../../shared/utils/fetch'
 
 const { Header: AntDHeader } = Layout
 
@@ -49,24 +49,23 @@ function UserSettings() {
     const { token, setToken } = useAuthToken()
     const { user, setUser } = useAuthUser()
 
-    useEffect(() => {
-        const controller = new AbortController();
-        if (!user && token) {
-            (async () => {
-                try {
-                    const data = await crudApi<{ data: User }>(`/auth_user`, { signal: controller.signal, headers: { Authorization: `Bearer ${token}` } })
-                    console.log('user: ', data.data)
-                    setUser(data?.data)
-                    return data
-                } catch (error) {
-                    return error
-                }
-            })()
-        }
-        return () => {
-            controller.abort()
-        }
-    }, [user, token])
+    // useEffect(() => {
+    //     const controller = new AbortController();
+    //     if (!user && token) {
+    //         (async () => {
+    //             try {
+    //                 const data = await crudApi<{ data: User }>(`/auth_user`, { signal: controller.signal, headers: { Authorization: `Bearer ${token}` } })
+    //                 setUser(data?.data)
+    //                 return data
+    //             } catch (error) {
+    //                 return error
+    //             }
+    //         })()
+    //     }
+    //     return () => {
+    //         controller.abort()
+    //     }
+    // }, [user, token])
 
     if (token == null) return <Navigate to='/login' />;
 
@@ -89,12 +88,12 @@ function UserSettings() {
     function logout(evt: React.MouseEvent) {
         evt.stopPropagation()
         evt.preventDefault()
-        crudApi('/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
-            .then(() => {
-                setUser(undefined)
-                setToken(null)
-                localStorage.clear()
-            })
+        // crudApi('/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
+        //     .then(() => {
+        //         setUser(undefined)
+        //         setToken(null)
+        //         localStorage.clear()
+        //     })
     }
 
     return <Dropdown menu={{ items }}>

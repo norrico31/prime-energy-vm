@@ -6,6 +6,7 @@ export { default as Button } from './Button'
 // COMPONENTS
 export { default as Layout } from './layout/Layout'
 export { default as DataLists } from './DataLists'
+export { default as _Table } from './_Table'
 export { default as Table } from './Table'
 export { default as Notification } from './Notification'
 export { default as Pagination } from './Pagination'

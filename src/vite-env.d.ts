@@ -33,15 +33,15 @@ type ApiData<T> = {
     to: number
     total: number
 }
-type Queries = {
-    queryKey: string
+type ApiMethods = {
     paths: {
         get: string
-        post?: string
-        put?: string
-        delete?: string
-        download?: string
-    }
+    } & Partial<{
+        post: string
+        put: string
+        delete: string
+        download: string
+    }>
 }
 type ParallelFetch = {
     paths: string[]
@@ -76,6 +76,15 @@ type ToastNotification = {
     msg: string;
     onClose: () => void
 }
+type TableParams<T> = Partial<{
+    pagination: T
+    filters: Record<string, FilterValue | null>
+    sortField: string
+    sortOrder: string
+    order: string
+    field: string
+    search: string
+}>
 type PageProps = {
     active: number;
     total: number;
@@ -97,10 +106,13 @@ type ButtonActionProps = {
     loading: boolean
     editData?: () => void
     viewData?: () => void
-    deleteData?: () => void
     download?: () => void
     disabled?: () => void
-}
+} & Partial<{
+    deleteData: () => void
+    dataTitle: string
+    dataDescription: string
+}>
 // ================================
 // ================================
 
@@ -114,37 +126,11 @@ type TCredentials = {
 }
 type Common = {
     id: string;
-    user_id: string;
-    date: string;
     created_at: string;
     updated_at: string;
     deleted_at?: string;
-    user: User;
 }
 
-type WhosInOut = Common & {
-    type: string;
-    time_keeping_date: string;
-    time_keeping_time: string;
-    lat: string;
-    long: string;
-    img_url: string;
-    schedule_id: string;
-    scheduled_time: string;
-    location_id?: string;
-    is_client_site: number;
-    overtime_date: string;
-    schedule: Schedule;
-}
-
-type Schedule = Common & {
-    name: string;
-    time_in: string;
-    time_out: string;
-    is_active: string;
-    description: string;
-    full_sched: string;
-}
 
 type User = {
     // activity_logs:[{…}]
@@ -208,6 +194,14 @@ type TLocation = {
     id: string
     name: string
     updated_at: string
+}
+type TSystems = {
+    id: string,
+    name: string,
+    description: string,
+    sequence_no: number,
+    site: TLocation
+    is_active: string
 }
 // ================================
 // ================================

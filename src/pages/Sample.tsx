@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useDataResource } from '../shared/hooks/useDataResource'
+import { useDataResource } from '../shared/utils/fetch'
 import { useDebounceSearch } from '../shared/hooks/useDebounceSearch'
 import Table from 'react-bootstrap/Table'
 import Spinner from 'react-bootstrap/Spinner'

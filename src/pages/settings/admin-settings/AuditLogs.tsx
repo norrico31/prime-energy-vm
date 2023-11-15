@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Col, Row, Form, InputGroup } from 'react-bootstrap';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
-import { useDataResource } from '../../../shared/hooks/useDataResource';
+import { useDataResource } from '../../../shared/utils/fetch';
 import { Table, Button } from '../../components';
 import { AiOutlineSearch } from 'react-icons/ai';
 

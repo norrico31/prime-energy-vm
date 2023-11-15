@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-bootstrap';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
-import { useDataResource } from '../../../shared/hooks/useDataResource';
+import { useDataResource } from '../../../shared/utils/fetch';
 import { Table, ButtonActions, Button } from '../../components';
 
 type Payload = {

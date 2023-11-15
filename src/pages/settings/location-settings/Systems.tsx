@@ -1,172 +1,203 @@
-import { useState } from 'react'
-import { Form as AntDForm, Input, Select, Row as AntDRow, Space, Switch } from 'antd';
-import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-bootstrap';
-import { AiOutlineSearch } from 'react-icons/ai';
-import { useDataResource } from '../../../shared/hooks/useDataResource';
+import { useEffect, useState } from 'react'
+import { Input, Select, Row, Col, Space, Switch, Modal, Form } from 'antd';
 import { Table, ButtonActions, Button } from '../../components';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
+import { ColumnsType } from 'antd/es/table';
 
-type Payload = {
-    name: string
-    age: number
-    gender: string
-}
-
-const columns: TableColHead = [
-    {
-        colHead: 'Systems',
-    },
-    {
-        colHead: 'Location',
-    },
-    {
-        colHead: 'Sequence No.s',
-    },
-    {
-        colHead: 'Description',
-    },
-    {
-        colHead: 'Action',
-    },
-]
+import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 
 export default function Systems() {
     const [search, searchVal, inputChange] = useDebounceSearch()
-    const [currentPage, setCurrentPage] = useState(1);
-    // const [pageSize, setPageSize] = useState(10);
-    const [showModal, setShowModal] = useState(false);
-    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [isModalShow, setIsModalShow] = useState(false);
+    const [selectedData, setSelectedData] = useState<TSystems | undefined>(undefined);
+    const [loading, setLoading] = useState(true)
+    const [dataSource, setDataSource] = useState<TSystems[]>([])
 
-    const { data, isLoading } = useDataResource<ApiSuccess<WhosInOut[]>, Payload>({ queryKey: 'system', paths: { get: '/systems', post: '/systems' }, search, page: currentPage, limit: 10 })
+    useEffect(() => {
+        const controller = new AbortController();
+        fetchData(controller.signal)
+        return () => controller.abort()
+    }, [search])
 
-    const paginationProps: PageProps = {
-        active: data?.data?.current_page ?? 0,
-        total: data?.data?.total ?? 0,
-        perPage: data?.data?.per_page ?? 0,
-        lastPage: data?.data?.last_page ?? 0,
-        setCurrentPage
+    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
+        setLoading(true)
+        try {
+            const res = await GET<ApiSuccess<TSystems[]>>('/systems', signal!, params)
+            setDataSource(res.data.data)
+            return res
+        } catch (error) {
+            return error
+        } finally {
+            setLoading(false)
+        }
     }
 
-    // const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
-    //     setCurrentPage(1)
-    //     setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
-    // }
+    const columns: ColumnsType<TSystems> = [
+        {
+            title: 'Systems',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Location',
+            dataIndex: 'location_name',
+            key: 'name',
+        },
+        {
+            title: 'Sequence No.s',
+            dataIndex: 'sequence_no',
+            key: 'sequence_no',
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            align: 'center',
+            render: (_, record) => (
+                <Space>
+                    <div></div>
+                    <ButtonActions
+                        loading={loading}
+                        editData={() => {
+                            setIsModalShow(true)
+                            setSelectedData(record)
+                        }}
+                        deleteData={() => DELETE('/systems/' + record.id).finally((fetchData))}
+                        dataTitle={record.name}
+                        dataDescription={record.description!}
+                    />
+                </Space>
+            ),
+        },
+    ]
 
-    const onHide = () => {
-        setShowModal(false)
-    }
-
-    const onHideDelete = () => {
-        setShowModalDelete(false)
+    const onCancel = () => {
+        setIsModalShow(false)
+        setSelectedData(undefined)
     }
 
     return (
         <>
-            <Row>
-                <h4 className='mb-3'>Systems</h4>
-            </Row>
-            <Row>
-                <Col xs={8} sm={7} md={6} lg={4}>
+            <h3 className='text-color-gray mb-2'>Systems Management</h3>
+            <Row wrap justify='space-between' style={{ marginBottom: 10 }}>
+                <Col xs={12} sm={12} md={12} lg={8}>
                     {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
-                    <InputGroup>
-                        <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
-                        <InputGroup.Text style={{ borderRadius: 0 }}>
-                            <AiOutlineSearch />
-                        </InputGroup.Text>
-                    </InputGroup>
+                    <Input.Search type="text" placeholder="Search..." value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center'>
-                    <Button variant='success' title='Create' onClick={() => setShowModal(true)}>Create</Button>
+                    <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
                 </Col>
             </Row>
-            <Table
-                loading={false}
-                pageProps={paginationProps}
-                columns={columns}
-            >
-                {data?.data.data.map(d => {
-                    return <tr key={d.id}>
-                        <td >{d.user.full_name}</td>
-                        <td >{d.time_keeping_date}</td>
-                        <td className='d-flex justify-content-center gap-1'>
-                            <ButtonActions
-                                loading={isLoading}
-                                // editData={() => createData({ name: 'gerald' })}
-                                disabled={() => setShowModalDelete(true)}
-                            />
-                        </td>
-                    </tr>
-                })}
-            </Table>
-            <Modal show={showModal} onHide={onHide} />
-            <ModalDelete show={showModalDelete} onHide={onHideDelete} />
+            <Table<TSystems> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
+
+            <ModalInput open={isModalShow} onCancel={onCancel} fetchData={fetchData} selectedData={selectedData} />
         </>
     )
 }
 
-function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
-    const [form] = AntDForm.useForm()
-    const onFinish = (v: unknown) => {
-        // hit endpoint for create/edit
-        console.log(v)
-    }
-    return <BootstrapModal show={show} onHide={onHide} footer={null}>
-        <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>System - Create</BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <BootstrapModal.Body>
-            <AntDForm form={form} onFinish={onFinish} layout='vertical'>
-                <AntDForm.Item label='System Name' name="name" rules={[{ required: true }]}>
-                    <Input type="text" placeholder="Enter system name." />
-                </AntDForm.Item>
-                <AntDForm.Item label="Location" name='site_id'>
-                    <Select placeholder='Select Location' optionFilterProp="children" >
-                        {/* <Select.Option value="short_term">Short Term</Select.Option> */}
-                    </Select>
-                </AntDForm.Item>
-                <AntDForm.Item label='Sequence No.' name="sequence_no" rules={[{ required: true }]}>
-                    <Input type="text" placeholder="Enter sequence no." />
-                </AntDForm.Item>
-                <AntDForm.Item label='Description' name="description" >
-                    <Input.TextArea placeholder="Enter sequence no." />
-                </AntDForm.Item>
-                <AntDForm.Item label='Disable' name="is_active" >
-                    <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
-                </AntDForm.Item>
-                <AntDRow justify='end' >
-                    <Space>
-                        <Button variant="secondary" onClick={onHide}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" type='submit'>
-                            Save
-                        </Button>
-                    </Space>
-                </AntDRow>
-            </AntDForm>
-        </BootstrapModal.Body>
-    </BootstrapModal >
+type ModalProps = {
+    open: boolean;
+    onCancel: () => void
+    fetchData(signal?: AbortSignal): Promise<unknown>
+    selectedData?: TSystems
 }
 
-function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
-    return <BootstrapModal
-        show={show}
-        onHide={onHide}
-        centered
-    >
-        <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title id="example-modal-sizes-title-sm">
-                Disabled Systems
-            </BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <BootstrapModal.Body>Disable Selected Systems</BootstrapModal.Body>
-        <BootstrapModal.Footer>
-            <Button variant="secondary" onClick={onHide} title='Cancel'>
-                Cancel
-            </Button>
-            <Button variant="danger" onClick={() => alert('Delete')} title='Disabled'>
-                Disable
-            </Button>
-        </BootstrapModal.Footer>
-    </BootstrapModal>
+type Payload = {
+    name: string
+    site_id: string
+    sequence_no: number
+    description: string
+    is_active: number
+}
+
+function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
+    const [form] = Form.useForm<Payload>()
+    const [error, setError] = useState<string | undefined>(undefined);
+    const [loading, setLoading] = useState(false)
+    const [locations, setLocations] = useState<TLocation[]>([])
+
+    useEffect(() => {
+        if (open) {
+            if (selectedData) {
+                console.log(typeof Number(selectedData?.is_active))
+                form.setFieldsValue({ ...selectedData, site_id: selectedData?.site?.id, is_active: Number(selectedData?.is_active) ? 1 : 0 })
+            } else {
+                form.resetFields()
+            }
+        }
+    }, [selectedData, open])
+
+    useEffect(() => {
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiSuccess<TLocation[]>>('/sites', controller.signal)
+                setLocations(res.data.data)
+                return res
+            } catch (error) {
+                return error
+            }
+        })()
+        return () => controller.abort()
+    }, [])
+
+    const onFinish = (v: Payload) => {
+        setLoading(true)
+        const result = !selectedData ? POST<Payload, ApiSuccess<TSystems>>('/systems/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload, ApiSuccess<TSystems>>('/systems/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
+        result.then(() => {
+            setError(undefined)
+            form.resetFields()
+            onCancel()
+        })
+            .catch((err) => {
+                setError(err.message)
+            })
+            .finally(() => {
+                fetchData()
+                setLoading(false)
+            })
+    }
+
+    return <Modal open={open} onCancel={onCancel} footer={null} title={`Systems - ${selectedData ? 'Edit' : 'Create'}`} forceRender>
+        <Form form={form} onFinish={onFinish} layout='vertical' disabled={loading}>
+            {error && (
+                <span className='error-text'>{error}</span>
+            )}
+            <Form.Item label='System Name' name="name" rules={[{ required: true }]}>
+                <Input type="text" placeholder="Enter system name." />
+            </Form.Item>
+            <Form.Item label="Location" name='site_id'>
+                <Select placeholder='Select Location' optionFilterProp="children" showSearch allowClear>
+                    {locations.map((loc) => (
+                        <Select.Option value={loc.id} key={loc.id}>
+                            {loc.name}
+                        </Select.Option>
+                    ))}
+                </Select>
+            </Form.Item>
+            <Form.Item label='Sequence No.' name="sequence_no" rules={[{ required: true }]}>
+                <Input type="text" placeholder="Enter sequence no." />
+            </Form.Item>
+            <Form.Item label='Description' name="description" >
+                <Input.TextArea placeholder="Enter sequence no." />
+            </Form.Item>
+            <Form.Item label='Disable' name="is_active" valuePropName="checked">
+                <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
+            </Form.Item>
+            <Row justify='end' >
+                <Space>
+                    <Button variant="secondary" onClick={onCancel}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" type='submit' disabled={loading}>
+                        Save
+                    </Button>
+                </Space>
+            </Row>
+        </Form>
+    </Modal >
 }

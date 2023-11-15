@@ -1,7 +1,7 @@
 import { useState, useReducer } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Modal, Col, Row, Container } from 'react-bootstrap'
-import { useDataResource } from '../../shared/hooks/useDataResource'
+import { useDataResource } from '../../shared/utils/fetch'
 import { Table, Button, ButtonActions, ListViewHeader } from '../components'
 
 const reducerState: ReducerState = {

@@ -5,7 +5,7 @@ import { Container } from 'react-bootstrap';
 import Logo from '../shared/assets/logo.png'
 import { useAuthToken } from '../shared/contexts/AuthToken';
 import { Navigate } from 'react-router-dom';
-import { crudApi } from '../shared/hooks/useDataResource';
+import { crudApi } from '../shared/utils/fetch';
 
 type Form = {
     email: string; password: string
