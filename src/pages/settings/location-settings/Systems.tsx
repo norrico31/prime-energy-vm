@@ -88,7 +88,7 @@ export default function Systems() {
 
     return (
         <>
-            <h3 className='text-color-gray mb-2'>Systems Management</h3>
+            <h3 className='text-color-gray mb-2'>Systems</h3>
             <Row wrap justify='space-between' style={{ marginBottom: 10 }}>
                 <Col xs={12} sm={12} md={12} lg={8}>
                     {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}

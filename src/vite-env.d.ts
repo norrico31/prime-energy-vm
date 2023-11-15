@@ -223,6 +223,12 @@ type TIntegrity = {
     updated_at: string
     description: string | null
 } & Common
+type TInitialRamRating = {
+    is_active: string
+    name: string
+    updated_at: string
+    description: string | null
+} & Common
 // ================================
 // ================================
 
