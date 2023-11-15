@@ -188,6 +188,7 @@ type CardData = {
         text: string;
     }[];
 }
+// LOCATION SETTINGS
 type TLocation = {
     created_at: string
     description: string | null
@@ -203,6 +204,13 @@ type TSystems = {
     site: TLocation
     is_active: string
 }
+// SYSTEM SETTINGS
+type TPhase = {
+    is_active: string
+    name: string
+    updated_at: string
+    description: string | null
+} & Common
 // ================================
 // ================================
 

@@ -139,7 +139,6 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     useEffect(() => {
         if (open) {
             if (selectedData) {
-                console.log(typeof Number(selectedData?.is_active))
                 form.setFieldsValue({ ...selectedData, site_id: selectedData?.site?.id, is_active: Number(selectedData?.is_active) ? 1 : 0 })
             } else {
                 form.resetFields()
@@ -163,7 +162,6 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
                 setLoading(false)
             })
     }
-
 
     return <Modal open={open} onCancel={onCancel} footer={null} title={`Equipment - ${selectedData ? 'Edit' : 'Create'}`} forceRender>
         <Form form={form} onFinish={onFinish} layout='vertical' disabled={loading}>
