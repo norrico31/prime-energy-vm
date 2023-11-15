@@ -235,6 +235,18 @@ type TRamPriority = {
     updated_at: string
     description: string | null
 } & Common
+type TReAssesRamRating = {
+    is_active: string
+    name: string
+    updated_at: string
+    description: string | null
+} & Common
+type TStatus = {
+    is_active: string
+    name: string
+    updated_at: string
+    description: string | null
+} & Common
 // ================================
 // ================================
 

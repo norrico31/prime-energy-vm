@@ -1,5 +1,5 @@
 import { Tabs as AntDTabs } from 'antd'
-import { useLocation, useNavigate, Outlet, NavigateFunction } from 'react-router-dom'
+import { useLocation, useNavigate, Outlet } from 'react-router-dom'
 import { Row } from 'react-bootstrap'
 import useWindowSize from '../../../shared/hooks/useWindowResize'
 
@@ -45,18 +45,19 @@ function Tabs() {
     let { pathname } = useLocation()
     const navigate = useNavigate()
     pathname = pathname?.split('/')[2]
-    return <ResponsiveTabs pathname={pathname} navigate={navigate} />
+    const onChange = (k: string) => navigate(`/admin-settings` + k)
+    return <ResponsiveTabs pathname={pathname} items={adminTabs} onChange={onChange} />
 }
 
-function ResponsiveTabs({ pathname, navigate }: { pathname: string; navigate: NavigateFunction }) {
+export function ResponsiveTabs({ pathname, items, onChange }: { pathname: string; items: typeof adminTabs; onChange: (k: string) => void }) {
     const { width } = useWindowSize()
     return <AntDTabs
         destroyInactiveTabPane
         activeKey={'/' + pathname}
         tabPosition={width > 650 ? 'left' : 'top'}
         size='small'
-        onChange={(key) => navigate(`/admin-settings` + key)}
-        items={adminTabs.map((el) => ({
+        onChange={onChange}
+        items={items.map((el) => ({
             label: el.label,
             key: el.key,
             children: <Outlet />,

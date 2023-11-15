@@ -1,6 +1,6 @@
-import { useLocation, useNavigate, Outlet } from 'react-router-dom'
-import { Tabs as AntDTabs } from 'antd'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Row } from 'react-bootstrap'
+import { ResponsiveTabs } from '../admin-settings/AdminSettings'
 
 const systemTabs = [
     {
@@ -48,17 +48,7 @@ function Tabs() {
     let { pathname } = useLocation()
     const navigate = useNavigate()
     pathname = pathname?.split('/')[2]
-    // window size (mobile and tablet)
-    return <AntDTabs
-        destroyInactiveTabPane
-        activeKey={'/' + pathname}
-        tabPosition="top"
-        size='small'
-        onChange={(key) => navigate(`/system-settings` + key)}
-        items={systemTabs.map((el) => ({
-            label: el.label,
-            key: el.key,
-            children: <Outlet />,
-        }))}
-    />
+    const onChange = (k: string) => navigate(`/system-settings` + k)
+
+    return <ResponsiveTabs pathname={pathname} onChange={onChange} items={systemTabs} />
 }

@@ -74,7 +74,7 @@ export default function Phase() {
 
     return (
         <>
-            <h3 className='text-color-gray mb-2'>Phase Management</h3>
+            <h3 className='text-color-gray mb-2'>Phase</h3>
             <Row wrap justify='space-between' style={{ marginBottom: 10 }}>
                 <Col xs={12} sm={12} md={12} lg={8}>
                     <Input.Search type="text" placeholder="Search..." value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
