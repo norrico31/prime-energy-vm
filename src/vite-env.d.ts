@@ -229,6 +229,12 @@ type TInitialRamRating = {
     updated_at: string
     description: string | null
 } & Common
+type TRamPriority = {
+    is_active: string
+    name: string
+    updated_at: string
+    description: string | null
+} & Common
 // ================================
 // ================================
 
