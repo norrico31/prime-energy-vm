@@ -34,24 +34,30 @@ export default function Systems() {
 
     const columns: ColumnsType<TSystems> = [
         {
-            title: 'Systems',
+            title: 'System',
             dataIndex: 'name',
             key: 'name',
+            // width: 120
         },
         {
             title: 'Location',
             dataIndex: 'location_name',
             key: 'name',
+            render: (_, rec) => rec.site?.name,
+            // width: 120
         },
         {
-            title: 'Sequence No.s',
+            title: 'Sequence No.',
             dataIndex: 'sequence_no',
             key: 'sequence_no',
+            align: 'center',
+            // width: 130
         },
         {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
+            // width: 200,
         },
         {
             title: 'Action',
