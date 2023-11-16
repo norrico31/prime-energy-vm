@@ -146,6 +146,7 @@ type TUser = {
     last_name: string
     middle_name: string
     position: null
+    role: TRole
 }
 
 type AuditLogs = Common & {
@@ -205,6 +206,16 @@ type TSystems = {
     site: TLocation
     is_active: string
 }
+type TEquipment = {
+    description: string
+    equipment_id: string
+    equipment_tag: string
+    id: string
+    is_active: string
+    is_critical: string
+    name: string
+    system: TSystems
+} & Common
 // SYSTEM SETTINGS
 type TPhase = {
     is_active: string

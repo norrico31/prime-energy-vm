@@ -45,6 +45,10 @@ const shortenPathname = (path: string) => path.includes('-') ? path.split('-')[0
 
 const links = [
     {
+        to: 'critical-equipment',
+        title: 'Critical Equipment'
+    },
+    {
         to: 'swp',
         title: 'SWP'
     },
@@ -55,9 +59,5 @@ const links = [
     {
         to: 'pipelines',
         title: 'Pipelines'
-    },
-    {
-        to: 'critical-equipment',
-        title: 'Critical Equipment'
     },
 ]

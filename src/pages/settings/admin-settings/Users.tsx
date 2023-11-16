@@ -52,6 +52,7 @@ export default function TUsers() {
             title: 'Role',
             dataIndex: 'role',
             key: 'role',
+            render: (_, rec) => rec.role?.name
         },
         {
             title: 'Action',

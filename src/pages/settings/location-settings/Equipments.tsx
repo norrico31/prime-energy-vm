@@ -5,14 +5,14 @@ import { Table, ButtonActions, Button } from '../../components';
 
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 import { ColumnsType } from 'antd/es/table';
-import { FormItemLocation, FormItemSystem } from './Systems';
+import { FormItemSystem } from './Systems';
 
 export default function Equipments() {
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [isModalShow, setIsModalShow] = useState(false);
-    const [selectedData, setSelectedData] = useState<TSystems | undefined>(undefined);
+    const [selectedData, setSelectedData] = useState<TEquipment | undefined>(undefined);
     const [loading, setLoading] = useState(true)
-    const [dataSource, setDataSource] = useState<TSystems[]>([])
+    const [dataSource, setDataSource] = useState<TEquipment[]>([])
 
 
     useEffect(() => {
@@ -24,7 +24,7 @@ export default function Equipments() {
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
         try {
-            const res = await GET<ApiSuccess<TSystems[]>>('/equipments', signal!, params)
+            const res = await GET<ApiSuccess<TEquipment[]>>('/equipments', signal!, params)
             setDataSource(res.data.data)
             return res
         } catch (error) {
@@ -34,25 +34,18 @@ export default function Equipments() {
         }
     }
 
-    const columns: ColumnsType<TSystems> = [
+    const columns: ColumnsType<TEquipment> = [
         {
             title: 'Equipment',
             dataIndex: 'name',
             key: 'name',
             // width: 120
         },
-        // {
-        //     title: 'System',
-        //     dataIndex: 'system_id',
-        //     key: 'system_id',
-        //     render: (_, rec) => rec.
-        //     // width: 120
-        // },
         {
             title: 'Location',
             dataIndex: 'location_name',
             key: 'name',
-            render: (_, rec) => rec.site?.name,
+            render: (_, rec) => rec.system?.site?.name,
             // width: 120
         },
         {
@@ -60,6 +53,7 @@ export default function Equipments() {
             dataIndex: 'sequence_no',
             key: 'sequence_no',
             align: 'center',
+            render: (_, rec) => rec.system?.sequence_no
             // width: 130
         },
         {
@@ -108,7 +102,7 @@ export default function Equipments() {
                     <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
                 </Col>
             </Row>
-            <Table<TSystems> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
+            <Table<TEquipment> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
             <ModalInput open={isModalShow} onCancel={onCancel} selectedData={selectedData} fetchData={fetchData} />
         </>
     )
@@ -119,12 +113,12 @@ type ModalProps = {
     open: boolean;
     onCancel: () => void
     fetchData(signal?: AbortSignal): Promise<unknown>
-    selectedData?: TSystems
+    selectedData?: TEquipment
 }
 
 type Payload = {
     name: string
-    site_id: string
+    system_id: string
     sequence_no: number
     description: string
     is_active: number
@@ -139,7 +133,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     useEffect(() => {
         if (open) {
             if (selectedData) {
-                form.setFieldsValue({ ...selectedData, site_id: selectedData?.site?.id, is_active: Number(selectedData?.is_active) ? 1 : 0 })
+                form.setFieldsValue({ ...selectedData, system_id: selectedData?.system.id, is_active: Number(selectedData?.is_active) ? 1 : 0 })
             } else {
                 form.resetFields()
             }
@@ -148,7 +142,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
 
     const onFinish = (v: Payload) => {
         setLoading(true)
-        const result = !selectedData ? POST<Payload, ApiSuccess<TSystems>>('/equipments/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/equipments/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
+        const result = !selectedData ? POST<Payload, ApiSuccess<TEquipment>>('/equipments/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/equipments/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
         result.then(() => {
             setError(undefined)
             form.resetFields()
@@ -177,7 +171,6 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             <Form.Item label='Equipment ID' name="equipment_id" rules={[{ required: true, message: '' }]}>
                 <Input type="text" placeholder="Enter equipment id." />
             </Form.Item>
-            <FormItemLocation name='site_id' />
             <FormItemSystem name='system_id' />
             <Form.Item label='Description' name="description" >
                 <Input.TextArea placeholder="Enter description" />

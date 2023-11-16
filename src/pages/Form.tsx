@@ -115,6 +115,13 @@ function Forms() {
                     </Form.Item>
                 </Col>
             </Row>
+            <Row wrap gutter={[24, 24]} style={{ marginBottom: 20 }}>
+                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                    <Form.Item label="Due Date (mm/dd/yyyy)" name='due_date'>
+                        <DatePicker style={{ width: '100%' }} />
+                    </Form.Item>
+                </Col>
+            </Row>
             {classification == 'short_term' ? (
                 <Row wrap gutter={[24, 24]}>
                     <Col xs={24} sm={12} md={12} lg={12} xl={12}>

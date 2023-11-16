@@ -217,7 +217,7 @@ const links = [
         true
     ),
     getItemLinks(
-        <Link className={`text-decoration-none`} to='/system-settings/phase'>
+        <Link className={`text-decoration-none`} to='/system-settings/availability'>
             System Settings
         </Link>,
         '/system-settings',

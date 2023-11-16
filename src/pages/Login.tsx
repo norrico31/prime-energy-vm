@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Button, Input, Form, Col } from 'antd'
+import { Button, Input, Form, Col, Row } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Container } from 'react-bootstrap';
 import Logo from '../shared/assets/logo.png'
 import { useAuthToken } from '../shared/contexts/AuthToken';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 type Form = {
     email: string; password: string
@@ -18,7 +18,7 @@ function Login() {
     const [errors, setErrors] = useState<Array<string>>([])
     const { token, setToken } = useAuthToken()
 
-    if (token) return <Navigate to='/dashboard/swp' />
+    if (token) return <Navigate to='/dashboard/critical-equipment' />
 
     const onFinish = async (values: Form) => {
         setErrors([])
@@ -57,6 +57,10 @@ function Login() {
                             placeholder="Password"
                         />
                     </Form.Item>
+                    <Row justify='end'>
+                        {/* ENDPOINT FOR FORGOT PASSWORD */}
+                        <Link to='/login/forgot-password'>Forgot Password</Link>
+                    </Row>
                     <Form.Item shouldUpdate>
                         {() => (
                             <Button

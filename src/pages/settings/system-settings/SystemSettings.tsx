@@ -3,10 +3,10 @@ import { Row } from 'react-bootstrap'
 import { ResponsiveTabs } from '../admin-settings/AdminSettings'
 
 const systemTabs = [
-    {
-        key: '/phase',
-        label: 'Phase',
-    },
+    // {
+    //     key: '/phase',
+    //     label: 'Phase',
+    // },
     {
         key: '/availability',
         label: 'Availability',
@@ -15,18 +15,18 @@ const systemTabs = [
         key: '/integrity',
         label: 'Integrity',
     },
-    {
-        key: '/initial-ram-rating',
-        label: 'Initial Ram Rating',
-    },
-    {
-        key: '/ram-priority',
-        label: 'Ram Priority',
-    },
-    {
-        key: '/re-asses-ram-rating',
-        label: 'Re Asses Ram Rating',
-    },
+    // {
+    //     key: '/initial-ram-rating',
+    //     label: 'Initial Ram Rating',
+    // },
+    // {
+    //     key: '/ram-priority',
+    //     label: 'Ram Priority',
+    // },
+    // {
+    //     key: '/re-asses-ram-rating',
+    //     label: 'Re Asses Ram Rating',
+    // },
     {
         key: '/status',
         label: 'Status',

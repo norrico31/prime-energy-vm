@@ -63,7 +63,7 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         path: '',
-                        element: <Navigate to='swp' />
+                        element: <Navigate to='critical-equipment' />
                     },
                     {
                         path: 'swp',
@@ -232,10 +232,6 @@ export const routes = createBrowserRouter([
                 element: <Suspense><SystemSettings /></Suspense>,
                 children: [
                     {
-                        path: 'phase',
-                        element: <Suspense><Phase /></Suspense>
-                    },
-                    {
                         path: 'availability',
                         element: <Suspense><Availability /></Suspense>
                     },
@@ -244,21 +240,26 @@ export const routes = createBrowserRouter([
                         element: <Suspense><Integrity /></Suspense>
                     },
                     {
-                        path: 'initial-ram-rating',
-                        element: <Suspense><InitialRamRating /></Suspense>
-                    },
-                    {
-                        path: 'ram-priority',
-                        element: <Suspense><RamPriority /></Suspense>
-                    },
-                    {
-                        path: 're-asses-ram-rating',
-                        element: <Suspense><ReAssesRamRating /></Suspense>
-                    },
-                    {
                         path: 'status',
                         element: <Suspense><Status /></Suspense>
                     },
+                    // {
+                    //     path: 'phase',
+                    //     element: <Suspense><Phase /></Suspense>
+                    // },
+                    // {
+                    //     path: 'initial-ram-rating',
+                    //     element: <Suspense><InitialRamRating /></Suspense>
+                    // },
+                    // {
+                    //     path: 'ram-priority',
+                    //     element: <Suspense><RamPriority /></Suspense>
+                    // },
+                    // {
+                    //     path: 're-asses-ram-rating',
+                    //     element: <Suspense><ReAssesRamRating /></Suspense>
+                    // },
+
                 ]
             },
             {

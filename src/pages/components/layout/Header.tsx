@@ -90,7 +90,8 @@ function UserSettings() {
         evt.stopPropagation()
         evt.preventDefault()
         POST('/logout', {})
-            .then(() => {
+            .finally(() => {
+
                 setUser(undefined)
                 setToken(null)
                 localStorage.clear()
