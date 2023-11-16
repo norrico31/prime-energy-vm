@@ -51,21 +51,16 @@ export default function Location() {
             title: 'Action',
             key: 'action',
             align: 'center',
-            render: (_, record) => (
-                <Space>
-                    <div></div>
-                    <ButtonActions
-                        loading={loading}
-                        editData={() => {
-                            setIsModalShow(true)
-                            setSelectedData(record)
-                        }}
-                        deleteData={() => DELETE('/sites/' + record.id).finally((fetchData))}
-                        dataTitle={record.name}
-                        dataDescription={record.description!}
-                    />
-                </Space>
-            ),
+            render: (_, record) => <ButtonActions
+                loading={loading}
+                editData={() => {
+                    setIsModalShow(true)
+                    setSelectedData(record)
+                }}
+                deleteData={() => DELETE('/sites/' + record.id).finally((fetchData))}
+                dataTitle={record.name}
+                dataDescription={record.description!}
+            />,
         },
     ]
 
@@ -97,7 +92,7 @@ type ModalProps = {
 type Payload = {
     name: string
     description: string | null
-}
+} & Partial<{ id: string }>
 
 function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     const [form] = AntDForm.useForm<Payload>()
@@ -116,7 +111,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
 
     const onFinish = (v: Payload) => {
         setLoading(true)
-        const result = !selectedData ? POST<Payload, ApiSuccess<TLocation>>('/sites/', v) : PUT<Payload, ApiSuccess<TLocation>>('/sites/' + selectedData.id, v);
+        const result = !selectedData ? POST<Payload, ApiSuccess<TLocation>>('/sites/', v) : PUT<Payload>('/sites/' + selectedData.id, v);
         result.then(() => {
             setError(undefined)
             form.resetFields()
@@ -136,7 +131,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             <span className='error-text'>{error}</span>
         )}
         <AntDForm form={form} onFinish={onFinish} layout='vertical' disabled={loading}>
-            <AntDForm.Item label='Location Name' name="name" rules={[{ required: true }]}>
+            <AntDForm.Item label='Location Name' name="name" rules={[{ required: true, message: '' }]}>
                 <Input type="text" placeholder="Enter location name." />
             </AntDForm.Item>
             <AntDForm.Item label='Description' name="description" >

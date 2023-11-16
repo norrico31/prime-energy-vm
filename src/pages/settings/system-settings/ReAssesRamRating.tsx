@@ -101,7 +101,7 @@ type Payload = {
     name: string
     description: string | null
     is_active: number
-}
+} & Partial<{ id: string }>
 
 function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     const [form] = Form.useForm<Payload>()
@@ -120,7 +120,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
 
     const onFinish = (v: Payload) => {
         setLoading(true)
-        const result = !selectedData ? POST<Payload, ApiSuccess<TReAssesRamRating>>('/re_assess_ram_rating/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload, ApiSuccess<TReAssesRamRating>>('/re_assess_ram_rating/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
+        const result = !selectedData ? POST<Payload, ApiSuccess<TReAssesRamRating>>('/re_assess_ram_rating/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/re_assess_ram_rating/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
         result.then(() => {
             setError(undefined)
             form.resetFields()
@@ -139,7 +139,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             {error && (
                 <span className='error-text'>{error}</span>
             )}
-            <Form.Item label='Re Asses Rating Name' name="name" rules={[{ required: true }]}>
+            <Form.Item label='Re Asses Rating Name' name="name" rules={[{ required: true, message: '' }]}>
                 <Input type="text" placeholder="Enter re asses ram rating name." />
             </Form.Item>
 

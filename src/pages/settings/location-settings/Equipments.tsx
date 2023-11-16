@@ -128,7 +128,7 @@ type Payload = {
     sequence_no: number
     description: string
     is_active: number
-}
+} & Partial<{ id: string }>
 
 
 function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
@@ -148,7 +148,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
 
     const onFinish = (v: Payload) => {
         setLoading(true)
-        const result = !selectedData ? POST<Payload, ApiSuccess<TSystems>>('/equipments/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload, ApiSuccess<TSystems>>('/equipments/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
+        const result = !selectedData ? POST<Payload, ApiSuccess<TSystems>>('/equipments/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/equipments/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
         result.then(() => {
             setError(undefined)
             form.resetFields()
@@ -168,13 +168,13 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             {error && (
                 <span className='error-text'>{error}</span>
             )}
-            <Form.Item label='Equipment' name="name" rules={[{ required: true }]}>
+            <Form.Item label='Equipment' name="name" rules={[{ required: true, message: '' }]}>
                 <Input type="text" placeholder="Enter equipment name." />
             </Form.Item>
-            <Form.Item label='Equipment Tag' name="equipment_tag" rules={[{ required: true }]}>
+            <Form.Item label='Equipment Tag' name="equipment_tag" rules={[{ required: true, message: '' }]}>
                 <Input type="text" placeholder="Enter equipment tag." />
             </Form.Item>
-            <Form.Item label='Equipment ID' name="equipment_id" rules={[{ required: true }]}>
+            <Form.Item label='Equipment ID' name="equipment_id" rules={[{ required: true, message: '' }]}>
                 <Input type="text" placeholder="Enter equipment id." />
             </Form.Item>
             <FormItemLocation name='site_id' />

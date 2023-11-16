@@ -5,11 +5,11 @@ import { Container } from 'react-bootstrap';
 import Logo from '../shared/assets/logo.png'
 import { useAuthToken } from '../shared/contexts/AuthToken';
 import { Navigate } from 'react-router-dom';
-import { crudApi } from '../shared/utils/fetch';
 
 type Form = {
     email: string; password: string
 }
+import { POST } from '../shared/utils/fetch'
 
 const { useForm } = Form
 
@@ -23,12 +23,7 @@ function Login() {
     const onFinish = async (values: Form) => {
         setErrors([])
         try {
-            const data = await crudApi<TCredentials>('/login', {
-                method: 'POST',
-                body: JSON.stringify({
-                    ...values
-                })
-            })
+            const data = await POST<Form, TCredentials>('/login', values)
             localStorage.setItem('token', JSON.stringify(data.data.token))
             setToken(data.data.token)
             return data
@@ -48,13 +43,13 @@ function Login() {
                     <span className='error-text'>{errors[0]}</span>
                     <Form.Item
                         name="email"
-                        rules={[{ required: true, message: 'Please input your email!', min: 5 }]}
+                        rules={[{ required: true, message: '', min: 5 }]}
                     >
                         <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
                     </Form.Item>
                     <Form.Item
                         name="password"
-                        rules={[{ required: true, message: 'Please input your password!', min: 4 }]}
+                        rules={[{ required: true, message: '', min: 4 }]}
                     >
                         <Input
                             prefix={<LockOutlined className="site-form-item-icon" />}

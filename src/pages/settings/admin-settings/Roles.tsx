@@ -1,160 +1,152 @@
-import { useState } from 'react'
-import { Col, Row, Form, Modal as BootstrapModal, InputGroup } from 'react-bootstrap';
-import { AiOutlineSearch } from 'react-icons/ai';
-import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
-import { useDataResource } from '../../../shared/utils/fetch';
-import { Table, ButtonActions, Button } from '../../components';
-
-type Payload = {
-    name: string
-    age: number
-    gender: string
-}
-
-const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
-const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
-
-const columns: TableColHead = [
-    {
-        colHead: 'Roles',
-    },
-    {
-        colHead: 'Description',
-    },
-    {
-        colHead: 'Action',
-    },
-]
+import { useEffect, useState } from 'react'
+import { Form as AntDForm, Input, Space, Col, Row, Modal } from 'antd'
+import { ColumnsType } from 'antd/es/table'
+import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch'
+import { ButtonActions, Button, Table } from '../../components'
+import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 
 export default function Roles() {
     const [search, searchVal, inputChange] = useDebounceSearch()
-    const [currentPage, setCurrentPage] = useState(1);
-    // const [pageSize, setPageSize] = useState(10);
-    const [showModal, setShowModal] = useState(false);
-    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [isModalShow, setIsModalShow] = useState(false);
+    const [selectedData, setSelectedData] = useState<TRoles | undefined>(undefined);
+    const [loading, setLoading] = useState(true)
+    const [dataSource, setDataSource] = useState<TRoles[]>([])
 
-    const { data, isLoading } = useDataResource<ApiSuccess<User[]>, Payload>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, search, page: currentPage, limit: 10 })
+    useEffect(() => {
+        const controller = new AbortController();
+        fetchData(controller.signal)
+        return () => controller.abort()
+    }, [search])
 
-    const paginationProps: PageProps = {
-        active: data?.data?.current_page ?? 0,
-        total: data?.data?.total ?? 0,
-        perPage: data?.data?.per_page ?? 0,
-        lastPage: data?.data?.last_page ?? 0,
-        setCurrentPage
+    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
+        setLoading(true)
+        try {
+            const res = await GET<ApiSuccess<TRoles[]>>('/roles', signal!, params)
+            setDataSource(res.data.data)
+            return res
+        } catch (error) {
+            return error
+        } finally {
+            setLoading(false)
+        }
     }
 
-    // const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
-    //     setCurrentPage(1)
-    //     setPageSize(isNaN(+v.target.value) ? 10 : parseInt(v.target.value))
-    // }
-
-    const onHide = () => {
-        setShowModal(false)
+    const onCancel = () => {
+        setIsModalShow(false)
+        setSelectedData(undefined)
     }
 
-    const onHideDelete = () => {
-        setShowModalDelete(false)
-    }
+    const columns: ColumnsType<TRoles> = [
+        {
+            title: 'Roles',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            align: 'center',
+            render: (_, record) => <ButtonActions
+                loading={loading}
+                editData={() => {
+                    setIsModalShow(true)
+                    setSelectedData(record)
+                }}
+                deleteData={() => DELETE('/roles/' + record.id).finally((fetchData))}
+                dataTitle={record.name}
+                dataDescription={record.description!}
+            />,
+        },
+    ]
 
     return (
         <>
             <h3 className='text-color-gray mb-2'>Roles</h3>
-            <Row>
-                <Col xs={8} sm={7} md={6} lg={4}>
-                    {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
-                    <InputGroup>
-                        <Form.Control required type="text" placeholder="Search..." className='w-50' value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
-                        <InputGroup.Text style={{ borderRadius: 0 }}>
-                            <AiOutlineSearch />
-                        </InputGroup.Text>
-                    </InputGroup>
+            <Row wrap justify='space-between' style={{ marginBottom: 10 }}>
+                <Col xs={12} sm={12} md={12} lg={8}>
+                    <Input.Search type="text" placeholder="Search..." value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center'>
-                    <Button variant='success' title='Create' onClick={() => setShowModal(true)}>Create</Button>
+                    <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
                 </Col>
             </Row>
-            <Table
-                loading={false}
-                pageProps={paginationProps}
-                columns={columns}
-            >
-                {data?.data.data.map(d => {
-                    return <tr key={d.id}>
-                        <td >{d.user.full_name}</td>
-                        <td >{d.email}</td>
-                        <td >{d.role?.name}</td>
-                        <td className='d-flex justify-content-center gap-1'>
-                            <ButtonActions
-                                loading={isLoading}
-                                // editData={() => createData({ name: 'gerald' })}
-                                disabled={() => setShowModalDelete(true)}
-                            />
-                        </td>
-                        <td>
-                            <div className='d-flex gap-1 justify-content-center'>
-                                <Button variant='success' title='active' size='sm'>Activate</Button>
-                                {/* <Button variant='danger' title='active' size='sm'>Deactivate</Button> */}
-                            </div>
-                        </td>
-                    </tr>
-                })}
-            </Table>
-            <Modal show={showModal} onHide={onHide} />
-            <ModalDelete show={showModalDelete} onHide={onHideDelete} />
+            <Table<TRoles> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
+            <ModalInput open={isModalShow} onCancel={onCancel} selectedData={selectedData} fetchData={fetchData} />
         </>
     )
 }
 
-function Modal({ show, onHide }: { show: boolean; onHide: () => void }) {
-    return <BootstrapModal show={show} onHide={onHide}>
-        <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Roles - Create</BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <BootstrapModal.Body>
-            <Row className="mb-3">
-                <Form.Group as={Col} controlId="formGridEmail">
-                    <Form.Label>Role Name</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter role name." />
-                </Form.Group>
-            </Row>
-
-            <Row>
-                <Form.Group as={Col} controlId="formGridPassword">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control required type="text" placeholder="Enter description." />
-                </Form.Group>
-            </Row>
-        </BootstrapModal.Body>
-        <BootstrapModal.Footer>
-            <Button variant="secondary" onClick={onHide}>
-                Cancel
-            </Button>
-            <Button variant="primary" onClick={() => alert('Create')}>
-                Submit
-            </Button>
-        </BootstrapModal.Footer>
-    </BootstrapModal>
+type ModalProps = {
+    open: boolean;
+    onCancel: () => void
+    fetchData(signal?: AbortSignal): Promise<unknown>
+    selectedData?: TRoles
 }
 
-function ModalDelete({ show, onHide }: { show: boolean; onHide: () => void }) {
-    return <BootstrapModal
-        show={show}
-        onHide={onHide}
-        centered
-    >
-        <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title id="example-modal-sizes-title-sm">
-                Disabled User
-            </BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <BootstrapModal.Body>Disable Selected Roles</BootstrapModal.Body>
-        <BootstrapModal.Footer>
-            <Button variant="secondary" onClick={onHide} title='Cancel'>
-                Cancel
-            </Button>
-            <Button variant="danger" onClick={() => alert('Delete')} title='Disabled'>
-                Disable
-            </Button>
-        </BootstrapModal.Footer>
-    </BootstrapModal>
+
+type Payload = {
+    name: string
+    description: string | null
+} & Partial<{ id: string }>
+
+function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
+    const [form] = AntDForm.useForm<Payload>()
+    const [error, setError] = useState<string | undefined>(undefined);
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (open) {
+            if (selectedData) {
+                form.setFieldsValue({ ...selectedData })
+            } else {
+                form.resetFields()
+            }
+        }
+    }, [selectedData, open])
+
+    const onFinish = (v: Payload) => {
+        setLoading(true)
+        const result = !selectedData ? POST<Payload, ApiSuccess<TRoles>>('/roles/', v) : PUT<Payload>('/roles/' + selectedData.id, v);
+        result.then(() => {
+            setError(undefined)
+            form.resetFields()
+            onCancel()
+        })
+            .catch((err) => {
+                setError(err.message)
+            })
+            .finally(() => {
+                fetchData()
+                setLoading(false)
+            })
+    }
+
+    return <Modal open={open} onCancel={onCancel} footer={null} title={`Roles - ${selectedData ? 'Edit' : 'Create'}`} forceRender>
+        {error && (
+            <span className='error-text'>{error}</span>
+        )}
+        <AntDForm form={form} onFinish={onFinish} layout='vertical' disabled={loading}>
+            <AntDForm.Item label='Roles Name' name="name" rules={[{ required: true, message: '' }]}>
+                <Input type="text" placeholder="Enter role name." />
+            </AntDForm.Item>
+            <AntDForm.Item label='Description' name="description" >
+                <Input.TextArea placeholder="Enter sequence no." />
+            </AntDForm.Item>
+            <Row justify='end' >
+                <Space>
+                    <Button variant="secondary" onClick={onCancel}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" type='submit' disabled={loading}>
+                        Save
+                    </Button>
+                </Space>
+            </Row>
+        </AntDForm>
+    </Modal>
 }

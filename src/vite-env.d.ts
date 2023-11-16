@@ -53,6 +53,7 @@ type ApiParams = {
     limit?: number
 }
 type RequestBody<T> = Record<string | number, string | number> & Partial<T>
+type WithId<T> = T extends { id: infer U } ? { id: U } : never;
 // ================================
 // ================================
 
@@ -121,7 +122,7 @@ type ButtonActionProps = {
 // ================================
 //* Modules
 type TCredentials = {
-    data: { token: string; user: User }
+    data: { token: string; user: TUser }
     message: string
 }
 type Common = {
@@ -132,7 +133,7 @@ type Common = {
 }
 
 
-type User = {
+type TUser = {
     // activity_logs:[{…}]
     department: string | null
     email: string
@@ -242,6 +243,13 @@ type TReAssesRamRating = {
     description: string | null
 } & Common
 type TStatus = {
+    is_active: string
+    name: string
+    updated_at: string
+    description: string | null
+} & Common
+// ADMIN SETTINIGS
+type TRoles = {
     is_active: string
     name: string
     updated_at: string

@@ -136,6 +136,12 @@ body, #root {
 :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-item, :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-submenu, :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-submenu-title {
   border-radius: 0;
 }
+:where(.css-dev-only-do-not-override-2i2tap).ant-form-vertical .ant-form-item-label, :where(.css-dev-only-do-not-override-2i2tap).ant-col-24.ant-form-item-label, :where(.css-dev-only-do-not-override-2i2tap).ant-col-xl-24.ant-form-item-label {
+  padding: 0;
+}
+:where(.css-dev-only-do-not-override-2i2tap).ant-form-item {
+  margin-bottom: 10px;;
+}
 .ant-menu-title-content {
   font-size: 16px;
 }

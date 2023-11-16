@@ -1,151 +1,152 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useReducer } from 'react'
+import { useState, useEffect } from 'react'
+import { Modal, Form, Space, Row, Col } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Modal, Col, Row, Container } from 'react-bootstrap'
-import { useDataResource } from '../../shared/utils/fetch'
 import { Table, Button, ButtonActions, ListViewHeader } from '../components'
+import { ColumnsType } from 'antd/es/table'
 
-const reducerState: ReducerState = {
-    view: false,
-    disable: false,
-    selectedData: undefined,
-    currentPage: 1,
-    pageSize: 10,
-}
-
-const MODAL_VIEW = 'MODAL_VIEW'
-const MODAL_DELETE = 'MODAL_DELETE'
-const CURRENT_PAGE = 'CURRENT_PAGE'
-const PAGE_SIZE = 'PAGE_SIZE'
-const ON_HIDE = 'ON_HIDE'
-
-function reducer<T>(state: ReducerState, action: Action<T>) {
-    switch (action.type) {
-        case MODAL_VIEW: {
-            return {
-                ...state,
-                view: true,
-                selectedData: action.payload
-            }
-        }
-        case MODAL_DELETE: {
-            return {
-                ...state,
-                disable: true,
-                selectedData: action.payload
-            }
-        }
-        case CURRENT_PAGE: {
-            return {
-                ...state,
-                currentPage: action.payload
-            }
-        }
-        case PAGE_SIZE: {
-            // TODO
-            // const pageSizeStorage = localStorage.getItem('pageSize')
-            return {
-                ...state,
-                pageSize: action.payload
-            }
-        }
-        case ON_HIDE: {
-            return {
-                ...state,
-                view: false,
-                disable: false,
-                selectedData: undefined
-            }
-        }
-        default: throw Error('Unknown action: ' + action);
-    }
-}
-
-const url = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
-const urlPost = 'https://hrportal.redcoresolutions.com/passthru/api/backend/time_keepings/whos/in?date=2023-10-05'
+import { GET, DELETE } from '../../shared/utils/fetch'
 
 export default function CriticalEquipmentView() {
     const { criticalEquipmentId } = useParams()
     const navigate = useNavigate()
-    // const [search, searchVal, inputChange] = useDebounceSearch()
-    const [{ currentPage, pageSize, }, dispatch] = useReducer((state: typeof reducerState, action: Action<any>) => reducer(state, action), reducerState);
-    const { data, isLoading } = useDataResource<ApiResponse<any[]>, unknown>({ queryKey: 'getWhos', paths: { get: url, post: urlPost }, page: currentPage, limit: pageSize })
-    const [selectedData, setSelectedData] = useState<any | undefined>(undefined);
+    const [isModalShow, setIsModalShow] = useState(false);
+    const [loading, setLoading] = useState(true)
+    const [selectedData, setSelectedData] = useState<TStatus | undefined>(undefined);
+    const [dataSource, setDataSource] = useState<TStatus[]>([])
 
-    const paginationProps: PageProps = {
-        active: data?.data?.current_page ?? 0,
-        total: data?.data?.total ?? 0,
-        perPage: data?.data?.per_page ?? 0,
-        lastPage: data?.data?.last_page ?? 0,
-        setCurrentPage: (payload: number) => dispatch({ type: CURRENT_PAGE, payload })
+    useEffect(() => {
+        const controller = new AbortController();
+        fetchData(controller.signal)
+        return () => controller.abort()
+    }, [])
+
+    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
+        setLoading(true)
+        try {
+            const res = await GET<ApiSuccess<TStatus[]>>('/critical_equipments', signal!, params)
+            setDataSource(res.data.data)
+            return res
+        } catch (error) {
+            return error
+        } finally {
+            setLoading(false)
+        }
     }
 
-    // const pageSizeChange = (v: React.ChangeEvent<HTMLSelectElement>) => {
-    //     dispatch({ type: CURRENT_PAGE, payload: 1 })
-    //     dispatch({ type: PAGE_SIZE, payload: isNaN(+v.target.value) ? 10 : parseInt(v.target.value) })
-    // }
+    const columns: ColumnsType<TStatus> = [
+        {
+            title: 'Ref No.',
+            dataIndex: 'ref_no',
+            key: 'ref_no',
+            // width: 120
+        },
+        {
+            title: 'Data Added',
+            dataIndex: 'data_added',
+            key: 'data_added',
+            // width: 200,
+        },
+        {
+            title: 'Vulnerability Title',
+            dataIndex: 'vulnerability_title',
+            key: 'vulnerability_title',
+            // width: 200,
+        },
+        {
+            title: 'Availability',
+            dataIndex: 'availability',
+            key: 'availability',
+            // width: 200,
+        },
+        {
+            title: 'Integrity',
+            dataIndex: 'integrity',
+            key: 'integrity',
+            // width: 200,
+        },
+        {
+            title: 'Threat Classification',
+            dataIndex: 'threat_classification',
+            key: 'threat_classification',
+            // width: 200,
+        },
+        {
+            title: 'Threat Owner',
+            dataIndex: 'threat_owner',
+            key: 'threat_owner',
+            // width: 200,
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            // width: 200,
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            align: 'center',
+            render: (_, record) => (
+                <Space>
+                    <div></div>
+                    <ButtonActions
+                        loading={loading}
+                        editData={() => {
+                            setIsModalShow(true)
+                            setSelectedData(record)
+                        }}
+                        deleteData={() => DELETE('/critical_equipments/' + record.id).finally((fetchData))}
+                        dataTitle={record.name}
+                        dataDescription={record.description!}
+                    />
+                </Space>
+            ),
+        },
+    ]
 
-    const onHide = () => {
-        dispatch({ type: ON_HIDE })
+    const onCancel = () => {
         setSelectedData(undefined)
+        setIsModalShow(false)
     }
 
     return (
         <>
-            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate('/critical-equipment')}>Back to Critical Equipments</Button>
             <ListViewHeader
                 handleCreate={() => navigate(`/critical-equipment/${criticalEquipmentId}/form`)}
             />
-            <Table
-                loading={false}
-                pageProps={paginationProps}
-            >
-                {data?.data.data.map(d => {
-                    return <tr key={d.id}>
-                        <td >{d.user.full_name}</td>
-                        <td >{d.account_type}</td>
-                        <td >{d.date}</td>
-                        <td >{d.action}</td>
-                        <td className='d-flex justify-content-center gap-1'>
-                            <ButtonActions
-                                loading={isLoading}
-                                viewData={() => setSelectedData(d)} // DISPLAY IN MODAL
-                                editData={() => navigate(`/critical-equipment/${criticalEquipmentId}/edit/${d.id}`)}
-                                disabled={() => alert('DISABLE SELECTED SWP')}
-                            />
-                        </td>
-                    </tr>
-                })}
-            </Table>
+            <Table<TStatus> loading={false} columns={columns} dataSource={dataSource} isSizeChanger />
             <ModalView
-                show={!!selectedData}
+                open={isModalShow}
                 selectedData={selectedData}
-                onHide={onHide}
+                onCancel={onCancel}
             />
         </>
     )
 }
 
-function ModalView({ selectedData, ...restProps }: { show: boolean; onHide: () => void; selectedData: any | undefined }) {
+
+
+type ModalProps = {
+    open: boolean;
+    onCancel: () => void
+    selectedData?: TStatus
+}
+function ModalView({ open, onCancel, selectedData, }: ModalProps) {
+    const [form] = Form.useForm()
+    console.log(form)
     return (
-        <Modal {...restProps} aria-labelledby="contained-modal-title-vcenter">
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Critical Equipment - View
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="grid-example">
-                <Container>
-                    <Row>
-                        <Col xs={12} md={8}>
-                            {JSON.stringify(selectedData, null, 2)}
-                        </Col>
-                        {/* <Col xs={6} md={4}>
+        <Modal open={open} onCancel={onCancel} footer={null} title={`Critical Equipment - ${selectedData ? 'Edit' : 'Create'}`} forceRender>
+
+            <Row>
+                <Col xs={12} md={8}>
+                    {JSON.stringify(selectedData, null, 2)}
+                </Col>
+                {/* <Col xs={6} md={4}>
                             .col-xs-6 .col-md-4
                         </Col> */}
-                    </Row>
+            </Row>
 
-                    {/* <Row>
+            {/* <Row>
                         <Col xs={6} md={4}>
                             .col-xs-6 .col-md-4
                         </Col>
@@ -156,11 +157,7 @@ function ModalView({ selectedData, ...restProps }: { show: boolean; onHide: () =
                             .col-xs-6 .col-md-4
                         </Col>
                     </Row> */}
-                </Container>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant='primary' onClick={restProps.onHide}>Close</Button>
-            </Modal.Footer>
+            <Button variant='primary' onClick={onCancel}>Close</Button>
         </Modal>
     );
 }

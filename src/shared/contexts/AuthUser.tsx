@@ -1,8 +1,8 @@
 import { useState, createContext, useContext, ReactNode } from 'react'
 
 const AuthUserContext = createContext<{
-    user?: User,
-    setUser: React.Dispatch<React.SetStateAction<User | undefined>>
+    user?: TUser,
+    setUser: React.Dispatch<React.SetStateAction<TUser | undefined>>
 }>({
     user: undefined,
     setUser: () => undefined
@@ -11,6 +11,6 @@ const AuthUserContext = createContext<{
 export const useAuthUser = () => useContext(AuthUserContext)
 
 export default function AuthUserProvider({ children }: { children: ReactNode }) {
-    const [user, setUser] = useState<User | undefined>(undefined)
+    const [user, setUser] = useState<TUser | undefined>(undefined)
     return <AuthUserContext.Provider value={{ user, setUser }}>{children}</AuthUserContext.Provider>
 }

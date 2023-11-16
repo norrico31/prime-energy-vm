@@ -24,10 +24,6 @@ const adminTabs = [
         key: '/audit-logs',
         label: 'Audit Logs',
     },
-    {
-        key: '/notification-logs',
-        label: 'Notification Logs',
-    },
 ]
 
 export default function AdminSettings() {

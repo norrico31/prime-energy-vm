@@ -100,7 +100,7 @@ type ModalProps = {
 type Payload = {
     name: string
     description: string | null
-}
+} & Partial<{ id: string }>
 
 function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     const [form] = Form.useForm<Payload>()
@@ -119,7 +119,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
 
     const onFinish = (v: Payload) => {
         setLoading(true)
-        const result = !selectedData ? POST<Payload, ApiSuccess<TIntegrity>>('/integrity/', v) : PUT<Payload, ApiSuccess<TIntegrity>>('/integrity/' + selectedData.id, v);
+        const result = !selectedData ? POST<Payload, ApiSuccess<TIntegrity>>('/integrity/', v) : PUT<Payload>('/integrity/' + selectedData.id, v);
         result.then(() => {
             setError(undefined)
             form.resetFields()
@@ -138,7 +138,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             {error && (
                 <span className='error-text'>{error}</span>
             )}
-            <Form.Item label='Integrity Name' name="name" rules={[{ required: true }]}>
+            <Form.Item label='Integrity Name' name="name" rules={[{ required: true, message: '' }]}>
                 <Input type="text" placeholder="Enter integrity name." />
             </Form.Item>
 

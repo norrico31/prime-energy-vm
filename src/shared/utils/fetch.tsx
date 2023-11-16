@@ -12,19 +12,22 @@ const POST = async <D, R>(path: string, data: D, headers?: RequestInit) => {
     try {
         const res = await crudApi<R>(path, { method: 'POST', body: JSON.stringify(data), ...headers })
         const message = (res as { message?: string })?.message
-        notification.open({
-            message: 'Create Successfully',
-            description: message,
-        });
-        return Promise.resolve(res)
+        if (message === 'Logout Successful' || message === 'Login Successful') return Promise.resolve(res)
+        else {
+            notification.open({
+                message: 'Create Successfully',
+                description: message,
+            });
+            return Promise.resolve(res)
+        }
     } catch (error) {
         return Promise.reject(error)
     }
 }
 
-const PUT = async <D, R>(path: string, data: D, headers?: RequestInit) => {
+const PUT = async <D extends Partial<{ id: string }>>(path: string, data: D, headers?: RequestInit) => {
     try {
-        const res = await crudApi<R>(path + data.id, { method: 'PUT', body: JSON.stringify(data), ...headers })
+        const res = await crudApi(path + data.id, { method: 'PUT', body: JSON.stringify(data), ...headers })
         const message = (res as { message?: string })?.message
         notification.open({
             message: 'Update Successfully',
@@ -52,54 +55,12 @@ const DELETE = async (path: string) => {
 
 export { GET, POST, PUT, DELETE }
 
-
-// const { data, isLoading, ...restQueries } = useQuery<Return<T>>({
-//     queryKey: [queryKey, tableParams],
-//     queryFn: async (): Promise<Return<T>> => {
-//         const res = await crudApi<T>(paths.get, { method: 'GET' }, { ...restProps, ...tableParams })
-//         const data = res as T as ApiSuccess<T>
-//         setTableParams({
-//             pagination: {
-//                 ...tableParams?.pagination,
-//                 total: data.data?.total,
-//                 current: data.data?.current_page,
-//             },
-//         })
-//         return res
-//     },
-// })
-
-// const { mutate: createData, error: errorCreate, isLoading: loadingCreate, status: statusCreate } = useMutation<P & Partial<{ '_method': 'PUT' }>>({
-//     queryKey,
-//     mutationFn: async (data: P & Partial<{ '_method': 'PUT' }>) => await crudApi(paths.post!, { method: 'POST', body: JSON.stringify(data) }),
-// })
-
-// const { mutate: editData, error: errorEdit, isLoading: loadingEdit, status: statusEdit } = useMutation<P & Partial<{ id: string }>>({
-//     queryKey,
-//     mutationFn: async (data: P & Partial<{ id: string }>) => await crudApi(paths.put + data.id!, { method: 'PUT', body: JSON.stringify(data) })
-// })
-// const { mutate: removeData, error: errorRemove, isLoading: loadingRemove } = useMutation<string>({
-//     queryKey,
-//     mutationFn: async (id: string) => await crudApi(paths.delete + id, { method: 'DELETE', body: JSON.stringify(id) })
-// })
-// const download = () => crudApi(paths?.download ?? '', {
-//     headers: {
-//         'Content-Disposition': "attachment; filename=task_report.xlsx",
-//         "Content-Type": "application/json",
-//     },
-// })
-// const tableChange = (pagination: TablePaginationConfig) => setTableParams({ ...tableParams, pagination: { current: pagination?.current, pageSize: pagination.pageSize! } })
-
-// return { ...restQueries, createData, editData, removeData, data, isLoading: (isLoading || loadingCreate || loadingEdit || loadingRemove), error: (errorEdit || errorCreate || errorRemove) as ApiError, download, statusCreate, statusEdit, tableParams, tableChange }
-
-
 async function crudApi<T>(reqPath: string, requestInit?: RequestInit, params?: TableParams<TablePaginationConfig>): Promise<T> {
     const url = urlParams(reqPath, params)
     const res = await fetch(url, { ...requestInit, headers: { ...requestInit?.headers } })
     if (!res.ok) return Promise.reject(res.json()) as T
     return Promise.resolve(res.json())
 }
-
 
 
 function urlParams(path: string, params?: TableParams<TablePaginationConfig>) {
