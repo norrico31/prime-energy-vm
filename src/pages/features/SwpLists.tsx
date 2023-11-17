@@ -1,8 +1,31 @@
-import { Row } from 'react-bootstrap'
+import { useState, useEffect } from 'react'
+import { Row } from 'antd'
 import { DataLists } from '../components'
+import { GET } from '../../shared/utils/fetch'
 
 // TODO: FETCH DATA HERE
 export default function SwpLists() {
+    const [loading, setLoading] = useState(true)
+    const [dataSource, setDataSource] = useState<TRoles[]>([])
+
+    useEffect(() => {
+        const controller = new AbortController();
+        fetchData(controller.signal)
+        return () => controller.abort()
+    }, [])
+
+    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
+        setLoading(true)
+        try {
+            const res = await GET<ApiSuccess<TRoles[]>>('/systems/dashboard?site=SWP', signal!, params)
+            setDataSource(res.data.data)
+            return res
+        } catch (error) {
+            return error
+        } finally {
+            setLoading(false)
+        }
+    }
     const data = [
         {
             title: 'WELL',

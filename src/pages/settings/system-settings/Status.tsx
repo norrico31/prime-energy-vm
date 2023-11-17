@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Input, Row, Col, Space, Modal, Form } from 'antd';
+import { Input, Row, Col, Space, Modal, Form, Switch } from 'antd';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { Table, ButtonActions, Button } from '../../components';
 
@@ -22,7 +22,7 @@ export default function Status() {
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
         try {
-            const res = await GET<ApiSuccess<TStatus[]>>('/status', signal!, params)
+            const res = await GET<ApiSuccess<TStatus[]>>('/statuses', signal!, params)
             setDataSource(res.data.data)
             return res
         } catch (error) {
@@ -58,7 +58,7 @@ export default function Status() {
                             setIsModalShow(true)
                             setSelectedData(record)
                         }}
-                        deleteData={() => DELETE('/status/' + record.id).finally((fetchData))}
+                        deleteData={() => DELETE('/statuses/' + record.id).finally((fetchData))}
                         dataTitle={record.name}
                         dataDescription={record.description!}
                     />
@@ -100,6 +100,7 @@ type ModalProps = {
 type Payload = {
     name: string
     description: string | null
+    is_active: number
 } & Partial<{ id: string }>
 
 function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
@@ -110,7 +111,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     useEffect(() => {
         if (open) {
             if (selectedData) {
-                form.setFieldsValue({ ...selectedData })
+                form.setFieldsValue({ ...selectedData, is_active: Number(selectedData?.is_active) ? 1 : 0 })
             } else {
                 form.resetFields()
             }
@@ -119,7 +120,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
 
     const onFinish = (v: Payload) => {
         setLoading(true)
-        const result = !selectedData ? POST<Payload, ApiSuccess<TStatus>>('/status/', v) : PUT<Payload>('/status/' + selectedData.id, v);
+        const result = !selectedData ? POST<Payload, ApiSuccess<TStatus>>('/statuses/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/statuses/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
         result.then(() => {
             setError(undefined)
             form.resetFields()
@@ -141,11 +142,12 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             <Form.Item label='Status' name="name" rules={[{ required: true, message: '' }]}>
                 <Input type="text" placeholder="Enter status name." />
             </Form.Item>
-
             <Form.Item label='Description' name="description" >
                 <Input.TextArea placeholder="Enter description." />
             </Form.Item>
-
+            <Form.Item label='Disable' name="is_active" valuePropName="checked">
+                <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
+            </Form.Item>
             <Row justify='end'>
                 <Space>
                     <Button variant="secondary" onClick={onCancel}>

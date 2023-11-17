@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Layout, Menu as AntdMenu, theme, MenuProps } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router-dom'
+import styled from 'styled-components';
 import { AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart } from 'react-icons/ai'
 import { FiSettings } from 'react-icons/fi'
 import { GiBrokenAxe } from 'react-icons/gi'
 import { TbSettingsCog } from 'react-icons/tb'
 import { MdLocationOn, MdAdminPanelSettings, MdOutlineDashboard, MdSystemUpdateAlt } from 'react-icons/md'
+import { FaUser } from "react-icons/fa";
 import Header from './Header';
 import VMLogo from '../../../shared/assets/logo_horizontal.svg'
 import Logo from '../../../shared/assets/logo.png'
-import styled from 'styled-components';
 
 const { Sider, Content } = Layout;
 
@@ -85,6 +86,7 @@ function Sidebar({ handleSelect }: { handleSelect: () => void }) {
             'location-settings': '/location-settings',
             'system-settings': '/system-settings',
             'admin-settings': '/admin-settings',
+            'profile': '/profile',
         }
         return paths[location]
     })
@@ -231,6 +233,15 @@ const links = [
         </Link>,
         '/admin-settings',
         <MdAdminPanelSettings />,
+        undefined,
+        true
+    ),
+    getItemLinks(
+        <Link className={`text-decoration-none`} to='/profile'>
+            Profile
+        </Link>,
+        '/profile',
+        <FaUser />,
         undefined,
         true
     ),

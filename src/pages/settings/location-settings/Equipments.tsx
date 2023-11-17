@@ -75,7 +75,7 @@ export default function Equipments() {
                             setIsModalShow(true)
                             setSelectedData(record)
                         }}
-                        deleteData={() => DELETE('/systems/' + record.id).finally((fetchData))}
+                        deleteData={() => DELETE('/equipments/' + record.id).finally((fetchData))}
                         dataTitle={record.name}
                         dataDescription={record.description!}
                     />
@@ -175,7 +175,6 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             <Form.Item label='Description' name="description" >
                 <Input.TextArea placeholder="Enter description" />
             </Form.Item>
-
             <Form.Item label='Disable' name="is_active" valuePropName="checked">
                 <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
             </Form.Item>
