@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Row, Col, Form, Modal, Input, Space, Select } from 'antd'
+import { Row, Col, Form, Modal, Input, Space, Select, Switch } from 'antd'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { Table, ButtonActions, Button } from '../../components';
 import { ColumnsType } from 'antd/es/table'
@@ -114,6 +114,7 @@ type ModalProps = {
 type Payload = {
     name: string
     description: string | null
+    is_active: number;
 } & Partial<{ id: string }>
 
 function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
@@ -124,7 +125,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     useEffect(() => {
         if (open) {
             if (selectedData) {
-                form.setFieldsValue({ ...selectedData })
+                form.setFieldsValue({ ...selectedData, is_active: Number(selectedData?.is_active) ? 1 : 0 })
             } else {
                 form.resetFields()
             }
@@ -133,7 +134,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
 
     const onFinish = (v: Payload) => {
         setLoading(true)
-        const result = !selectedData ? POST<Payload, ApiSuccess<TLocation>>('/users/', v) : PUT<Payload>('/users/' + selectedData.id, v);
+        const result = !selectedData ? POST<Payload, ApiSuccess<TLocation>>('/users/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/users/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
         result.then(() => {
             setError(undefined)
             form.resetFields()
@@ -173,6 +174,9 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             </Form.Item>
             <Form.Item label='Description' name="description" >
                 <Input.TextArea placeholder="Enter description" />
+            </Form.Item>
+            <Form.Item label='Active' name="is_active" valuePropName="checked">
+                <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
             </Form.Item>
             <Row justify='end' >
                 <Space>

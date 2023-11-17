@@ -133,7 +133,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     useEffect(() => {
         if (open) {
             if (selectedData) {
-                form.setFieldsValue({ ...selectedData, system_id: selectedData?.system.id, is_active: Number(selectedData?.is_active) ? 1 : 0 })
+                form.setFieldsValue({ ...selectedData, system_id: selectedData?.system?.id, is_active: Number(selectedData?.is_active) ? 1 : 0 })
             } else {
                 form.resetFields()
             }

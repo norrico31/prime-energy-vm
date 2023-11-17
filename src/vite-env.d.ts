@@ -130,8 +130,9 @@ type Common = {
     created_at: string;
     updated_at: string;
     deleted_at?: string;
+    is_active: string
+    name: string
 }
-
 
 type TUser = {
     // activity_logs:[{…}]
@@ -199,13 +200,11 @@ type TLocation = {
     updated_at: string
 }
 type TSystems = {
-    id: string,
-    name: string,
-    description: string,
-    sequence_no: number,
+    equipments: TEquipment[]
+    sequence_no: string
     site: TLocation
-    is_active: string
-}
+    site_id: string
+} & Common
 type TEquipment = {
     description: string
     equipment_id: string
