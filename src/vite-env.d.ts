@@ -201,7 +201,7 @@ type TLocation = {
 }
 type TSystems = {
     equipments: TEquipment[]
-    sequence_no: string
+    sequence_no: number
     site: TLocation
     site_id: string
 } & Common

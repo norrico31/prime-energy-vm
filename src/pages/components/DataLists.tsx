@@ -58,7 +58,7 @@ function DataItem({ to, data }: { to: string; data: TSystems }) {
 }
 
 export default function DataLists<T extends TSystems[]>({ to, dataList, idx = 0, loading }: { to: string; dataList: T, idx?: number; loading: boolean }) {
-    if (loading) return <Spin size="lg" />
+    if (loading) return <Spin size="large" />
     if (!dataList.length) return <div style={{ width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>
         <h3>No Data</h3>
     </div>

@@ -74,7 +74,7 @@ export default function Systems() {
                         }}
                         deleteData={() => DELETE('/systems/' + record.id).finally((fetchData))}
                         dataTitle={record.name}
-                        dataDescription={record.description!}
+                        dataDescription={record.name}
                     />
                 </Space>
             ),

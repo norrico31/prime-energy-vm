@@ -1,4 +1,4 @@
-import { Suspense as ReactSuspense, lazy, ReactNode } from "react"
+import { Suspense, lazy, ReactNode } from "react"
 import { Navigate, createBrowserRouter } from "react-router-dom"
 import { Layout } from "./pages/components"
 
@@ -31,12 +31,8 @@ const LocationEquipments = lazy(() => import('./pages/settings/location-settings
 
 // SYSTEM SETTINGS
 const SystemSettings = lazy(() => import('./pages/settings/system-settings/SystemSettings'))
-const Phase = lazy(() => import('./pages/settings/system-settings/Phase'))
 const Availability = lazy(() => import('./pages/settings/system-settings/Availability'))
 const Integrity = lazy(() => import('./pages/settings/system-settings/Integrity'))
-const InitialRamRating = lazy(() => import('./pages/settings/system-settings/InitialRamRating'))
-const RamPriority = lazy(() => import('./pages/settings/system-settings/RamPriority'))
-const ReAssesRamRating = lazy(() => import('./pages/settings/system-settings/ReAssesRamRating'))
 const Status = lazy(() => import('./pages/settings/system-settings/Status'))
 
 // ADMIN admin
@@ -47,10 +43,10 @@ const Roles = lazy(() => import('./pages/settings/admin-settings/Roles'))
 const Permission = lazy(() => import('./pages/settings/admin-settings/Permission'))
 const AuditLogs = lazy(() => import('./pages/settings/admin-settings/AuditLogs'))
 
-function Suspense({ children }: { children: ReactNode }) {
-    return <ReactSuspense fallback={<div />}>
+function AsyncComponent({ children }: { children: ReactNode }) {
+    return <Suspense fallback={<div />}>
         {children}
-    </ReactSuspense>
+    </Suspense>
 }
 
 export const routes = createBrowserRouter([
@@ -60,7 +56,7 @@ export const routes = createBrowserRouter([
         children: [
             {
                 path: 'dashboard',
-                element: <Suspense><Dashboard /></Suspense>,
+                element: <AsyncComponent><Dashboard /></AsyncComponent>,
                 children: [
                     {
                         path: '',
@@ -68,19 +64,19 @@ export const routes = createBrowserRouter([
                     },
                     {
                         path: 'swp',
-                        element: <Suspense><SwpLists /></Suspense>,
+                        element: <AsyncComponent><SwpLists /></AsyncComponent>,
                     },
                     {
                         path: 'ogp',
-                        element: <Suspense><OgpLists /></Suspense>,
+                        element: <AsyncComponent><OgpLists /></AsyncComponent>,
                     },
                     {
                         path: 'pipelines',
-                        element: <Suspense><PipelineLists /></Suspense>,
+                        element: <AsyncComponent><PipelineLists /></AsyncComponent>,
                     },
                     {
                         path: 'critical-equipment',
-                        element: <Suspense><CriticalEquipmentList /></Suspense>,
+                        element: <AsyncComponent><CriticalEquipmentList /></AsyncComponent>,
                     },
                 ]
             },
@@ -90,206 +86,186 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/profile',
-                element: <Suspense><Profile /></Suspense>
+                element: <AsyncComponent><Profile /></AsyncComponent>
             },
             {
                 path: '/swp',
-                element: <Suspense><Swp /></Suspense>,
+                element: <AsyncComponent><Swp /></AsyncComponent>,
                 children: [
                     {
                         path: '',
-                        element: <Suspense><SwpLists /></Suspense>,
+                        element: <AsyncComponent><SwpLists /></AsyncComponent>,
                     },
                     {
                         path: ':swpId',
                         children: [
                             {
                                 path: 'view',
-                                element: <Suspense><SwpView /></Suspense>,
+                                element: <AsyncComponent><SwpView /></AsyncComponent>,
                             },
                             {
                                 path: 'form',
-                                element: <Suspense><Form /></Suspense>,
+                                element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                             {
                                 path: 'edit/:swpItemId',
-                                element: <Suspense><Form /></Suspense>,
+                                element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                         ]
                     },
                     {
                         path: 'form',
-                        element: <Suspense><Form /></Suspense>,
+                        element: <AsyncComponent><Form /></AsyncComponent>,
                     }
 
                 ]
             },
             {
                 path: '/ogp',
-                element: <Suspense><Ogp /></Suspense>,
+                element: <AsyncComponent><Ogp /></AsyncComponent>,
                 children: [
                     {
                         path: '',
-                        element: <Suspense><OgpLists /></Suspense>,
+                        element: <AsyncComponent><OgpLists /></AsyncComponent>,
                     },
                     {
                         path: ':ogpId',
                         children: [
                             {
                                 path: 'view',
-                                element: <Suspense><OgpView /></Suspense>,
+                                element: <AsyncComponent><OgpView /></AsyncComponent>,
                             },
                             {
                                 path: 'form',
-                                element: <Suspense><Form /></Suspense>,
+                                element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                             {
                                 path: 'edit/:ogpItemId',
-                                element: <Suspense><Form /></Suspense>,
+                                element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                         ]
                     },
                     {
                         path: 'form',
-                        element: <Suspense><Form /></Suspense>,
+                        element: <AsyncComponent><Form /></AsyncComponent>,
                     }
-
                 ]
             },
             {
                 path: '/pipelines',
-                element: <Suspense><Pipelines /></Suspense>,
+                element: <AsyncComponent><Pipelines /></AsyncComponent>,
                 children: [
                     {
                         path: '',
-                        element: <Suspense><PipelineLists /></Suspense>,
+                        element: <AsyncComponent><PipelineLists /></AsyncComponent>,
                     },
                     {
                         path: ':pipelineId',
                         children: [
                             {
                                 path: 'view',
-                                element: <Suspense><PipelineView /></Suspense>,
+                                element: <AsyncComponent><PipelineView /></AsyncComponent>,
                             },
                             {
                                 path: 'form',
-                                element: <Suspense><Form /></Suspense>,
+                                element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                             {
                                 path: 'edit/:pipelineItemId',
-                                element: <Suspense><Form /></Suspense>,
+                                element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                         ]
                     },
                     {
                         path: 'form',
-                        element: <Suspense><Form /></Suspense>,
+                        element: <AsyncComponent><Form /></AsyncComponent>,
                     }
-
                 ]
             },
             {
                 path: '/critical-equipment',
-                element: <Suspense><CriticalEquipments /></Suspense>,
+                element: <AsyncComponent><CriticalEquipments /></AsyncComponent>,
                 children: [
                     {
                         path: '',
-                        element: <Suspense><CriticalEquipmentList /></Suspense>,
+                        element: <AsyncComponent><CriticalEquipmentList /></AsyncComponent>,
                     },
                     {
                         path: ':criticalEquipmentId',
                         children: [
                             {
                                 path: 'view',
-                                element: <Suspense><CriticalEquipmentView /></Suspense>,
+                                element: <AsyncComponent><CriticalEquipmentView /></AsyncComponent>,
                             },
                             {
                                 path: 'form',
-                                element: <Suspense><Form /></Suspense>,
+                                element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                             {
                                 path: 'edit/:criticalEquipmentItemId',
-                                element: <Suspense><Form /></Suspense>,
+                                element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                         ]
                     },
                     {
                         path: 'form',
-                        element: <Suspense><Form /></Suspense>,
+                        element: <AsyncComponent><Form /></AsyncComponent>,
                     }
-
                 ]
             },
             {
                 path: '/vulnerabilities',
-                element: <Suspense><Vulnerabilities /></Suspense>
+                element: <AsyncComponent><Vulnerabilities /></AsyncComponent>
             },
             {
                 path: '/Location-settings/systems',
-                element: <Suspense><LocationSystems /></Suspense>,
+                element: <AsyncComponent><LocationSystems /></AsyncComponent>,
             },
             {
                 path: '/Location-settings/equipments',
-                element: <Suspense><LocationEquipments /></Suspense>,
+                element: <AsyncComponent><LocationEquipments /></AsyncComponent>,
             },
             {
                 path: '/system-settings',
-                element: <Suspense><SystemSettings /></Suspense>,
+                element: <AsyncComponent><SystemSettings /></AsyncComponent>,
                 children: [
                     {
                         path: 'availability',
-                        element: <Suspense><Availability /></Suspense>
+                        element: <AsyncComponent><Availability /></AsyncComponent>
                     },
                     {
                         path: 'integrity',
-                        element: <Suspense><Integrity /></Suspense>
+                        element: <AsyncComponent><Integrity /></AsyncComponent>
                     },
                     {
                         path: 'status',
-                        element: <Suspense><Status /></Suspense>
+                        element: <AsyncComponent><Status /></AsyncComponent>
                     },
-                    // {
-                    //     path: 'phase',
-                    //     element: <Suspense><Phase /></Suspense>
-                    // },
-                    // {
-                    //     path: 'initial-ram-rating',
-                    //     element: <Suspense><InitialRamRating /></Suspense>
-                    // },
-                    // {
-                    //     path: 'ram-priority',
-                    //     element: <Suspense><RamPriority /></Suspense>
-                    // },
-                    // {
-                    //     path: 're-asses-ram-rating',
-                    //     element: <Suspense><ReAssesRamRating /></Suspense>
-                    // },
-
                 ]
             },
             {
                 path: '/admin-settings',
-                element: <Suspense><AdminSettings /></Suspense>,
+                element: <AsyncComponent><AdminSettings /></AsyncComponent>,
                 children: [
                     {
                         path: 'location',
-                        element: <Suspense><Location /></Suspense>
+                        element: <AsyncComponent><Location /></AsyncComponent>
                     },
                     {
                         path: 'users',
-                        element: <Suspense><Users /></Suspense>
+                        element: <AsyncComponent><Users /></AsyncComponent>
                     },
                     {
                         path: 'roles',
-                        element: <Suspense><Roles /></Suspense>
+                        element: <AsyncComponent><Roles /></AsyncComponent>
                     },
                     {
                         path: 'permission',
-                        element: <Suspense><Permission /></Suspense>
+                        element: <AsyncComponent><Permission /></AsyncComponent>
                     },
                     {
                         path: 'audit-logs',
-                        element: <Suspense><AuditLogs /></Suspense>
+                        element: <AsyncComponent><AuditLogs /></AsyncComponent>
                     },
                 ]
             },
@@ -297,6 +273,6 @@ export const routes = createBrowserRouter([
     },
     {
         path: '/login',
-        element: <Suspense><Login /></Suspense>
+        element: <AsyncComponent><Login /></AsyncComponent>
     }
 ])
