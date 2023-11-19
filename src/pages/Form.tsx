@@ -362,7 +362,7 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
                             }} />
                         </FloatingLabel>
                     </BootstrapForm.Group>
-                    <CloseButton onClick={() => removeRow(url.id)} disabled={urlList.length === 1} />
+                    <CloseButton style={{ marginLeft: 10 }} onClick={() => removeRow(url.id)} disabled={urlList.length === 1} />
                 </Row>
                 )}
             </Modal.Body>
@@ -375,7 +375,7 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
                     disabled={Object.values(urlList).map(Object.values).flat().some(u => u === '')}
                     onClick={() => {
                         onHide()
-                        setTimeout(() => setUrls(urlList), 500)
+                        setTimeout(() => setUrls(urlList), 300)
                     }}>Upload</Button>
             </Modal.Footer>
         </Modal>
