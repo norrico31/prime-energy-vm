@@ -4,30 +4,39 @@ import { Form as BootstrapForm, Modal, FloatingLabel, Table as BootstrapTable, C
 import { Row, Col, Form, Input, DatePicker, Select } from 'antd'
 import { Button, FileUpload } from './components';
 
+import { GET, POST, PUT } from '../shared/utils/fetch'
 const { useForm } = Form
 
 function Forms() {
     const params = useParams()
-    console.log(params)
     const navigate = useNavigate()
     const [form] = useForm()
-    const [classification, setClassification] = useState<string>('short_term');
-    const [urls, setUrls] = useState<typeof initDataRowState>([]);
+    const [classification, setClassification] = useState<string>('0');
+    const [url, setUrls] = useState<typeof initDataRowState>([]);
 
     useEffect(() => {
         // if (id === 'create') return
+        const controller = new AbortController();
+        if (!params?.transactionId) return
+        (async () => {
+            try {
+                const res = await GET<ApiSuccess<TLocation[]>>('/transactions/' + params?.equipmentId, controller.signal)
+                console.log(res)
+            } catch (error) {
+                return error
+            }
+        })()
         form.setFieldsValue({
             ...form.getFieldsValue(),
-            classification: 'short_term'
+            classification: '0'
         })
-        // FETCH ENDPOINT BY ID
+        return () => controller.abort()
     }, [])
 
     const onFinish = (values: Record<string, string | number>) => {
-        console.log({ ...values, urls })
+        console.log({ ...values, url })
         // edit create endpoint
     }
-
 
     return <>
 
@@ -49,12 +58,10 @@ function Forms() {
             </Row>
             <Row wrap gutter={[24, 24]}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Equipment" name='equipment'>
-                        <Input placeholder="Enter equipment" />
-                    </Form.Item>
+                    <FormItemEquipment name='equipment_id' />
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Threat Owner" name='theat_owner_id'>
+                    <Form.Item label="Threat Owner" name='threat_owner'>
                         <Select placeholder='Select threat owner'>
                             {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
                         </Select>
@@ -70,10 +77,10 @@ function Forms() {
                     </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Classification" name='classification'>
+                    <Form.Item label="Classification" name='is_longterm'>
                         <Select placeholder='Select classification' value={classification} onChange={setClassification} optionFilterProp="children">
-                            <Select.Option value="short_term">Short Term</Select.Option>
-                            <Select.Option value="long_term">Long Term</Select.Option>
+                            <Select.Option value="0">Short Term</Select.Option>
+                            <Select.Option value="1">Long Term</Select.Option>
                         </Select>
                     </Form.Item>
                 </Col>
@@ -122,7 +129,7 @@ function Forms() {
                     </Form.Item>
                 </Col>
             </Row>
-            {classification == 'short_term' ? (
+            {classification == '0' ? (
                 <Row wrap gutter={[24, 24]}>
                     <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                         <Form.Item label='Action Item' >
@@ -157,27 +164,59 @@ function Forms() {
                 </BootstrapForm.Group>
             </BootstrapRow>
             <Row className="mb-3">
-                <FormUrl urls={urls} setUrls={setUrls} />
+                <FormUrl url={url} setUrls={setUrls} />
             </Row>
             <ButtonSubmit />
         </Form>
     </>
+}
 
+function FormItemEquipment({ name }: { name: string }) {
+    let { pathname } = useLocation()
+    pathname = pathname.split('/')[1].toLowerCase()
+    // console.log(pathname);
+    let [equipments, setEquipments] = useState<TEquipment[]>([]);
+
+    equipments = equipments.filter((e) => e.system.name.toLocaleLowerCase() === pathname)
+
+    useEffect(() => {
+        // if (id === 'create') return
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiSuccess<TEquipment[]>>('/equipments', controller.signal)
+                setEquipments(res.data.data ?? [])
+            } catch (error) {
+                return error
+            }
+        })();
+        return () => controller.abort()
+    }, [])
+
+    return <Form.Item label="Equipment" name={name}>
+        <Select placeholder='Select Equipment' optionFilterProp="children" showSearch allowClear>
+            {equipments.map((eq) => (
+                <Select.Option value={eq.id} key={eq.id}>
+                    {eq.name} - {eq.system?.name}
+                </Select.Option>
+            ))}
+        </Select>
+    </Form.Item>
 }
 
 export default Forms;
 
-function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: React.Dispatch<React.SetStateAction<{ id: string; url: string; }[]>> }) {
+function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: React.Dispatch<React.SetStateAction<{ id: string; url: string; }[]>> }) {
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [urlList, setUrlList] = useState<typeof initDataRowState>(initDataRowState)
 
     useEffect(() => {
-        if (isModalVisible && urls.length) {
-            setUrlList(urls)
+        if (isModalVisible && url.length) {
+            setUrlList(url)
         } else {
             setTimeout(() => setUrlList(initDataRowState), 200)
         }
-    }, [isModalVisible, urls])
+    }, [isModalVisible, url])
 
     const addRow = () => setUrlList(prevUrl => [...prevUrl, { ...initDataRowState[0], id: Math.floor(Math.random() * 99999) + '', }])
 
@@ -203,7 +242,7 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
                 </tr>
             </thead>
             <tbody>
-                {urls?.map((d, idx) => (
+                {url?.map((d, idx) => (
                     <tr key={idx}>
                         <td>{idx + 1}</td>
                         <td>
@@ -211,7 +250,7 @@ function FormUrl({ urls, setUrls }: { urls: typeof initDataRowState; setUrls: Re
                         </td>
                         <td >
                             <Button variant='primary' onClick={() => {
-                                const filteredUrls = urls.filter(u => u.id !== d.id)
+                                const filteredUrls = url.filter(u => u.id !== d.id)
                                 setUrls([...filteredUrls])
                             }}>Remove</Button>
                         </td>

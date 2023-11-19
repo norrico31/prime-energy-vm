@@ -7,7 +7,7 @@ import { ColumnsType } from 'antd/es/table'
 import { GET, DELETE } from '../../shared/utils/fetch'
 
 export default function CriticalEquipmentView() {
-    const { criticalEquipmentId } = useParams()
+    const { equipmentId } = useParams()
     const navigate = useNavigate()
     const [isModalShow, setIsModalShow] = useState(false);
     const [loading, setLoading] = useState(true)
@@ -112,7 +112,7 @@ export default function CriticalEquipmentView() {
     return (
         <>
             <ListViewHeader
-                handleCreate={() => navigate(`/critical-equipment/${criticalEquipmentId}/form`)}
+                handleCreate={() => navigate(`/critical-equipment/${equipmentId}/form`)}
             />
             <Table<TStatus> loading={false} columns={columns} dataSource={dataSource} isSizeChanger />
             <ModalView

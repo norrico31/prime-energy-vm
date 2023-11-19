@@ -97,7 +97,7 @@ export const routes = createBrowserRouter([
                         element: <AsyncComponent><SwpLists /></AsyncComponent>,
                     },
                     {
-                        path: ':swpId',
+                        path: ':equipmentId',
                         children: [
                             {
                                 path: 'view',
@@ -108,7 +108,7 @@ export const routes = createBrowserRouter([
                                 element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                             {
-                                path: 'edit/:swpItemId',
+                                path: 'edit/:transactionId',
                                 element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                         ]
@@ -129,7 +129,7 @@ export const routes = createBrowserRouter([
                         element: <AsyncComponent><OgpLists /></AsyncComponent>,
                     },
                     {
-                        path: ':ogpId',
+                        path: ':equipmentId',
                         children: [
                             {
                                 path: 'view',
@@ -140,7 +140,7 @@ export const routes = createBrowserRouter([
                                 element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                             {
-                                path: 'edit/:ogpItemId',
+                                path: 'edit/:transactionId',
                                 element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                         ]
@@ -160,7 +160,7 @@ export const routes = createBrowserRouter([
                         element: <AsyncComponent><PipelineLists /></AsyncComponent>,
                     },
                     {
-                        path: ':pipelineId',
+                        path: ':equipmentId',
                         children: [
                             {
                                 path: 'view',
@@ -171,7 +171,7 @@ export const routes = createBrowserRouter([
                                 element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                             {
-                                path: 'edit/:pipelineItemId',
+                                path: 'edit/:transactionId',
                                 element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                         ]
@@ -191,7 +191,7 @@ export const routes = createBrowserRouter([
                         element: <AsyncComponent><CriticalEquipmentList /></AsyncComponent>,
                     },
                     {
-                        path: ':criticalEquipmentId',
+                        path: ':equipmentId',
                         children: [
                             {
                                 path: 'view',
@@ -202,7 +202,7 @@ export const routes = createBrowserRouter([
                                 element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                             {
-                                path: 'edit/:criticalEquipmentItemId',
+                                path: 'edit/:transactionId',
                                 element: <AsyncComponent><Form /></AsyncComponent>,
                             },
                         ]

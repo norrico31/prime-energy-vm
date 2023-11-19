@@ -6,7 +6,7 @@ import { ColumnsType } from 'antd/es/table'
 
 import { GET, DELETE } from '../../shared/utils/fetch'
 export default function OgpView() {
-    const { ogpId } = useParams()
+    const { equipmentId } = useParams()
     const navigate = useNavigate()
     const [isModalShow, setIsModalShow] = useState(false);
     const [loading, setLoading] = useState(true)
@@ -111,7 +111,7 @@ export default function OgpView() {
     return (
         <>
             <ListViewHeader
-                handleCreate={() => navigate(`/ogp/${ogpId}/form`)}
+                handleCreate={() => navigate(`/ogp/${equipmentId}/form`)}
             />
             <Table<TStatus> loading={false} columns={columns} dataSource={dataSource} isSizeChanger />
             <ModalView

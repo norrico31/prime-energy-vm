@@ -7,7 +7,7 @@ import { ColumnsType } from 'antd/es/table'
 import { GET, DELETE } from '../../shared/utils/fetch'
 
 export default function SwpView() {
-    const { swpId } = useParams()
+    const { equipmentId } = useParams()
     const navigate = useNavigate()
     const [isModalShow, setIsModalShow] = useState(false);
     const [loading, setLoading] = useState(true)
@@ -112,7 +112,7 @@ export default function SwpView() {
     return (
         <>
             <ListViewHeader
-                handleCreate={() => navigate(`/swp/${swpId}/form`)}
+                handleCreate={() => navigate(`/swp/${equipmentId}/form`)}
             />
             <Table<TStatus> loading={false} columns={columns} dataSource={dataSource} isSizeChanger />
             <ModalView
