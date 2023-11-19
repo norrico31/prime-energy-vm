@@ -7,12 +7,16 @@ import { Button, FileUpload } from './components';
 import { GET, POST, PUT } from '../shared/utils/fetch'
 const { useForm } = Form
 
+// WHERE SHUOLD I GET THREAT OWNER
+// PROPERTY FOR UPLOADING FILES
+
 function Forms() {
     const params = useParams()
     const navigate = useNavigate()
     const [form] = useForm()
     const [classification, setClassification] = useState<string>('0');
     const [url, setUrls] = useState<typeof initDataRowState>([]);
+    const [files, setFiles] = useState<Array<File>>([]);
 
     useEffect(() => {
         // if (id === 'create') return
@@ -34,7 +38,8 @@ function Forms() {
     }, [])
 
     const onFinish = (values: Record<string, string | number>) => {
-        console.log({ ...values, url })
+        console.log({ ...values, url: url.map((u) => ({ url: u.url, id: '' })), files })
+        // use new FormData for upload docs
         // edit create endpoint
     }
 
@@ -70,11 +75,7 @@ function Forms() {
             </Row>
             <Row wrap gutter={[24, 24]}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Status" name='status_id'>
-                        <Select placeholder='Select status' allowClear optionFilterProp="children" showSearch>
-                            {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
-                        </Select>
-                    </Form.Item>
+                    <FormItemStatuses name='status_id' />
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                     <Form.Item label="Classification" name='is_longterm'>
@@ -87,18 +88,10 @@ function Forms() {
             </Row>
             <Row wrap gutter={[24, 24]}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Availability" name='availability_id'>
-                        <Select placeholder='Select availability'>
-                            {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
-                        </Select>
-                    </Form.Item>
+                    <FormItemAvailability name='availability_id' />
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Integrity" name='integrity_id'>
-                        <Select placeholder='Select integrity'>
-                            {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
-                        </Select>
-                    </Form.Item>
+                    <FormItemIntegrity name='integrity_id' />
                 </Col>
             </Row>
             <Row>
@@ -143,7 +136,7 @@ function Forms() {
                     <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                         <Form.Item label='Action Owner' >
                             {new Array(5).fill(null).map((_, i) => (
-                                <Form.Item name={`action_owner_${i}`} key={i} style={{ marginBottom: 28, }}>
+                                <Form.Item name={`action_owner_${i}`} key={i} style={{ marginBottom: 14, }}>
                                     <Select placeholder='Select owner' style={{ height: 50 }}>
                                         {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
                                     </Select>
@@ -159,7 +152,10 @@ function Forms() {
                     <BootstrapForm.Label>Other Remarks</BootstrapForm.Label>
                     <BootstrapForm.Group as={Col} xs={10} controlId="formGridOtherRemarks">
                         <BootstrapForm.Label>Upload Documents</BootstrapForm.Label>
-                        <FileUpload />
+                        <FileUpload
+                            files={files}
+                            setFiles={setFiles}
+                        />
                     </BootstrapForm.Group>
                 </BootstrapForm.Group>
             </BootstrapRow>
@@ -174,9 +170,8 @@ function Forms() {
 function FormItemEquipment({ name }: { name: string }) {
     let { pathname } = useLocation()
     pathname = pathname.split('/')[1].toLowerCase()
-    // console.log(pathname);
+    // eslint-disable-next-line prefer-const
     let [equipments, setEquipments] = useState<TEquipment[]>([]);
-
     equipments = equipments.filter((e) => e.system.name.toLocaleLowerCase() === pathname)
 
     useEffect(() => {
@@ -198,6 +193,90 @@ function FormItemEquipment({ name }: { name: string }) {
             {equipments.map((eq) => (
                 <Select.Option value={eq.id} key={eq.id}>
                     {eq.name} - {eq.system?.name}
+                </Select.Option>
+            ))}
+        </Select>
+    </Form.Item>
+}
+
+function FormItemStatuses({ name }: { name: string }) {
+    const [statuses, setStatuses] = useState<TStatus[]>([]);
+
+    useEffect(() => {
+        // if (id === 'create') return
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiSuccess<TStatus[]>>('/statuses', controller.signal)
+                setStatuses(res.data.data ?? [])
+            } catch (error) {
+                return error
+            }
+        })();
+        return () => controller.abort()
+    }, [])
+
+    return <Form.Item label="Status" name={name}>
+        <Select placeholder='Select Status' optionFilterProp="children" showSearch allowClear>
+            {statuses.map((stat) => (
+                <Select.Option value={stat.id} key={stat.id}>
+                    {stat.name}
+                </Select.Option>
+            ))}
+        </Select>
+    </Form.Item>
+}
+
+function FormItemAvailability({ name }: { name: string }) {
+    const [availabilities, setAvailabilities] = useState<TAvailability[]>([]);
+
+    useEffect(() => {
+        // if (id === 'create') return
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiSuccess<TAvailability[]>>('/availability', controller.signal)
+                setAvailabilities(res.data.data ?? [])
+            } catch (error) {
+                return error
+            }
+        })();
+        return () => controller.abort()
+    }, [])
+
+    return <Form.Item label="Availability" name={name}>
+        <Select placeholder='Select Availability' optionFilterProp="children" showSearch allowClear>
+            {availabilities.map((stat) => (
+                <Select.Option value={stat.id} key={stat.id}>
+                    {stat.name}
+                </Select.Option>
+            ))}
+        </Select>
+    </Form.Item>
+}
+
+function FormItemIntegrity({ name }: { name: string }) {
+    const [integrities, setIntegrities] = useState<TIntegrity[]>([]);
+
+    useEffect(() => {
+        // if (id === 'create') return
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiSuccess<TIntegrity[]>>('/integrity', controller.signal)
+                setIntegrities(res.data.data ?? [])
+            } catch (error) {
+                return error
+            }
+        })();
+        return () => controller.abort()
+    }, [])
+
+    return <Form.Item label="Integrity" name={name}>
+        <Select placeholder='Select Integrity' optionFilterProp="children" showSearch allowClear>
+            {integrities.map((stat) => (
+                <Select.Option value={stat.id} key={stat.id}>
+                    {stat.name}
                 </Select.Option>
             ))}
         </Select>
@@ -227,7 +306,6 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
 
     const onHide = () => setIsModalVisible(false)
 
-
     return <BootstrapForm.Group as={BootstrapCol} controlId="formGridOtherRemarks">
         <div className='d-flex justify-content-between mb-2'>
             <BootstrapForm.Label>Upload URL</BootstrapForm.Label>
@@ -255,7 +333,6 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
                             }}>Remove</Button>
                         </td>
                     </tr>
-
                 ))}
             </tbody>
         </BootstrapTable>
@@ -278,7 +355,6 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
                             controlId="floatingInput"
                             label="Add Link"
                             className="mb-2"
-
                         >
                             <BootstrapForm.Control type="text" placeholder="name@example.com" value={urlList[idx].url} onChange={(e) => {
                                 const urls = urlList.map((u) => u.id === url.id ? { ...url, url: e.target.value } : u)
@@ -315,7 +391,6 @@ function ButtonSubmit() {
         </Button>
     </div>
 }
-
 
 const initDataRowState = [
     {
