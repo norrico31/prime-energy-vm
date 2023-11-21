@@ -17,7 +17,7 @@ export default function Equipments() {
 
     useEffect(() => {
         const controller = new AbortController();
-        fetchData(controller.signal)
+        fetchData(controller.signal, { search })
         return () => controller.abort()
     }, [search])
 

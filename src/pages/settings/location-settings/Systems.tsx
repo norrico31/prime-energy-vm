@@ -15,7 +15,7 @@ export default function Systems() {
 
     useEffect(() => {
         const controller = new AbortController();
-        fetchData(controller.signal)
+        fetchData(controller.signal, { search })
         return () => controller.abort()
     }, [search])
 

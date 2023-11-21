@@ -40,7 +40,7 @@ function Forms() {
     const onFinish = async (values: Record<string, string | number>) => {
         //* edit create endpoint
         const formData = new FormData()
-        const payload = { ...values, url: url.map((u) => ({ url: u.url, id: '' })), files }
+        const payload = { ...values, url: url.map((u) => ({ url: u.url, id: '' })) }
         if (files.length > 0) {
             for (const k in values) {
                 const val = values[k]
