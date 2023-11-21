@@ -25,7 +25,6 @@ export default function Systems() {
         try {
             // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
             const res = await GET<ApiSuccess<TSystems[]>>('/systems', args?.signal!, args)
-            console.log(res.data.pagination)
             setTableParams({
                 ...tableParams,
                 pagination: {
