@@ -100,7 +100,7 @@ type ModalProps = {
 type Payload = {
     name: string
     description: string | null
-    is_active: number
+    // is_active: number
 } & Partial<{ id: string }>
 
 function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
@@ -111,7 +111,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     useEffect(() => {
         if (open) {
             if (selectedData) {
-                form.setFieldsValue({ ...selectedData, is_active: Number(selectedData?.is_active) ? 1 : 0 })
+                form.setFieldsValue({ ...selectedData })
             } else {
                 form.resetFields()
             }
@@ -120,7 +120,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
 
     const onFinish = (v: Payload) => {
         setLoading(true)
-        const result = !selectedData ? POST<Payload, ApiSuccess<TStatus>>('/statuses/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/statuses/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
+        const result = !selectedData ? POST<Payload, ApiSuccess<TStatus>>('/statuses/', v) : PUT<Payload>('/statuses/' + selectedData.id, v);
         result.then(() => {
             setError(undefined)
             form.resetFields()
@@ -145,9 +145,9 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             <Form.Item label='Description' name="description" >
                 <Input.TextArea placeholder="Enter description." />
             </Form.Item>
-            <Form.Item label='Disable' name="is_active" valuePropName="checked">
+            {/* <Form.Item label='Disable' name="is_active" valuePropName="checked">
                 <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
-            </Form.Item>
+            </Form.Item> */}
             <Row justify='end'>
                 <Space>
                     <Button variant="secondary" onClick={onCancel}>

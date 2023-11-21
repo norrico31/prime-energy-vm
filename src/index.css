@@ -29,6 +29,9 @@ body, #root {
 /* button:focus {
   outline: revert !important;
 } */
+a {
+  text-decoration: none;
+}
 
 
 /* HEADINGS */
@@ -133,9 +136,7 @@ body, #root {
   margin-block: 0px;
   width: 100.4%;
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-item, :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-submenu, :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-submenu-title {
-  border-radius: 0;
-}
+
 :where(.css-dev-only-do-not-override-2i2tap).ant-form-vertical .ant-form-item-label, :where(.css-dev-only-do-not-override-2i2tap).ant-col-24.ant-form-item-label, :where(.css-dev-only-do-not-override-2i2tap).ant-col-xl-24.ant-form-item-label {
   padding: 0;
 }
@@ -174,6 +175,7 @@ button.btn-print-report {
 .ant-menu-item:hover {
   background-color: #f69a22 !important;
   color: #fff !important;
+  width: 100% !important;
 }
 .error-text {
   display: grid;
@@ -412,4 +414,13 @@ td.bg-red {
     background-position: center; 
   }
   /* background-position: center; */
+}
+:where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-item, :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-submenu, :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-submenu-title {
+  border-radius: 0 !important;
+}
+:where(.css-dev-only-do-not-override-2i2tap).ant-switch.ant-switch-checked, :where(.css-dev-only-do-not-override-2i2tap).ant-switch.ant-switch-checked, :where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-ink-bar {
+  background: #f69a22 !important;
+}
+:where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn, :where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-tab-btn:hover {
+  color: #f69a22 !important;
 }

@@ -16,14 +16,15 @@ export default function SwpView() {
 
     useEffect(() => {
         const controller = new AbortController();
+        if (!equipmentId) return
         fetchData(controller.signal)
         return () => controller.abort()
-    }, [])
+    }, [equipmentId])
 
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
         try {
-            const res = await GET<ApiSuccess<TStatus[]>>('/swp', signal!, params)
+            const res = await GET<ApiSuccess<TStatus[]>>('/transactions/' + equipmentId, signal!, params)
             setDataSource(res.data.data)
             return res
         } catch (error) {

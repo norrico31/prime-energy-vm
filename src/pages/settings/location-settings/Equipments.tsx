@@ -42,6 +42,12 @@ export default function Equipments() {
             // width: 120
         },
         {
+            title: 'Equipment Tag',
+            dataIndex: 'equipment_tag',
+            key: 'equipment_tag',
+            // width: 120
+        },
+        {
             title: 'Location',
             dataIndex: 'location_name',
             key: 'name',

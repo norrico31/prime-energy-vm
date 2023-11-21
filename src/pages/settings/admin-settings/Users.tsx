@@ -162,16 +162,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             <Form.Item label='Email' name="email" rules={[{ required: true, message: '' }]}>
                 <Input type="email" placeholder="Enter email." />
             </Form.Item>
-
-            <Form.Item label="Role" name='role_id' rules={[{ required: true, message: '' }]}>
-                <Select placeholder='Select Role' optionFilterProp="children" showSearch allowClear>
-                    {/* {locations.map((loc) => (
-                <Select.Option value={loc.id} key={loc.id}>
-                    {loc.name}
-                </Select.Option>
-            ))} */}
-                </Select>
-            </Form.Item>
+            <FormItemRoles name='role_id' />
             <Form.Item label='Description' name="description" >
                 <Input.TextArea placeholder="Enter description" />
             </Form.Item>
@@ -190,4 +181,32 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             </Row>
         </Form>
     </Modal>
+}
+
+function FormItemRoles({ name }: { name: string }) {
+    const [roles, setRoles] = useState<TRoles[]>([]);
+
+    useEffect(() => {
+        // if (id === 'create') return
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiSuccess<TRoles[]>>('/roles', controller.signal)
+                setRoles(res.data.data ?? [])
+            } catch (error) {
+                return error
+            }
+        })();
+        return () => controller.abort()
+    }, [])
+
+    return <Form.Item label="Roles" name={name}>
+        <Select placeholder='Select Roles' optionFilterProp="children" showSearch allowClear>
+            {roles.map((stat) => (
+                <Select.Option value={stat.id} key={stat.id}>
+                    {stat.name}
+                </Select.Option>
+            ))}
+        </Select>
+    </Form.Item>
 }

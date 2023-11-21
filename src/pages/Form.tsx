@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom'
 import { Form as BootstrapForm, Modal, FloatingLabel, Table as BootstrapTable, CloseButton, Col as BootstrapCol, Row as BootstrapRow } from 'react-bootstrap'
 import { Row, Col, Form, Input, DatePicker, Select } from 'antd'
-import { Button, FileUpload } from './components';
+import { Button, FileUpload } from './components'
 
-import { GET, POST, PUT } from '../shared/utils/fetch'
+import { GET, POST } from '../shared/utils/fetch'
 const { useForm } = Form
 
 // WHERE SHUOLD I GET THREAT OWNER
@@ -37,10 +37,28 @@ function Forms() {
         return () => controller.abort()
     }, [])
 
-    const onFinish = (values: Record<string, string | number>) => {
-        console.log({ ...values, url: url.map((u) => ({ url: u.url, id: '' })), files })
-        // use new FormData for upload docs
-        // edit create endpoint
+    const onFinish = async (values: Record<string, string | number>) => {
+        //* edit create endpoint
+        const formData = new FormData()
+        const payload = { ...values, url: url.map((u) => ({ url: u.url, id: '' })), files }
+        if (files.length > 0) {
+            for (const k in values) {
+                const val = values[k]
+                if (val !== undefined) {
+                    formData.append(k, val + '')
+                }
+                else formData.append(k, '')
+            }
+            const blobFile = new Blob(files)
+            formData.append('files', blobFile)
+        }
+        try {
+            const res = await POST('/transactions', files.length > 0 ? formData : payload)
+            console.log(res)
+            return res
+        } catch (error) {
+            return error
+        }
     }
 
     return <>
@@ -66,11 +84,7 @@ function Forms() {
                     <FormItemEquipment name='equipment_id' />
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Threat Owner" name='threat_owner'>
-                        <Select placeholder='Select threat owner'>
-                            {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
-                        </Select>
-                    </Form.Item>
+                    <FormItemThreatOwner name='threat_owner' />
                 </Col>
             </Row>
             <Row wrap gutter={[24, 24]}>
@@ -125,7 +139,7 @@ function Forms() {
             {classification == '0' ? (
                 <Row wrap gutter={[24, 24]}>
                     <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                        <Form.Item label='Action Item' >
+                        <Form.Item label='Action Item'>
                             {new Array(5).fill(null).map((_, i) => (
                                 <Form.Item name={`action_item_${i}`} key={i}>
                                     <Input.TextArea placeholder='Enter action item' />
@@ -168,18 +182,18 @@ function Forms() {
 }
 
 function FormItemEquipment({ name }: { name: string }) {
-    let { pathname } = useLocation()
-    pathname = pathname.split('/')[1].toLowerCase()
+    // let { pathname } = useLocation()
+    // pathname = pathname.split('/')[1].toLowerCase()
     // eslint-disable-next-line prefer-const
     let [equipments, setEquipments] = useState<TEquipment[]>([]);
-    equipments = equipments.filter((e) => e.system.name.toLocaleLowerCase() === pathname)
+    // equipments = equipments.filter((e) => e.system.name.toLocaleLowerCase() === pathname)
 
     useEffect(() => {
         // if (id === 'create') return
         const controller = new AbortController();
         (async () => {
             try {
-                const res = await GET<ApiSuccess<TEquipment[]>>('/equipments', controller.signal)
+                const res = await GET<ApiSuccess<TEquipment[]>>('/equipments', controller.signal) // URL FOR ALL EQUIPMENTS
                 setEquipments(res.data.data ?? [])
             } catch (error) {
                 return error
@@ -221,6 +235,33 @@ function FormItemStatuses({ name }: { name: string }) {
             {statuses.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>
                     {stat.name}
+                </Select.Option>
+            ))}
+        </Select>
+    </Form.Item>
+}
+
+function FormItemThreatOwner({ name }: { name: string }) {
+    const [statuses, setStatuses] = useState<TUserOptions[]>([]);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiData<TUserOptions[]>>('/users/options', controller.signal)
+                setStatuses(res.data ?? [])
+            } catch (error) {
+                return error
+            }
+        })();
+        return () => controller.abort()
+    }, [])
+
+    return <Form.Item label="Threat Owner" name={name}>
+        <Select placeholder='Select Threat Owner' optionFilterProp="children" showSearch allowClear>
+            {statuses.map((stat) => (
+                <Select.Option value={stat.id} key={stat.id}>
+                    {stat?.label}
                 </Select.Option>
             ))}
         </Select>

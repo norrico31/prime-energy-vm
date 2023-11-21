@@ -90,7 +90,6 @@ function Sidebar({ handleSelect }: { handleSelect: () => void }) {
         }
         return paths[location]
     })
-
     return <MenuContainer
         theme="dark"
         mode="inline"
@@ -144,7 +143,6 @@ function getItemLinks(
         label,
     } as MenuItem : null;
 }
-
 
 const links = [
     getItemLinks(

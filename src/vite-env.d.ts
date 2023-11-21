@@ -150,6 +150,12 @@ type TUser = {
     role: TRole
 }
 
+type TUserOptions = {
+    id: string
+    label: string
+    role: string
+}
+
 type AuditLogs = Common & {
     account_type: string
     action: string

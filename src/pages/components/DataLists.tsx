@@ -52,7 +52,14 @@ function DataItem({ to, data }: { to: string; data: TSystems }) {
             </OverlayTrigger>
         </div>
         <div className="card-body">
-            <NestedCardItem lists={data?.equipments as TEquipment[]} to={to} />
+            {data?.equipments.length > 0 ? (
+                <NestedCardItem lists={data?.equipments as TEquipment[]} to={to} />
+            ) : (
+                <div style={{ textAlign: 'center' }}>
+                    <Link to='/location-settings/equipments' style={{ fontSize: 18 }}>Add Data</Link>
+                </div>
+            )}
+
         </div>
     </div>
 }
