@@ -6,7 +6,7 @@ import useWindowSize from '../../../shared/hooks/useWindowResize'
 const adminTabs = [
     {
         key: '/location',
-        label: 'Location',
+        label: 'Locations',
     },
     {
         key: '/users',
@@ -18,7 +18,7 @@ const adminTabs = [
     },
     {
         key: '/permission',
-        label: 'Permission',
+        label: 'Permissions',
     },
     {
         key: '/audit-logs',

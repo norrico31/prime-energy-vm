@@ -2,38 +2,27 @@ import { useEffect, useState } from 'react'
 import { Input, Select, Row, Col, Space, Switch, Modal, Form } from 'antd';
 import { Table, ButtonActions, Button } from '../../components';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
-import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
+import { ColumnsType } from 'antd/es/table';
 
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 
 export default function Systems() {
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [isModalShow, setIsModalShow] = useState(false);
-    const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const [selectedData, setSelectedData] = useState<TSystems | undefined>(undefined);
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TSystems[]>([])
 
     useEffect(() => {
         const controller = new AbortController();
-        fetchData({ signal: controller.signal, search, page: tableParams?.pagination?.current, limit: tableParams?.pagination?.pageSize })
+        fetchData(controller.signal, { search })
         return () => controller.abort()
     }, [search])
 
-    async function fetchData(args?: ApiParams) {
+    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
         try {
-            const { signal, ...restArgs } = args!
-            const res = await GET<ApiSuccess<TSystems[]>>('/systems', signal!, restArgs)
-            setTableParams({
-                ...tableParams,
-                pagination: {
-                    ...tableParams?.pagination,
-                    total: res.data.pagination?.total,
-                    current: res.data.pagination?.current_page,
-                    pageSize: res.data.pagination?.per_page,
-                },
-            })
+            const res = await GET<ApiSuccess<TSystems[]>>('/systems', signal!, params)
             setDataSource(res.data.data)
             return res
         } catch (error) {
@@ -42,8 +31,6 @@ export default function Systems() {
             setLoading(false)
         }
     }
-
-    const tableChange = (pagination: TablePaginationConfig) => fetchData({ page: pagination?.current, search, limit: pagination.pageSize! })
 
     const columns: ColumnsType<TSystems> = [
         {
@@ -111,7 +98,7 @@ export default function Systems() {
                     <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
                 </Col>
             </Row>
-            <Table<TSystems> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger tableParams={tableParams} onChange={tableChange} />
+            <Table<TSystems> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
 
             <ModalInput open={isModalShow} onCancel={onCancel} fetchData={fetchData} selectedData={selectedData} />
         </>
@@ -121,7 +108,7 @@ export default function Systems() {
 type ModalProps = {
     open: boolean;
     onCancel: () => void
-    fetchData(args?: ApiParams): Promise<unknown>
+    fetchData(signal?: AbortSignal): Promise<unknown>
     selectedData?: TSystems
 }
 

@@ -21,7 +21,7 @@ function Main() {
         </Row>
         <hr />
         <div className='text-end mb-4'>
-            <Button variant='primary' className='btn-print-report text-end' title={`Print Rerport - aha`}>Print Report - {heading[shortenPathname(pathname)]}</Button>
+            <Button variant='primary' className='btn-print-report text-end' title={`Print Report - ${heading[shortenPathname(pathname)]}`}>Print Report - {heading[shortenPathname(pathname)]}</Button>
         </div>
     </>
 }

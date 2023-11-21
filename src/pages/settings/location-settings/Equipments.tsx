@@ -4,38 +4,28 @@ import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { Table, ButtonActions, Button } from '../../components';
 
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
-import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
+import { ColumnsType } from 'antd/es/table';
 import { FormItemSystem } from './Systems';
 
 export default function Equipments() {
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [isModalShow, setIsModalShow] = useState(false);
     const [selectedData, setSelectedData] = useState<TEquipment | undefined>(undefined);
-    const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TEquipment[]>([])
 
+
     useEffect(() => {
         const controller = new AbortController();
-        fetchData({ signal: controller.signal, search, page: tableParams?.pagination?.current, limit: tableParams?.pagination?.pageSize })
+        fetchData(controller.signal, { search })
         return () => controller.abort()
     }, [search])
 
-    async function fetchData(args?: ApiParams) {
+    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
         try {
-            const { signal, ...restArgs } = args!
-            const res = await GET<ApiSuccess<TEquipment[]>>('/equipments', signal!, restArgs)
+            const res = await GET<ApiSuccess<TEquipment[]>>('/equipments', signal!, params)
             setDataSource(res.data.data)
-            setTableParams({
-                ...tableParams,
-                pagination: {
-                    ...tableParams?.pagination,
-                    total: res.data.pagination?.total,
-                    current: res.data.pagination?.current_page,
-                    pageSize: res.data.pagination?.per_page,
-                },
-            })
             return res
         } catch (error) {
             return error
@@ -43,8 +33,6 @@ export default function Equipments() {
             setLoading(false)
         }
     }
-
-    const tableChange = (pagination: TablePaginationConfig) => fetchData({ page: pagination?.current, search, limit: pagination.pageSize! })
 
     const columns: ColumnsType<TEquipment> = [
         {
@@ -120,7 +108,7 @@ export default function Equipments() {
                     <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
                 </Col>
             </Row>
-            <Table<TEquipment> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger tableParams={tableParams} onChange={tableChange} />
+            <Table<TEquipment> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
             <ModalInput open={isModalShow} onCancel={onCancel} selectedData={selectedData} fetchData={fetchData} />
         </>
     )
@@ -130,7 +118,7 @@ export default function Equipments() {
 type ModalProps = {
     open: boolean;
     onCancel: () => void
-    fetchData(signal?: ApiParams): Promise<unknown>
+    fetchData(signal?: AbortSignal): Promise<unknown>
     selectedData?: TEquipment
 }
 
@@ -194,7 +182,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
                 <Input.TextArea placeholder="Enter description" />
             </Form.Item>
             <Form.Item label='Disable' name="is_active" valuePropName="checked">
-                <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
+                <Switch checkedChildren="Yes" unCheckedChildren="No" />
             </Form.Item>
             <Form.Item label="Critical Equipment" name='is_critical'>
                 <Select placeholder='Select Critical Equipment' optionFilterProp="children" showSearch allowClear>
