@@ -16,21 +16,22 @@ export default function Systems() {
 
     useEffect(() => {
         const controller = new AbortController();
-        fetchData({ signal: controller.signal, search })
+        fetchData({ signal: controller.signal, search, page: tableParams?.pagination?.current, limit: tableParams?.pagination?.pageSize })
         return () => controller.abort()
     }, [search])
 
     async function fetchData(args?: ApiParams) {
         setLoading(true)
         try {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            const res = await GET<ApiSuccess<TSystems[]>>('/systems', args?.signal!, args)
+            const { signal, ...restArgs } = args!
+            const res = await GET<ApiSuccess<TSystems[]>>('/systems', signal!, restArgs)
             setTableParams({
                 ...tableParams,
                 pagination: {
                     ...tableParams?.pagination,
                     total: res.data.pagination?.total,
                     current: res.data.pagination?.current_page,
+                    pageSize: res.data.pagination?.per_page,
                 },
             })
             setDataSource(res.data.data)

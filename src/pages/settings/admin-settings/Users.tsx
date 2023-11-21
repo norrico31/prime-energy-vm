@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Row, Col, Form, Modal, Input, Space, Select, Switch } from 'antd'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { Table, ButtonActions, Button } from '../../components';
-import { ColumnsType } from 'antd/es/table'
+import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 
@@ -12,18 +12,30 @@ export default function TUsers() {
     const [selectedData, setSelectedData] = useState<TUser | undefined>(undefined);
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TUser[]>([])
+    const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
 
     useEffect(() => {
         const controller = new AbortController();
-        fetchData(controller.signal)
+        fetchData({ signal: controller.signal, search, page: tableParams?.pagination?.current, limit: tableParams?.pagination?.pageSize })
         return () => controller.abort()
     }, [search])
 
-    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
+    async function fetchData(args?: ApiParams) {
         setLoading(true)
         try {
-            const res = await GET<ApiData<TUser[]>>('/users', signal!, params)
-            setDataSource(res.data)
+            const { signal, ...restArgs } = args!
+            const res = await GET<ApiSuccess<TUser[]>>('/users', signal!, restArgs)
+            console.log(res)
+            setDataSource(res?.data.data)
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams?.pagination,
+                    total: res?.data.pagination?.total,
+                    current: res?.data.pagination?.current_page,
+                    pageSize: res.data.pagination?.per_page,
+                },
+            })
             return res
         } catch (error) {
             return error
@@ -31,6 +43,8 @@ export default function TUsers() {
             setLoading(false)
         }
     }
+
+    const tableChange = (pagination: TablePaginationConfig) => fetchData({ page: pagination?.current, search, limit: pagination.pageSize! })
 
     const onCancel = () => {
         setIsModalShow(false)
@@ -97,7 +111,7 @@ export default function TUsers() {
                     <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
                 </Col>
             </Row>
-            <Table<TUser> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
+            <Table<TUser> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger tableParams={tableParams} onChange={tableChange} />
             <ModalInput open={isModalShow} onCancel={onCancel} selectedData={selectedData} fetchData={fetchData} />
         </>
     )
@@ -106,7 +120,7 @@ export default function TUsers() {
 type ModalProps = {
     open: boolean;
     onCancel: () => void
-    fetchData(signal?: AbortSignal): Promise<unknown>
+    fetchData(signal?: ApiParams): Promise<unknown>
     selectedData?: TUser
 }
 
