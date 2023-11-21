@@ -55,14 +55,6 @@ export default function Equipments() {
             // width: 120
         },
         {
-            title: 'Sequence No.',
-            dataIndex: 'sequence_no',
-            key: 'sequence_no',
-            align: 'center',
-            render: (_, rec) => rec.system?.sequence_no
-            // width: 130
-        },
-        {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',

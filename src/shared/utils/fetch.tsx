@@ -10,7 +10,7 @@ const GET = async <D,>(path: string, signal: AbortSignal, params?: TableParams<T
 
 const POST = async <D, R>(path: string, data: D, headers?: RequestInit) => {
     try {
-        const res = await crudApi<R>(path, { method: 'POST', body: JSON.stringify(data), ...headers })
+        const res = await crudApi<R>(path, { method: 'POST', body: data instanceof FormData ? data : JSON.stringify(data), ...headers })
         const message = (res as { message?: string })?.message
         if (message === 'Logout Successful' || message === 'Login Successful') return Promise.resolve(res)
         else {

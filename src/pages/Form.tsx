@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, Link, useLocation } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Form as BootstrapForm, Modal, FloatingLabel, Table as BootstrapTable, CloseButton, Col as BootstrapCol, Row as BootstrapRow } from 'react-bootstrap'
-import { Row, Col, Form, Input, DatePicker, Select } from 'antd'
+import { Row, Col, Form, Input, DatePicker, Select, Space } from 'antd'
+import dayjs from 'dayjs'
 import { Button, FileUpload } from './components'
 
 import { GET, POST } from '../shared/utils/fetch'
 const { useForm } = Form
-
-// WHERE SHUOLD I GET THREAT OWNER
-// PROPERTY FOR UPLOADING FILES
 
 function Forms() {
     const params = useParams()
@@ -40,21 +38,19 @@ function Forms() {
     const onFinish = async (values: Record<string, string | number>) => {
         //* edit create endpoint
         const formData = new FormData()
-        const payload = { ...values, url: url.map((u) => ({ url: u.url, id: '' })) }
+        const objPayload = { ...values, url: url.map((u) => ({ url: u.url, id: '' })), date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'), due_date: dayjs(values?.due_date).format('MM-DD-YYYY') }
         if (files.length > 0) {
             for (const k in values) {
                 const val = values[k]
-                if (val !== undefined) {
-                    formData.append(k, val + '')
-                }
-                else formData.append(k, '')
+                formData.append(k, val !== undefined ? (val + '') : '')
             }
             const blobFile = new Blob(files)
-            formData.append('files', blobFile)
+            formData.append('file', blobFile)
         }
+        const payload = files.length > 0 ? formData : objPayload
         try {
-            const res = await POST('/transactions', files.length > 0 ? formData : payload)
-            console.log(res)
+            const res = await POST('/transactions', payload)
+            // console.log(res)
             return res
         } catch (error) {
             return error
@@ -69,12 +65,12 @@ function Forms() {
         <Form form={form} name="horizontal_login" onFinish={onFinish} layout='vertical'>
             <Row wrap gutter={[24, 24]}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Reference No." name='reference_no'>
+                    <Form.Item label="Reference No." name='reference_no' rules={[{ required: true, message: '' }]}>
                         <Input placeholder="Enter reference no." />
                     </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Date Raised (mm/dd/yyyy)" name='date_raised'>
+                    <Form.Item label="Date Raised (mm/dd/yyyy)" name='date_raised' rules={[{ required: true, message: '' }]}>
                         <DatePicker style={{ width: '100%' }} />
                     </Form.Item>
                 </Col>
@@ -92,7 +88,7 @@ function Forms() {
                     <FormItemStatuses name='status_id' />
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Classification" name='is_longterm'>
+                    <Form.Item label="Classification" name='is_longterm' rules={[{ required: true, message: '' }]}>
                         <Select placeholder='Select classification' value={classification} onChange={setClassification} optionFilterProp="children">
                             <Select.Option value="0">Short Term</Select.Option>
                             <Select.Option value="1">Long Term</Select.Option>
@@ -131,7 +127,7 @@ function Forms() {
             </Row>
             <Row wrap gutter={[24, 24]} style={{ marginBottom: 20 }}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Due Date (mm/dd/yyyy)" name='due_date'>
+                    <Form.Item label="Due Date (mm/dd/yyyy)" name='due_date' rules={[{ required: true, message: '' }]}>
                         <DatePicker style={{ width: '100%' }} />
                     </Form.Item>
                 </Col>
@@ -176,8 +172,17 @@ function Forms() {
             <Row className="mb-3">
                 <FormUrl url={url} setUrls={setUrls} />
             </Row>
-            <ButtonSubmit />
-        </Form>
+            <Row justify='end'>
+                <Space>
+                    <Button variant='danger' title='Cancel' onClick={() => navigate(-1)}>
+                        Cancel
+                    </Button>
+                    <Button type="submit" variant='primary' title='Create' >
+                        Submit
+                    </Button>
+                </Space>
+            </Row>
+        </Form >
     </>
 }
 
@@ -202,7 +207,7 @@ function FormItemEquipment({ name }: { name: string }) {
         return () => controller.abort()
     }, [])
 
-    return <Form.Item label="Equipment" name={name}>
+    return <Form.Item label="Equipment" name={name} rules={[{ required: true, message: '' }]}>
         <Select placeholder='Select Equipment' optionFilterProp="children" showSearch allowClear>
             {equipments.map((eq) => (
                 <Select.Option value={eq.id} key={eq.id}>
@@ -230,7 +235,7 @@ function FormItemStatuses({ name }: { name: string }) {
         return () => controller.abort()
     }, [])
 
-    return <Form.Item label="Status" name={name}>
+    return <Form.Item label="Status" name={name} rules={[{ required: true, message: '' }]}>
         <Select placeholder='Select Status' optionFilterProp="children" showSearch allowClear>
             {statuses.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>
@@ -257,7 +262,7 @@ function FormItemThreatOwner({ name }: { name: string }) {
         return () => controller.abort()
     }, [])
 
-    return <Form.Item label="Threat Owner" name={name}>
+    return <Form.Item label="Threat Owner" name={name} rules={[{ required: true, message: '' }]}>
         <Select placeholder='Select Threat Owner' optionFilterProp="children" showSearch allowClear>
             {statuses.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>
@@ -285,7 +290,7 @@ function FormItemAvailability({ name }: { name: string }) {
         return () => controller.abort()
     }, [])
 
-    return <Form.Item label="Availability" name={name}>
+    return <Form.Item label="Availability" name={name} rules={[{ required: true, message: '' }]}>
         <Select placeholder='Select Availability' optionFilterProp="children" showSearch allowClear>
             {availabilities.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>
@@ -313,7 +318,7 @@ function FormItemIntegrity({ name }: { name: string }) {
         return () => controller.abort()
     }, [])
 
-    return <Form.Item label="Integrity" name={name}>
+    return <Form.Item label="Integrity" name={name} rules={[{ required: true, message: '' }]}>
         <Select placeholder='Select Integrity' optionFilterProp="children" showSearch allowClear>
             {integrities.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>
@@ -423,15 +428,15 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
     </BootstrapForm.Group >
 }
 
-function ButtonSubmit() {
-    const { pathname } = useLocation()
-    return <div className={`d-flex justify-content-end gap-2`}>
-        <Button variant='danger' title='Close' onClick={() => alert('cancel')}>Cancel</Button>
-        <Button type="submit" variant={pathname.includes('edit') ? 'primary' : 'success'} title={pathname.includes('edit') ? 'Update' : 'Create'} >
-            {pathname.includes('edit') ? 'Update' : 'Submit'}
-        </Button>
-    </div>
-}
+// function ButtonSubmit() {
+//     const { pathname } = useLocation()
+//     return <div className={`d-flex justify-content-end gap-2`}>
+//         <Button variant='danger' title='Close' onClick={() => alert('cancel')}>Cancel</Button>
+//         <Button type="submit" variant={pathname.includes('edit') ? 'primary' : 'success'} title={pathname.includes('edit') ? 'Update' : 'Create'} >
+//             {pathname.includes('edit') ? 'Update' : 'Submit'}
+//         </Button>
+//     </div>
+// }
 
 const initDataRowState = [
     {
