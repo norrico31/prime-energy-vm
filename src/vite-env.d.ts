@@ -48,7 +48,8 @@ type ApiParams = {
     search?: string
     page?: number
     limit?: number
-} & Partial<{ signal: AbortSignal }>
+    signal?: AbortSignal
+}
 type RequestBody<T> = Record<string | number, string | number> & Partial<T>
 type WithId<T> = T extends { id: infer U } ? { id: U } : never;
 // ================================

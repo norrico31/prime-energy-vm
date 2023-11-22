@@ -22,10 +22,9 @@ export default function TUsers() {
 
     async function fetchData(args?: ApiParams) {
         setLoading(true)
+        const { signal, ...restArgs } = args ?? {};
         try {
-            const { signal, ...restArgs } = args!
             const res = await GET<ApiSuccess<TUser[]>>('/users', signal!, restArgs)
-            console.log(res)
             setDataSource(res?.data.data)
             setTableParams({
                 ...tableParams,
@@ -152,19 +151,20 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     }, [selectedData, open])
 
     const onFinish = (v: Payload) => {
-        setLoading(true)
-        setError(undefined)
         if (v.password !== v.confirm_password) {
             setError('Password do not match!')
             setLoading(false)
             return
         }
+        setLoading(true)
+        setError(undefined)
         const result = !selectedData ? POST<Payload, ApiSuccess<TLocation>>('/users/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/users/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
-        result.then(() => {
-            setError(undefined)
-            form.resetFields()
-            onCancel()
-        })
+        result
+            .then(() => {
+                setError(undefined)
+                form.resetFields()
+                onCancel()
+            })
             .catch((err) => {
                 setError(err.message)
             })
@@ -188,17 +188,17 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
                     </Form.Item>
                     <FormItemRoles name='role_id' />
                     <Form.Item label='Active' name="is_active" valuePropName="checked">
-                        <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
+                        <Switch checkedChildren="Yes" unCheckedChildren="No" />
                     </Form.Item>
                 </Col>
                 <Col>
                     <Form.Item label='Email' name="email" rules={[{ required: true, message: '' }]}>
                         <Input type="email" placeholder="Enter email." />
                     </Form.Item>
-                    <Form.Item label='Password' name="password" rules={[{ required: true, message: '' }]}>
+                    <Form.Item label='Password' name="password" rules={[{ required: selectedData ? false : true, message: '' }]}>
                         <Input type="password" placeholder="Enter password." />
                     </Form.Item>
-                    <Form.Item label='Confirm Password' name="confirm_password" rules={[{ required: true, message: '' }]}>
+                    <Form.Item label='Confirm Password' name="confirm_password" rules={[{ required: selectedData ? false : true, message: '' }]}>
                         <Input type="password" placeholder="Enter password." />
                     </Form.Item>
                 </Col>

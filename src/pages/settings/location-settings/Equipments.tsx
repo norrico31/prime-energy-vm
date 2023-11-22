@@ -23,8 +23,8 @@ export default function Equipments() {
 
     async function fetchData(args?: ApiParams) {
         setLoading(true)
+        const { signal, ...restArgs } = args ?? {};
         try {
-            const { signal, ...restArgs } = args!
             const res = await GET<ApiSuccess<TEquipment[]>>('/equipments', signal!, restArgs)
             setDataSource(res.data.data)
             setTableParams({

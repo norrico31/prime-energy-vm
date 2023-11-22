@@ -22,8 +22,8 @@ export default function Systems() {
 
     async function fetchData(args?: ApiParams) {
         setLoading(true)
+        const { signal, ...restArgs } = args ?? {}
         try {
-            const { signal, ...restArgs } = args!
             const res = await GET<ApiSuccess<TSystems[]>>('/systems', signal!, restArgs)
             setTableParams({
                 ...tableParams,
