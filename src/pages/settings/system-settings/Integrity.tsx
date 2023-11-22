@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Input, Row, Col, Space, Modal, Form } from 'antd';
+import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { Table, ButtonActions, Button } from '../../components';
 
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
-import { ColumnsType } from 'antd/es/table';
 
 export default function Integrity() {
     const [search, searchVal, inputChange] = useDebounceSearch()
@@ -12,18 +12,29 @@ export default function Integrity() {
     const [selectedData, setSelectedData] = useState<TIntegrity | undefined>(undefined);
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TIntegrity[]>([])
+    const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
 
     useEffect(() => {
         const controller = new AbortController();
-        fetchData(controller.signal)
+        fetchData({ signal: controller.signal, search, page: tableParams?.pagination?.current, limit: tableParams?.pagination?.pageSize })
         return () => controller.abort()
     }, [search])
 
-    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
+    async function fetchData(args?: ApiParams) {
         setLoading(true)
+        const { signal, ...restArgs } = args ?? {};
         try {
-            const res = await GET<ApiSuccess<TIntegrity[]>>('/integrity', signal!, params)
+            const res = await GET<ApiSuccess<TIntegrity[]>>('/integrity', signal!, restArgs)
             setDataSource(res.data.data)
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams?.pagination,
+                    total: res?.data.pagination?.total,
+                    current: res?.data.pagination?.current_page,
+                    pageSize: res.data.pagination?.per_page,
+                },
+            })
             return res
         } catch (error) {
             return error
@@ -31,6 +42,8 @@ export default function Integrity() {
             setLoading(false)
         }
     }
+
+    const tableChange = (pagination: TablePaginationConfig) => fetchData({ page: pagination?.current, search, limit: pagination.pageSize! })
 
     const columns: ColumnsType<TIntegrity> = [
         {
@@ -83,17 +96,16 @@ export default function Integrity() {
                     <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
                 </Col>
             </Row>
-            <Table<TIntegrity> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
+            <Table<TIntegrity> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger tableParams={tableParams} onChange={tableChange} />
             <ModalInput open={isModalShow} onCancel={onCancel} selectedData={selectedData} fetchData={fetchData} />
         </>
     )
 }
 
-
 type ModalProps = {
     open: boolean;
     onCancel: () => void
-    fetchData(signal?: AbortSignal): Promise<unknown>
+    fetchData(signal?: ApiParams): Promise<unknown>
     selectedData?: TIntegrity
 }
 
