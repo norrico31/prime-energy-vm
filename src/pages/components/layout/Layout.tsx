@@ -206,7 +206,7 @@ const links = [
             ),
             getItemLinks(
                 <Link className={`text-decoration-none`} to='/location-settings/equipments'>
-                    Equipments
+                    Equipment
                 </Link>,
                 '/location-settings/equipments',
                 <TbSettingsCog />,

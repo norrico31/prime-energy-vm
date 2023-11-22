@@ -47,7 +47,7 @@ export default function Systems() {
 
     const columns: ColumnsType<TSystems> = [
         {
-            title: 'System',
+            title: 'System Name',
             dataIndex: 'name',
             key: 'name',
             // width: 120
@@ -101,7 +101,7 @@ export default function Systems() {
 
     return (
         <>
-            <h3 className='text-color-gray mb-2'>Systems</h3>
+            <h3 className='text-color-gray mb-2'>System</h3>
             <Row wrap justify='space-between' style={{ marginBottom: 10 }}>
                 <Col xs={12} sm={12} md={12} lg={8}>
                     {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
@@ -148,8 +148,6 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
         }
     }, [selectedData, open])
 
-
-
     const onFinish = (v: Payload) => {
         setLoading(true)
         const result = !selectedData ? POST<Payload, ApiSuccess<TSystems>>('/systems/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/systems/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
@@ -167,7 +165,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             })
     }
 
-    return <Modal open={open} onCancel={onCancel} footer={null} title={`Systems - ${selectedData ? 'Edit' : 'Create'}`} forceRender>
+    return <Modal open={open} onCancel={onCancel} footer={null} title={`System - ${selectedData ? 'Edit' : 'Create'}`} forceRender>
         <Form form={form} onFinish={onFinish} layout='vertical' disabled={loading}>
             {error && (
                 <span className='error-text'>{error}</span>
@@ -241,7 +239,7 @@ export function FormItemSystem({ name }: { name: string }) {
         return () => controller.abort()
     }, [])
 
-    return <Form.Item label="Systems" name={name}>
+    return <Form.Item label="System" name={name}>
         <Select placeholder='Select System' optionFilterProp="children" showSearch allowClear>
             {systems.map((sys) => (
                 <Select.Option value={sys.id} key={sys.id}>

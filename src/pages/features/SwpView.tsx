@@ -24,7 +24,7 @@ export default function SwpView() {
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
         try {
-            const res = await GET<ApiSuccess<TStatus[]>>('/transactions/' + equipmentId, signal!, params)
+            const res = await GET<ApiSuccess<TStatus[]>>('/transactions?equipment=' + equipmentId, signal!, params)
             setDataSource(res.data.data)
             return res
         } catch (error) {
@@ -92,10 +92,7 @@ export default function SwpView() {
                     <div></div>
                     <ButtonActions
                         loading={loading}
-                        editData={() => {
-                            setIsModalShow(true)
-                            setSelectedData(record)
-                        }}
+                        editData={() => navigate(`/swp/${equipmentId}/edit/${record.id}`)}
                         deleteData={() => DELETE('/swp/' + record.id).finally((fetchData))}
                         dataTitle={record.name}
                         dataDescription={record.description!}

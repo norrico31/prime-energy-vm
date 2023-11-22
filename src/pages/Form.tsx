@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Form as BootstrapForm, Modal, FloatingLabel, Table as BootstrapTable, CloseButton, Col as BootstrapCol, Row as BootstrapRow } from 'react-bootstrap'
 import { Row, Col, Form, Input, DatePicker, Select, Space } from 'antd'
-import dayjs from 'dayjs'
+import { useAuthUser } from '../shared/contexts/AuthUser'
+import dayjs, { Dayjs } from 'dayjs'
 import { Button, FileUpload } from './components'
 
 import { GET, POST } from '../shared/utils/fetch'
@@ -10,6 +11,7 @@ const { useForm } = Form
 
 function Forms() {
     const params = useParams()
+    const { user } = useAuthUser()
     const navigate = useNavigate()
     const [form] = useForm()
     const [classification, setClassification] = useState<string>('0');
@@ -19,19 +21,43 @@ function Forms() {
     useEffect(() => {
         // if (id === 'create') return
         const controller = new AbortController();
-        if (!params?.transactionId) return
-        (async () => {
-            try {
-                const res = await GET<ApiSuccess<TLocation[]>>('/transactions/' + params?.equipmentId, controller.signal)
-                console.log(res)
-            } catch (error) {
-                return error
-            }
-        })()
-        form.setFieldsValue({
-            ...form.getFieldsValue(),
-            classification: '0'
-        })
+        if (params?.transactionId) {
+            (async () => {
+                try {
+                    const res = await GET<ApiData<TTransaction<Dayjs>>>('/transactions/' + params?.transactionId, controller.signal)
+                    form.setFieldsValue({
+                        ...res.data,
+                        reference_no: res.data?.ref_no,
+                        equipment_id: res.data?.equipment.id,
+                        status_id: res.data?.status.id,
+                        availability_id: res.data?.availability.id,
+                        integrity_id: res.data?.integrity.id,
+                        date_raised: dayjs(res.data?.date_raised, 'YYYY/MM/DD'),
+                        due_date: dayjs(res.data?.due_date, 'YYYY/MM/DD')
+                    })
+                    setUrls(res.data?.url)
+                } catch (error) {
+                    return error
+                }
+            })()
+        } else {
+            (async () => {
+                try {
+                    const res = await GET<ApiData<TEquipment>>('/equipments/' + params?.equipmentId, controller.signal)
+                    console.log('specific equipment: ', res.data)
+                    form.setFieldsValue({
+                        ...res.data,
+                    })
+                } catch (error) {
+                    return error
+                }
+            })()
+            form.setFieldsValue({
+                ...form.getFieldsValue(),
+                classification: '0',
+                threat_owner: user?.id
+            })
+        }
         return () => controller.abort()
     }, [])
 
@@ -49,7 +75,7 @@ function Forms() {
         }
         const payload = files.length > 0 ? formData : objPayload
         try {
-            const res = await POST('/transactions', payload)
+            const res = await POST('/transactions', payload, { ...(files.length > 0 ? { headers: { enctype: 'multipart/form-data' } } : {}) })
             // console.log(res)
             return res
         } catch (error) {
@@ -58,26 +84,27 @@ function Forms() {
     }
 
     return <>
-
         <div className={`d-flex justify-content-between`}>
             <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate(-1)}>Back to lists</Button>
         </div>
         <Form form={form} name="horizontal_login" onFinish={onFinish} layout='vertical'>
             <Row wrap gutter={[24, 24]}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Reference No." name='reference_no' rules={[{ required: true, message: '' }]}>
-                        <Input placeholder="Enter reference no." />
+                    <Form.Item label="Reference No." name='reference_no'>
+                        <Input placeholder="Enter reference no." disabled />
                     </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                     <Form.Item label="Date Raised (mm/dd/yyyy)" name='date_raised' rules={[{ required: true, message: '' }]}>
-                        <DatePicker style={{ width: '100%' }} />
+                        <DatePicker style={{ width: '100%' }} format='YYYY/MM/DD' />
                     </Form.Item>
                 </Col>
             </Row>
             <Row wrap gutter={[24, 24]}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <FormItemEquipment name='equipment_id' />
+                    <Form.Item label="Equipment" name='equipment_tag'>
+                        <Input disabled />
+                    </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                     <FormItemThreatOwner name='threat_owner' />
@@ -125,31 +152,34 @@ function Forms() {
                     </Form.Item>
                 </Col>
             </Row>
-            <Row wrap gutter={[24, 24]} style={{ marginBottom: 20 }}>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Due Date (mm/dd/yyyy)" name='due_date' rules={[{ required: true, message: '' }]}>
-                        <DatePicker style={{ width: '100%' }} />
-                    </Form.Item>
-                </Col>
-            </Row>
+            <hr />
             {classification == '0' ? (
                 <Row wrap gutter={[24, 24]}>
                     <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                         <Form.Item label='Action Item'>
                             {new Array(5).fill(null).map((_, i) => (
-                                <Form.Item name={`action_item_${i}`} key={i}>
+                                <Form.Item name={`action_item${i}`} key={i}>
                                     <Input.TextArea placeholder='Enter action item' />
                                 </Form.Item>
                             ))}
                         </Form.Item>
                     </Col>
-                    <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                    <Col xs={12} sm={6} md={6} lg={6} xl={6}>
                         <Form.Item label='Action Owner' >
                             {new Array(5).fill(null).map((_, i) => (
-                                <Form.Item name={`action_owner_${i}`} key={i} style={{ marginBottom: 14, }}>
+                                <Form.Item name={`action_owner${i}`} key={i} style={{ marginBottom: 14, }}>
                                     <Select placeholder='Select owner' style={{ height: 50 }}>
                                         {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
                                     </Select>
+                                </Form.Item>
+                            ))}
+                        </Form.Item>
+                    </Col>
+                    <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+                        <Form.Item label='Due Date' >
+                            {new Array(5).fill(null).map((_, i) => (
+                                <Form.Item name={`due_date${i}`} key={i} style={{ marginBottom: 14 }}>
+                                    <DatePicker format='YYYY/MM/DD' style={{ height: 50, width: '100%' }} />
                                 </Form.Item>
                             ))}
                         </Form.Item>
@@ -184,38 +214,6 @@ function Forms() {
             </Row>
         </Form >
     </>
-}
-
-function FormItemEquipment({ name }: { name: string }) {
-    // let { pathname } = useLocation()
-    // pathname = pathname.split('/')[1].toLowerCase()
-    // eslint-disable-next-line prefer-const
-    let [equipments, setEquipments] = useState<TEquipment[]>([]);
-    // equipments = equipments.filter((e) => e.system.name.toLocaleLowerCase() === pathname)
-
-    useEffect(() => {
-        // if (id === 'create') return
-        const controller = new AbortController();
-        (async () => {
-            try {
-                const res = await GET<ApiSuccess<TEquipment[]>>('/equipments', controller.signal) // URL FOR ALL EQUIPMENTS
-                setEquipments(res.data.data ?? [])
-            } catch (error) {
-                return error
-            }
-        })();
-        return () => controller.abort()
-    }, [])
-
-    return <Form.Item label="Equipment" name={name} rules={[{ required: true, message: '' }]}>
-        <Select placeholder='Select Equipment' optionFilterProp="children" showSearch allowClear>
-            {equipments.map((eq) => (
-                <Select.Option value={eq.id} key={eq.id}>
-                    {eq.name} - {eq.system?.name}
-                </Select.Option>
-            ))}
-        </Select>
-    </Form.Item>
 }
 
 function FormItemStatuses({ name }: { name: string }) {
@@ -262,8 +260,8 @@ function FormItemThreatOwner({ name }: { name: string }) {
         return () => controller.abort()
     }, [])
 
-    return <Form.Item label="Threat Owner" name={name} rules={[{ required: true, message: '' }]}>
-        <Select placeholder='Select Threat Owner' optionFilterProp="children" showSearch allowClear>
+    return <Form.Item label="Threat Owner" name={name}>
+        <Select placeholder='Select Threat Owner' optionFilterProp="children" showSearch allowClear disabled>
             {statuses.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>
                     {stat?.label}
@@ -427,16 +425,6 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
         </Modal>
     </BootstrapForm.Group >
 }
-
-// function ButtonSubmit() {
-//     const { pathname } = useLocation()
-//     return <div className={`d-flex justify-content-end gap-2`}>
-//         <Button variant='danger' title='Close' onClick={() => alert('cancel')}>Cancel</Button>
-//         <Button type="submit" variant={pathname.includes('edit') ? 'primary' : 'success'} title={pathname.includes('edit') ? 'Update' : 'Create'} >
-//             {pathname.includes('edit') ? 'Update' : 'Submit'}
-//         </Button>
-//     </div>
-// }
 
 const initDataRowState = [
     {

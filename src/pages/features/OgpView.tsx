@@ -5,13 +5,14 @@ import { Table, Button, ButtonActions, ListViewHeader } from '../components'
 import { ColumnsType } from 'antd/es/table'
 
 import { GET, DELETE } from '../../shared/utils/fetch'
+import dayjs, { Dayjs } from 'dayjs'
 export default function OgpView() {
     const { equipmentId } = useParams()
     const navigate = useNavigate()
     const [isModalShow, setIsModalShow] = useState(false);
     const [loading, setLoading] = useState(true)
-    const [selectedData, setSelectedData] = useState<TStatus | undefined>(undefined);
-    const [dataSource, setDataSource] = useState<TStatus[]>([])
+    const [selectedData, setSelectedData] = useState<TTransaction<Dayjs> | undefined>(undefined);
+    const [dataSource, setDataSource] = useState<TTransaction<Dayjs>[]>([])
 
     useEffect(() => {
         const controller = new AbortController();
@@ -22,7 +23,7 @@ export default function OgpView() {
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
         try {
-            const res = await GET<ApiSuccess<TStatus[]>>('/ogp', signal!, params)
+            const res = await GET<ApiSuccess<TTransaction<Dayjs>[]>>('/transactions?equipment=' + equipmentId, signal!, params)
             setDataSource(res.data.data)
             return res
         } catch (error) {
@@ -32,7 +33,7 @@ export default function OgpView() {
         }
     }
 
-    const columns: ColumnsType<TStatus> = [
+    const columns: ColumnsType<TTransaction<Dayjs>> = [
         {
             title: 'Ref No.',
             dataIndex: 'ref_no',
@@ -40,9 +41,10 @@ export default function OgpView() {
             // width: 120
         },
         {
-            title: 'Data Added',
-            dataIndex: 'data_added',
-            key: 'data_added',
+            title: 'Data Raised',
+            dataIndex: 'date_raised',
+            key: 'date_raised',
+            render: (_, rec) => dayjs(rec?.date_raised).format('YYYY-MM-DD')
             // width: 200,
         },
         {
@@ -55,30 +57,42 @@ export default function OgpView() {
             title: 'Availability',
             dataIndex: 'availability',
             key: 'availability',
+            align: 'center',
+            render: (_, rec) => rec?.availability?.name,
             // width: 200,
         },
         {
             title: 'Integrity',
             dataIndex: 'integrity',
             key: 'integrity',
+            align: 'center',
+            render: (_, rec) => rec?.integrity?.name,
             // width: 200,
         },
         {
             title: 'Threat Classification',
             dataIndex: 'threat_classification',
             key: 'threat_classification',
+            render: (_, rec) => {
+                return (rec.is_longterm ? 'Long' : 'Short') + ' Term'
+            }
             // width: 200,
         },
         {
             title: 'Threat Owner',
             dataIndex: 'threat_owner',
             key: 'threat_owner',
+            render: (_, rec) => {
+                console.log(rec)
+                return rec?.threat_owner.label
+            }
             // width: 200,
         },
         {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            render: (_, rec) => rec?.status.name
             // width: 200,
         },
         {
@@ -90,13 +104,10 @@ export default function OgpView() {
                     <div></div>
                     <ButtonActions
                         loading={loading}
-                        editData={() => {
-                            setIsModalShow(true)
-                            setSelectedData(record)
-                        }}
+                        editData={() => navigate(`/ogp/${equipmentId}/edit/${record.id}`)}
                         deleteData={() => DELETE('/ogp/' + record.id).finally((fetchData))}
                         dataTitle={record.name}
-                        dataDescription={record.description!}
+                    // dataDescription={record.!}
                     />
                 </Space>
             ),
@@ -113,7 +124,7 @@ export default function OgpView() {
             <ListViewHeader
                 handleCreate={() => navigate(`/ogp/${equipmentId}/form`)}
             />
-            <Table<TStatus> loading={false} columns={columns} dataSource={dataSource} isSizeChanger />
+            <Table<TTransaction<Dayjs>> loading={false} columns={columns} dataSource={dataSource} isSizeChanger />
             <ModalView
                 open={isModalShow}
                 selectedData={selectedData}
@@ -128,7 +139,7 @@ export default function OgpView() {
 type ModalProps = {
     open: boolean;
     onCancel: () => void
-    selectedData?: TStatus
+    selectedData?: TTransaction<Dayjs>
 }
 function ModalView({ open, onCancel, selectedData, }: ModalProps) {
     const [form] = Form.useForm()

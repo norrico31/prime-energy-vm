@@ -219,6 +219,32 @@ type TEquipment = {
     name: string
     system: TSystems
 } & Common
+type TTransaction<D> = {
+    action_item1: null
+    action_item2: null
+    action_item3: null
+    action_item4: null
+    action_item5: null
+    action_owner1: null
+    action_owner2: null
+    action_owner3: null
+    action_owner4: null
+    action_owner5: null
+    availability: TAvailability
+    date_raised: string | D
+    due_date: string | D
+    equipment: TEquipment
+    id: string
+    integrity: TIntegrity
+    is_longterm: string
+    ref_no: string
+    risk_description: string
+    status: TStatus
+    threat_owner: TUserOptions
+    url: { id: string; url: string }[]
+    vulnerability_description: string | null
+    vulnerability_title: string | null
+} & Common
 // SYSTEM SETTINGS
 type TPhase = {
     is_active: string

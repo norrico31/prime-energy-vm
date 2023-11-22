@@ -48,7 +48,7 @@ export default function Equipments() {
 
     const columns: ColumnsType<TEquipment> = [
         {
-            title: 'Equipment',
+            title: 'Equipment Name',
             dataIndex: 'name',
             key: 'name',
             // width: 120
@@ -102,7 +102,7 @@ export default function Equipments() {
 
     return (
         <>
-            <h3 className='text-color-gray mb-2'>Equipments</h3>
+            <h3 className='text-color-gray mb-2'>Equipment</h3>
             <Row wrap justify='space-between' style={{ marginBottom: 10 }}>
                 <Col xs={12} sm={12} md={12} lg={8}>
                     {/* <PageSize value={pageSize} onChange={pageSizeChange} /> */}
@@ -172,14 +172,11 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             {error && (
                 <span className='error-text'>{error}</span>
             )}
-            <Form.Item label='Equipment' name="name" rules={[{ required: true, message: '' }]}>
+            <Form.Item label='Equipment Name' name="name" rules={[{ required: true, message: '' }]}>
                 <Input type="text" placeholder="Enter equipment name." />
             </Form.Item>
             <Form.Item label='Equipment Tag' name="equipment_tag" rules={[{ required: true, message: '' }]}>
                 <Input type="text" placeholder="Enter equipment tag." />
-            </Form.Item>
-            <Form.Item label='Equipment ID' name="equipment_id" rules={[{ required: true, message: '' }]}>
-                <Input type="text" placeholder="Enter equipment id." />
             </Form.Item>
             <FormItemSystem name='system_id' />
             <Form.Item label='Description' name="description" >

@@ -23,7 +23,7 @@ export default function CriticalEquipmentView() {
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
         try {
-            const res = await GET<ApiSuccess<TStatus[]>>('/critical_equipments', signal!, params)
+            const res = await GET<ApiSuccess<TStatus[]>>('/transactions?equipment=' + equipmentId, signal!, params)
             setDataSource(res.data.data)
             return res
         } catch (error) {
