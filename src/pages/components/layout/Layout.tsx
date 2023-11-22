@@ -104,18 +104,11 @@ const MenuContainer = styled(AntdMenu)`
     height: 100%;
     background-color: #1e9aff;
     color: #fff;
-    
-  
-    /* .menu-item-main.active, .menu-item-main.active > * {
-        color: #9B3423 !important;
-    }
-    */
-    .ant-menu-title-content > * {
-        display: block;
-        text-decoration: none;
-    }
+
+    /* .ant-menu-item:hover, */
     .ant-menu-item-selected,
     .ant-menu-item.ant-menu-item-active {
+        border-radius: 0;
         background-color: #f69a22;
         color: #fff;
     }

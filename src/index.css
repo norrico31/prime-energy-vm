@@ -128,31 +128,46 @@ a {
 .modal-title {
   font-size: 1.2rem !important;
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-menu-light .ant-menu-submenu-selected >.ant-menu-submenu-title, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-light>.ant-menu .ant-menu-submenu-selected >.ant-menu-submenu-title {
+
+.ant-menu-light .ant-menu-submenu-selected >.ant-menu-submenu-title, 
+.ant-menu-light>.ant-menu .ant-menu-submenu-selected >.ant-menu-submenu-title {
   color: #0a3253;
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-menu-inline .ant-menu-item, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-vertical .ant-menu-item, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-inline .ant-menu-submenu-title, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-vertical .ant-menu-submenu-title {
+
+.ant-menu-inline .ant-menu-item, 
+.ant-menu-vertical .ant-menu-item, 
+.ant-menu-inline .ant-menu-submenu-title, 
+.ant-menu-vertical .ant-menu-submenu-title {
   margin-inline: 0px;
   margin-block: 0px;
   width: 100.4%;
 }
 
-:where(.css-dev-only-do-not-override-2i2tap).ant-form-vertical .ant-form-item-label, :where(.css-dev-only-do-not-override-2i2tap).ant-col-24.ant-form-item-label, :where(.css-dev-only-do-not-override-2i2tap).ant-col-xl-24.ant-form-item-label {
+
+.ant-form-vertical .ant-form-item-label, 
+.ant-col-24.ant-form-item-label, 
+.ant-col-xl-24.ant-form-item-label {
   padding: 0;
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-form-item {
+
+.ant-form-item {
   margin-bottom: 10px;;
 }
 .ant-menu-title-content {
   font-size: 16px;
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-switch.ant-switch-checked,
-:where(.css-dev-only-do-not-override-2i2tap).ant-switch.ant-switch-checked,
-:where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-ink-bar {
+
+.ant-switch.ant-switch-checked,
+
+.ant-switch.ant-switch-checked,
+
+.ant-tabs .ant-tabs-ink-bar {
   background-color: #f69a22;
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
-:where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-tab-btn:hover {
+
+.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
+
+.ant-tabs .ant-tabs-tab-btn:hover {
   color: #f69a22 !important;
 }
 .nav-pills .nav-link:hover,
@@ -171,7 +186,9 @@ button.btn-print-report {
   font-weight: bold;
   color: #3d3d3d
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-menu-light .ant-menu-item-selected, :where(.css-dev-only-do-not-override-2i2tap).ant-menu-light>.ant-menu .ant-menu-item-selected,
+
+.ant-menu-light .ant-menu-item-selected, 
+.ant-menu-light>.ant-menu .ant-menu-item-selected,
 .ant-menu-item:hover {
   background-color: #f69a22 !important;
   color: #fff !important;
@@ -186,7 +203,8 @@ button.btn-print-report {
 
 /* COMPONENTS */
 .ant-input,
-:where(.css-dev-only-do-not-override-2i2tap).ant-input-search >.ant-input-group >.ant-input-group-addon:last-child .ant-input-search-button{
+
+.ant-input-search >.ant-input-group >.ant-input-group-addon:last-child .ant-input-search-button{
   border-radius: 0;
 }
 .login-container {
@@ -415,12 +433,20 @@ td.bg-red {
   }
   /* background-position: center; */
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-item, :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-submenu, :where(.css-dev-only-do-not-override-2i2tap).ant-menu .ant-menu-submenu-title {
+
+.ant-menu .ant-menu-item, 
+.ant-menu .ant-menu-submenu, 
+.ant-menu .ant-menu-submenu-title {
   border-radius: 0 !important;
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-switch.ant-switch-checked, :where(.css-dev-only-do-not-override-2i2tap).ant-switch.ant-switch-checked, :where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-ink-bar {
+
+.ant-switch.ant-switch-checked, 
+.ant-switch.ant-switch-checked, 
+.ant-tabs .ant-tabs-ink-bar {
   background: #f69a22 !important;
 }
-:where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn, :where(.css-dev-only-do-not-override-2i2tap).ant-tabs .ant-tabs-tab-btn:hover {
+
+.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn, 
+.ant-tabs .ant-tabs-tab-btn:hover {
   color: #f69a22 !important;
 }
