@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Row, Col, Form, Modal, Input, Space, Select, Switch } from 'antd'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { Table, ButtonActions, Button } from '../../components';
-import { ColumnsType } from 'antd/es/table'
+import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 
@@ -12,18 +12,30 @@ export default function TUsers() {
     const [selectedData, setSelectedData] = useState<TUser | undefined>(undefined);
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TUser[]>([])
+    const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
 
     useEffect(() => {
         const controller = new AbortController();
-        fetchData(controller.signal)
+        fetchData({ signal: controller.signal, search, page: tableParams?.pagination?.current, limit: tableParams?.pagination?.pageSize })
         return () => controller.abort()
     }, [search])
 
-    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
+    async function fetchData(args?: ApiParams) {
         setLoading(true)
         try {
-            const res = await GET<ApiData<TUser[]>>('/users', signal!, params)
-            setDataSource(res.data)
+            const { signal, ...restArgs } = args!
+            const res = await GET<ApiSuccess<TUser[]>>('/users', signal!, restArgs)
+            console.log(res)
+            setDataSource(res?.data.data)
+            setTableParams({
+                ...tableParams,
+                pagination: {
+                    ...tableParams?.pagination,
+                    total: res?.data.pagination?.total,
+                    current: res?.data.pagination?.current_page,
+                    pageSize: res.data.pagination?.per_page,
+                },
+            })
             return res
         } catch (error) {
             return error
@@ -31,6 +43,8 @@ export default function TUsers() {
             setLoading(false)
         }
     }
+
+    const tableChange = (pagination: TablePaginationConfig) => fetchData({ page: pagination?.current, search, limit: pagination.pageSize! })
 
     const onCancel = () => {
         setIsModalShow(false)
@@ -97,7 +111,7 @@ export default function TUsers() {
                     <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
                 </Col>
             </Row>
-            <Table<TUser> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
+            <Table<TUser> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger tableParams={tableParams} onChange={tableChange} />
             <ModalInput open={isModalShow} onCancel={onCancel} selectedData={selectedData} fetchData={fetchData} />
         </>
     )
@@ -106,7 +120,7 @@ export default function TUsers() {
 type ModalProps = {
     open: boolean;
     onCancel: () => void
-    fetchData(signal?: AbortSignal): Promise<unknown>
+    fetchData(signal?: ApiParams): Promise<unknown>
     selectedData?: TUser
 }
 
@@ -114,6 +128,11 @@ type ModalProps = {
 type Payload = {
     name: string
     description: string | null
+    first_name: string | null
+    last_name: string | null
+    email: string | null
+    password: string | null
+    confirm_password: string | null
     is_active: number;
 } & Partial<{ id: string }>
 
@@ -134,6 +153,12 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
 
     const onFinish = (v: Payload) => {
         setLoading(true)
+        setError(undefined)
+        if (v.password !== v.confirm_password) {
+            setError('Password do not match!')
+            setLoading(false)
+            return
+        }
         const result = !selectedData ? POST<Payload, ApiSuccess<TLocation>>('/users/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/users/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
         result.then(() => {
             setError(undefined)
@@ -153,22 +178,31 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             {error && (
                 <span className='error-text'>{error}</span>
             )}
-            <Form.Item label='First Name' name="first_name" rules={[{ required: true, message: '' }]}>
-                <Input type="text" placeholder="Enter first name." />
-            </Form.Item>
-            <Form.Item label='Last Name' name="last_name" rules={[{ required: true, message: '' }]}>
-                <Input type="text" placeholder="Enter last name." />
-            </Form.Item>
-            <Form.Item label='Email' name="email" rules={[{ required: true, message: '' }]}>
-                <Input type="email" placeholder="Enter email." />
-            </Form.Item>
-            <FormItemRoles name='role_id' />
-            <Form.Item label='Description' name="description" >
-                <Input.TextArea placeholder="Enter description" />
-            </Form.Item>
-            <Form.Item label='Active' name="is_active" valuePropName="checked">
-                <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
-            </Form.Item>
+            <Row justify='space-evenly' gutter={[24, 24]}>
+                <Col>
+                    <Form.Item label='First Name' name="first_name" rules={[{ required: true, message: '' }]}>
+                        <Input type="text" placeholder="Enter first name." />
+                    </Form.Item>
+                    <Form.Item label='Last Name' name="last_name" rules={[{ required: true, message: '' }]}>
+                        <Input type="text" placeholder="Enter last name." />
+                    </Form.Item>
+                    <FormItemRoles name='role_id' />
+                    <Form.Item label='Active' name="is_active" valuePropName="checked">
+                        <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
+                    </Form.Item>
+                </Col>
+                <Col>
+                    <Form.Item label='Email' name="email" rules={[{ required: true, message: '' }]}>
+                        <Input type="email" placeholder="Enter email." />
+                    </Form.Item>
+                    <Form.Item label='Password' name="password" rules={[{ required: true, message: '' }]}>
+                        <Input type="password" placeholder="Enter password." />
+                    </Form.Item>
+                    <Form.Item label='Confirm Password' name="confirm_password" rules={[{ required: true, message: '' }]}>
+                        <Input type="password" placeholder="Enter password." />
+                    </Form.Item>
+                </Col>
+            </Row>
             <Row justify='end' >
                 <Space>
                     <Button variant="secondary" onClick={onCancel}>
@@ -200,7 +234,7 @@ function FormItemRoles({ name }: { name: string }) {
         return () => controller.abort()
     }, [])
 
-    return <Form.Item label="Roles" name={name}>
+    return <Form.Item label="Roles" name={name} rules={[{ required: true, message: '' }]}>
         <Select placeholder='Select Roles' optionFilterProp="children" showSearch allowClear>
             {roles.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>

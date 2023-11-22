@@ -19,17 +19,14 @@ type ApiError = {
     errors: Record<string, string | string[]>
 }
 type ApiData<T> = {
-    current_page: number
     data: T
-    first_page_url: string
+    pagination: Pagination
+}
+type Pagination = {
+    current_page: number
     from: number
-    last_page: 6
-    last_page_url: string
-    links: { url: string; label: string; active: boolean }
-    next_page_url: string
-    path: string
-    per_page: number
-    prev_page_url: string | null
+    last_page: number
+    per_page: number0
     to: number
     total: number
 }
@@ -51,7 +48,7 @@ type ApiParams = {
     search?: string
     page?: number
     limit?: number
-}
+} & Partial<{ signal: AbortSignal }>
 type RequestBody<T> = Record<string | number, string | number> & Partial<T>
 type WithId<T> = T extends { id: infer U } ? { id: U } : never;
 // ================================
