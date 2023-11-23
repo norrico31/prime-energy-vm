@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Modal, Form, Space, Row, Col } from 'antd'
+import { Modal, Form, Space, Row, Col, Tag } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Table, Button, ButtonActions, ListViewHeader } from '../components'
 import { ColumnsType } from 'antd/es/table'
@@ -33,6 +33,32 @@ export default function OgpView() {
         }
     }
 
+    const deleteData = (id: string) => DELETE('/ogp/' + id).finally((fetchData))
+    const editNavigate = (id: string) => navigate(`/ogp/${equipmentId}/edit/${id}`)
+
+    const columns = renderColumns({ loading, deleteData, navigate: editNavigate })
+
+    const onCancel = () => {
+        setSelectedData(undefined)
+        setIsModalShow(false)
+    }
+
+    return (
+        <>
+            <ListViewHeader
+                handleCreate={() => navigate(`/ogp/${equipmentId}/form`)}
+            />
+            <Table<TTransaction<Dayjs>> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
+            <ModalView
+                open={isModalShow}
+                selectedData={selectedData}
+                onCancel={onCancel}
+            />
+        </>
+    )
+}
+
+export function renderColumns({ loading, navigate, deleteData }: { loading: boolean; navigate: (id: string) => void; deleteData: (id: string) => Promise<unknown> }) {
     const columns: ColumnsType<TTransaction<Dayjs>> = [
         {
             title: 'Ref No.',
@@ -58,7 +84,7 @@ export default function OgpView() {
             dataIndex: 'availability',
             key: 'availability',
             align: 'center',
-            render: (_, rec) => rec?.availability?.name,
+            render: (_, rec) => <Tag bordered={false} style={{ borderRadius: 0, color: '#fff', background: rec?.availability.name.toLocaleLowerCase() === 'green' ? '#009c15' : rec?.availability.name.toLocaleLowerCase() === 'yellow' ? '#ebfc05' : 'red' }}>{rec?.availability?.name}</Tag>,
             // width: 200,
         },
         {
@@ -66,7 +92,7 @@ export default function OgpView() {
             dataIndex: 'integrity',
             key: 'integrity',
             align: 'center',
-            render: (_, rec) => rec?.integrity?.name,
+            render: (_, rec) => <Tag bordered={false} style={{ borderRadius: 0, color: '#fff', background: rec?.integrity.name.toLocaleLowerCase() === 'green' ? '#009c15' : rec?.integrity.name.toLocaleLowerCase() === 'yellow' ? '#ebfc05' : 'red' }}>{rec?.integrity?.name}</Tag>,
             // width: 200,
         },
         {
@@ -74,7 +100,7 @@ export default function OgpView() {
             dataIndex: 'threat_classification',
             key: 'threat_classification',
             render: (_, rec) => {
-                return (rec.is_longterm ? 'Long' : 'Short') + ' Term'
+                return (rec.is_longterm === '1' ? 'Long' : 'Short') + ' Term'
             }
             // width: 200,
         },
@@ -104,8 +130,8 @@ export default function OgpView() {
                     <div></div>
                     <ButtonActions
                         loading={loading}
-                        editData={() => navigate(`/ogp/${equipmentId}/edit/${record.id}`)}
-                        deleteData={() => DELETE('/ogp/' + record.id).finally((fetchData))}
+                        editData={() => navigate(record.id)}
+                        deleteData={() => deleteData(record?.id)}
                         dataTitle={record.name}
                     // dataDescription={record.!}
                     />
@@ -113,27 +139,8 @@ export default function OgpView() {
             ),
         },
     ]
-
-    const onCancel = () => {
-        setSelectedData(undefined)
-        setIsModalShow(false)
-    }
-
-    return (
-        <>
-            <ListViewHeader
-                handleCreate={() => navigate(`/ogp/${equipmentId}/form`)}
-            />
-            <Table<TTransaction<Dayjs>> loading={false} columns={columns} dataSource={dataSource} isSizeChanger />
-            <ModalView
-                open={isModalShow}
-                selectedData={selectedData}
-                onCancel={onCancel}
-            />
-        </>
-    )
+    return columns
 }
-
 
 
 type ModalProps = {

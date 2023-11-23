@@ -26,6 +26,7 @@ type Payload = {
     action_owner4: string | null
     action_owner5: string | null
     availability: TAvailability
+    classification: string
     date_raised: string
     due_date: string
     equipment: TEquipment
@@ -68,7 +69,8 @@ function Forms() {
                         integrity_id: res.data?.integrity.id,
                         date_raised: dayjs(res.data?.date_raised, 'YYYY/MM/DD'),
                         due_date: dayjs(res.data?.due_date, 'YYYY/MM/DD'),
-                        equipment_tag: res.data?.equipment.name // MUST CHANGE TO equipment_tag
+                        equipment_tag: res.data?.equipment.name, // MUST CHANGE TO equipment_tag
+                        threat_owner: user?.id
                     })
                     setUrls(res.data?.url)
                 } catch (error) {
@@ -99,7 +101,7 @@ function Forms() {
     const onFinish = async (values: Record<string, string | number>) => {
         //* edit create endpoint
         const formData = new FormData()
-        const objPayload = { ...values, id: params?.transactionId, equipment_id: params?.equipmentId, url: url.map((u) => ({ url: u.url, id: '' })), date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'), due_date: dayjs(values?.due_date).format('MM-DD-YYYY') }
+        const objPayload = { ...values, id: params?.transactionId, equipment_id: params?.equipmentId, url: url.map((u) => ({ url: u.url, id: '' })), threat_owner: user?.id, date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'), due_date: dayjs(values?.due_date).format('MM-DD-YYYY') }
         if (files.length > 0) {
             for (const k in values) {
                 const val = values[k]
@@ -112,9 +114,10 @@ function Forms() {
         }
         const payload = files.length > 0 ? formData : objPayload;
         try {
-            const res = params?.transactionId ? PUT<Payload & FormData>('/transactions/' + params?.transactionId, payload as Payload & FormData, { ...(files.length > 0 ? { headers: { enctype: 'multipart/form-data' } } : {}) }) : POST('/transactions', payload, { ...(files.length > 0 ? { headers: { enctype: 'multipart/form-data' } } : {}) })
+            const res = params?.transactionId ? PUT<Payload & FormData>('/transactions/', payload as Payload & FormData, { ...(files.length > 0 ? { headers: { enctype: 'multipart/form-data' } } : {}) }) : POST('/transactions', payload, { ...(files.length > 0 ? { headers: { enctype: 'multipart/form-data' } } : {}) })
             const data = await res
-            console.log('form data: ', data)
+            navigate(-1)
+            return data
             return res
         } catch (error) {
             return error
