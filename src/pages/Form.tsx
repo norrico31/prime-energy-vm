@@ -6,8 +6,41 @@ import { useAuthUser } from '../shared/contexts/AuthUser'
 import dayjs, { Dayjs } from 'dayjs'
 import { Button, FileUpload } from './components'
 
-import { GET, POST } from '../shared/utils/fetch'
+import { GET, POST, PUT } from '../shared/utils/fetch'
 const { useForm } = Form
+
+type Payload = {
+    action_due_date1: string | null
+    action_due_date2: string | null
+    action_due_date3: string | null
+    action_due_date4: string | null
+    action_due_date5: string | null
+    action_item1: string | null
+    action_item2: string | null
+    action_item3: string | null
+    action_item4: string | null
+    action_item5: string | null
+    action_owner1: string | null
+    action_owner2: string | null
+    action_owner3: string | null
+    action_owner4: string | null
+    action_owner5: string | null
+    availability: TAvailability
+    date_raised: string
+    due_date: string
+    equipment: TEquipment
+    name: string
+    id: string
+    integrity: TIntegrity
+    is_longterm: string
+    reference_no: string
+    risk_description: string
+    status: TStatus
+    threat_owner: TUserOptions
+    url: { id: string; url: string }[]
+    vulnerability_description: string
+    vulnerability_title: string
+}
 
 function Forms() {
     const params = useParams()
@@ -17,6 +50,7 @@ function Forms() {
     const [classification, setClassification] = useState<string>('0');
     const [url, setUrls] = useState<typeof initDataRowState>([]);
     const [files, setFiles] = useState<Array<File>>([]);
+    // const [equipmentId, setEquipmentId] = useState<string|undefined>(undefined)
 
     useEffect(() => {
         // if (id === 'create') return
@@ -33,7 +67,8 @@ function Forms() {
                         availability_id: res.data?.availability.id,
                         integrity_id: res.data?.integrity.id,
                         date_raised: dayjs(res.data?.date_raised, 'YYYY/MM/DD'),
-                        due_date: dayjs(res.data?.due_date, 'YYYY/MM/DD')
+                        due_date: dayjs(res.data?.due_date, 'YYYY/MM/DD'),
+                        equipment_tag: res.data?.equipment.name // MUST CHANGE TO equipment_tag
                     })
                     setUrls(res.data?.url)
                 } catch (error) {
@@ -59,24 +94,27 @@ function Forms() {
             })
         }
         return () => controller.abort()
-    }, [])
+    }, [form])
 
     const onFinish = async (values: Record<string, string | number>) => {
         //* edit create endpoint
         const formData = new FormData()
-        const objPayload = { ...values, url: url.map((u) => ({ url: u.url, id: '' })), date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'), due_date: dayjs(values?.due_date).format('MM-DD-YYYY') }
+        const objPayload = { ...values, id: params?.transactionId, equipment_id: params?.equipmentId, url: url.map((u) => ({ url: u.url, id: '' })), date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'), due_date: dayjs(values?.due_date).format('MM-DD-YYYY') }
         if (files.length > 0) {
             for (const k in values) {
                 const val = values[k]
                 formData.append(k, val !== undefined ? (val + '') : '')
             }
             const blobFile = new Blob(files)
+            formData.append('id', params?.equipmentId + '')
             formData.append('file', blobFile)
+            formData.append('equipment_id', params?.equipmentId + '')
         }
-        const payload = files.length > 0 ? formData : objPayload
+        const payload = files.length > 0 ? formData : objPayload;
         try {
-            const res = await POST('/transactions', payload, { ...(files.length > 0 ? { headers: { enctype: 'multipart/form-data' } } : {}) })
-            // console.log(res)
+            const res = params?.transactionId ? PUT<Payload & FormData>('/transactions/' + params?.transactionId, payload as Payload & FormData, { ...(files.length > 0 ? { headers: { enctype: 'multipart/form-data' } } : {}) }) : POST('/transactions', payload, { ...(files.length > 0 ? { headers: { enctype: 'multipart/form-data' } } : {}) })
+            const data = await res
+            console.log('form data: ', data)
             return res
         } catch (error) {
             return error
@@ -149,6 +187,13 @@ function Forms() {
                 <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <Form.Item label='Risk Description' name='risk_description'>
                         <Input.TextArea placeholder='Enter risk description' />
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                    <Form.Item label='Due Date' name='due_date' >
+                        <DatePicker format='YYYY/MM/DD' style={{ width: '100%' }} />
                     </Form.Item>
                 </Col>
             </Row>
