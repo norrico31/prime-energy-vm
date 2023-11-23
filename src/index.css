@@ -433,10 +433,10 @@ td.bg-red {
   }
   /* background-position: center; */
 }
-
-.ant-menu .ant-menu-item, 
-.ant-menu .ant-menu-submenu, 
-.ant-menu .ant-menu-submenu-title {
+/* 
+.ant-menu-item, 
+.ant-menu-submenu, 
+.ant-menu-submenu-title {
   border-radius: 0 !important;
 }
 
@@ -449,4 +449,4 @@ td.bg-red {
 .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn, 
 .ant-tabs .ant-tabs-tab-btn:hover {
   color: #f69a22 !important;
-}
+} */
