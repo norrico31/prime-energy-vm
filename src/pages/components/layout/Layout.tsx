@@ -105,12 +105,6 @@ const MenuContainer = styled(AntdMenu)`
     background-color: #1e9aff;
     color: #fff;
 
-    .ant-menu-item,
-    .ant-menu-item:hover,
-    .ant-menu.ant-menu-sub.ant-menu-inline {
-        border-radius: 0 !important;
-    }
-
     /* .ant-menu-item:hover, */
     .ant-menu-item-selected,
     .ant-menu-item.ant-menu-item-active {
@@ -121,6 +115,9 @@ const MenuContainer = styled(AntdMenu)`
     .menu-item-icon {
         color: #00AEEF;
     }
+    /* .ant-menu.ant-menu-sub.ant-menu-inline {
+        background: #9B3423;
+    } */
 `
 
 type MenuItem = Required<MenuProps>['items'][number]

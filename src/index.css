@@ -26,6 +26,10 @@ body, #root {
   box-shadow: inset 0px 0px #848484, inset 1px 1px #fff, inset -2px -2px grey,
     inset 2px 2px #dfdfdf;
 }
+.ant-select-selector,
+.ant-input-password {
+  border-radius: 0 !important;
+}
 /* button:focus {
   outline: revert !important;
 } */
@@ -204,7 +208,7 @@ button.btn-print-report {
 /* COMPONENTS */
 .ant-input,
 
-.ant-input-search >.ant-input-group >.ant-input-group-addon:last-child .ant-input-search-button{
+.ant-input-search >.ant-input-group >.ant-input-group-addon:last-child .ant-input-search-button {
   border-radius: 0;
 }
 .login-container {
@@ -362,13 +366,13 @@ button.btn-print-report {
  border: 2px solid #fff;
  border-radius: 50%;
 } */
-.circle.avail:before {
+.circle.green:before {
   background: green;
 }
-.circle.affected:before {
+.circle.yellow:before {
   background: rgb(230, 150, 0);
 }
-.circle.unavail:before {
+.circle.red:before {
   background: red;
 }
 
@@ -433,10 +437,10 @@ td.bg-red {
   }
   /* background-position: center; */
 }
-/* 
-.ant-menu-item, 
-.ant-menu-submenu, 
-.ant-menu-submenu-title {
+
+.ant-menu .ant-menu-item, 
+.ant-menu .ant-menu-submenu, 
+.ant-menu .ant-menu-submenu-title {
   border-radius: 0 !important;
 }
 
@@ -449,4 +453,4 @@ td.bg-red {
 .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn, 
 .ant-tabs .ant-tabs-tab-btn:hover {
   color: #f69a22 !important;
-} */
+}

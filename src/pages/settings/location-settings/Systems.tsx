@@ -181,7 +181,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
                 <Input.TextArea placeholder="Enter description" />
             </Form.Item>
             <Form.Item label='Disable' name="is_active" valuePropName="checked">
-                <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
+                <Switch checkedChildren="Yes" unCheckedChildren="No" />
             </Form.Item>
             <Row justify='end' >
                 <Space>

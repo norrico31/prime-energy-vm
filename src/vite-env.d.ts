@@ -218,6 +218,10 @@ type TEquipment = {
     is_critical: string
     name: string
     system: TSystems
+    extra: {
+        'A': string;
+        'I': string
+    }
 } & Common
 type TTransaction<D> = {
     action_item1: null

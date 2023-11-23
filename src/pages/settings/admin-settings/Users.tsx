@@ -3,6 +3,7 @@ import { Row, Col, Form, Modal, Input, Space, Select, Switch } from 'antd'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { Table, ButtonActions, Button } from '../../components';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 
@@ -195,12 +196,18 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
                     <Form.Item label='Email' name="email" rules={[{ required: true, message: '' }]}>
                         <Input type="email" placeholder="Enter email." />
                     </Form.Item>
-                    <Form.Item label='Password' name="password" rules={[{ required: selectedData ? false : true, message: '' }]}>
-                        <Input type="password" placeholder="Enter password." />
-                    </Form.Item>
-                    <Form.Item label='Confirm Password' name="confirm_password" rules={[{ required: selectedData ? false : true, message: '' }]}>
-                        <Input type="password" placeholder="Enter password." />
-                    </Form.Item>
+                    <InputPassword
+                        label='Password'
+                        name='password'
+                        required={selectedData ? false : true}
+                        placeholder='Enter password'
+                    />
+                    <InputPassword
+                        label='Confirm Password'
+                        name='confirm_password'
+                        required={selectedData ? false : true}
+                        placeholder='Enter confirm password'
+                    />
                 </Col>
             </Row>
             <Row justify='end' >
@@ -215,6 +222,17 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
             </Row>
         </Form>
     </Modal>
+}
+
+function InputPassword({ placeholder, required, name, label }: { placeholder: string, required: boolean; name: string, label: string }) {
+    const [passwordVisible, setPasswordVisible] = useState(false)
+    return <Form.Item label={label} name={name} rules={[{ required, message: '' }]}>
+        <Input.Password
+            placeholder={placeholder}
+            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            visibilityToggle={{ visible: passwordVisible, onVisibleChange: setPasswordVisible }}
+        />
+    </Form.Item>
 }
 
 function FormItemRoles({ name }: { name: string }) {

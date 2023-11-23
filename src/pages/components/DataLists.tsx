@@ -12,8 +12,8 @@ function NestedCardData(props: TEquipment & { to: string }) {
                 <div className='card-head-title'>
                     <OverlayTrigger key='create' offset={[0, 10]} overlay={<Tooltip id='create' className='position-fixed'>Create</Tooltip>} trigger={['hover', 'focus']}>
                         <div className="d-flex card-head-title-ai gap-4" onClick={() => navigate(to + '/form')}>
-                            <div className={`circle avail`} />
-                            <div className={`circle avail`} />
+                            <div className={`circle avail ${props.extra?.A.toLowerCase()}`} />
+                            <div className={`circle avail ${props.extra?.I.toLowerCase()}`} />
                         </div>
                     </OverlayTrigger>
                     <OverlayTrigger key={props.id} offset={[0, 10]} overlay={<Tooltip id={props?.equipment_tag} className='position-fixed'>{`View - ${props?.equipment_tag}`}</Tooltip>} trigger={['hover', 'focus']}>
