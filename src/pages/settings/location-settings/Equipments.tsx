@@ -54,6 +54,13 @@ export default function Equipments() {
             // width: 120
         },
         {
+            title: 'System Name',
+            dataIndex: 'system_name',
+            key: 'system_name',
+            render: (_, rec) => rec.system?.name,
+            // width: 120
+        },
+        {
             title: 'Equipment Tag',
             dataIndex: 'equipment_tag',
             key: 'equipment_tag',
@@ -62,8 +69,16 @@ export default function Equipments() {
         {
             title: 'Location',
             dataIndex: 'location_name',
-            key: 'name',
+            key: 'location_name',
             render: (_, rec) => rec.system?.site?.name,
+            // width: 120
+        },
+        {
+            title: 'Disable',
+            dataIndex: 'is_active',
+            key: 'is_active',
+            render: (_, rec) => rec.is_active === '0' ? 'No' : 'Yes',
+            align: 'center',
             // width: 120
         },
         {

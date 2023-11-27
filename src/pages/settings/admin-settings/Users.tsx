@@ -189,7 +189,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
                     </Form.Item>
                     <FormItemRoles name='role_id' />
                     <Form.Item label='Active' name="is_active" valuePropName="checked">
-                        <Switch checkedChildren="Yes" unCheckedChildren="No" />
+                        <Switch checkedChildren="Yes" unCheckedChildren="No" defaultChecked />
                     </Form.Item>
                 </Col>
                 <Col>
