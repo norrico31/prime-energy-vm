@@ -1,4 +1,5 @@
 import { Row } from 'react-bootstrap'
+import { useLocation } from 'react-router-dom';
 import { DataLists } from '../components'
 import { useEffect, useState } from 'react'
 import { GET } from '../../shared/utils/fetch'
@@ -26,9 +27,15 @@ export default function OgpLists() {
             setLoading(false)
         }
     }
+    const { pathname } = useLocation()
     return (
-        <Row className='card-list justify-content-center'>
-            <DataLists dataList={dataSource} to='/ogp' loading={loading} />
-        </Row>
+        <>
+            {!pathname.includes('dashboard') && (
+                <h3 className="mb-3">OGP</h3>
+            )}
+            <Row className='card-list justify-content-center'>
+                <DataLists dataList={dataSource} to='/ogp' loading={loading} />
+            </Row>
+        </>
     )
 }

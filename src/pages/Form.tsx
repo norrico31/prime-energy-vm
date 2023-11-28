@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Form as BootstrapForm, Modal, FloatingLabel, Table as BootstrapTable, CloseButton, Col as BootstrapCol, Row as BootstrapRow } from 'react-bootstrap'
-import { Row, Col, Form, Input, DatePicker, Select, Space } from 'antd'
+import { Row, Col, Form, Input, DatePicker, Select, Space, Skeleton } from 'antd'
 import { useAuthUser } from '../shared/contexts/AuthUser'
 import dayjs, { Dayjs } from 'dayjs'
-import { Button, FileUpload } from './components'
+import { Button, FileUpload, PageHeading } from './components'
 
 import { GET, POST, PUT } from '../shared/utils/fetch'
 const { useForm } = Form
@@ -51,10 +51,12 @@ function Forms() {
     const [classification, setClassification] = useState<string>('0');
     const [url, setUrls] = useState<typeof initDataRowState>([]);
     const [files, setFiles] = useState<Array<File>>([]);
-    // const [equipmentId, setEquipmentId] = useState<string|undefined>(undefined)
+    const [title, setTitle] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // if (id === 'create') return
+        setLoading(true);
         const controller = new AbortController();
         if (params?.transactionId) {
             (async () => {
@@ -72,21 +74,26 @@ function Forms() {
                         equipment_tag: res.data?.equipment.name, // MUST CHANGE TO equipment_tag
                         threat_owner: user?.id
                     })
+                    setTitle(res?.data?.equipment?.name)
                     setUrls(res.data?.url)
                 } catch (error) {
                     return error
+                } finally {
+                    setLoading(false)
                 }
             })()
         } else {
             (async () => {
                 try {
                     const res = await GET<ApiData<TEquipment>>('/equipments/' + params?.equipmentId, controller.signal)
-                    console.log('specific equipment: ', res.data)
+                    setTitle(res?.data?.system?.name)
                     form.setFieldsValue({
                         ...res.data,
                     })
                 } catch (error) {
                     return error
+                } finally {
+                    setLoading(false)
                 }
             })()
             form.setFieldsValue({
@@ -124,144 +131,146 @@ function Forms() {
         }
     }
 
-    return <>
-        <div className={`d-flex justify-content-between`}>
-            <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate(-1)}>Back to lists</Button>
-        </div>
-        <Form form={form} name="horizontal_login" onFinish={onFinish} layout='vertical'>
-            <Row wrap gutter={[24, 24]}>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Reference No." name='reference_no'>
-                        <Input placeholder="Enter reference no." disabled />
-                    </Form.Item>
-                </Col>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Date Raised (mm/dd/yyyy)" name='date_raised' rules={[{ required: true, message: '' }]}>
-                        <DatePicker style={{ width: '100%' }} format='YYYY/MM/DD' />
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row wrap gutter={[24, 24]}>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Equipment" name='equipment_tag'>
-                        <Input disabled />
-                    </Form.Item>
-                </Col>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <FormItemThreatOwner name='threat_owner' />
-                </Col>
-            </Row>
-            <Row wrap gutter={[24, 24]}>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <FormItemStatuses name='status_id' />
-                </Col>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label="Classification" name='is_longterm' rules={[{ required: true, message: '' }]}>
-                        <Select placeholder='Select classification' value={classification} onChange={setClassification} optionFilterProp="children">
-                            <Select.Option value="0">Short Term</Select.Option>
-                            <Select.Option value="1">Long Term</Select.Option>
-                        </Select>
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row wrap gutter={[24, 24]}>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <FormItemAvailability name='availability_id' />
-                </Col>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                    <FormItemIntegrity name='integrity_id' />
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Form.Item label='Vulnerability Title' name='vulnerability_title'>
-                        <Input.TextArea placeholder='Enter vulnerability title' />
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Form.Item label='Vulnerability Description' name='vulnerability_description'>
-                        <Input.TextArea placeholder='Enter vulnerability description' />
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Form.Item label='Risk Description' name='risk_description'>
-                        <Input.TextArea placeholder='Enter risk description' />
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-                    <Form.Item label='Due Date' name='due_date' >
-                        <DatePicker format='YYYY/MM/DD' style={{ width: '100%' }} />
-                    </Form.Item>
-                </Col>
-            </Row>
-            <hr />
-            {classification == '0' ? (
+    return loading ? <Skeleton /> :
+        <>
+            <PageHeading title={title} onClick={() => alert('print report critical')} />
+            <div className={`d-flex justify-content-between`}>
+                <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate(-1)}>Back to lists</Button>
+            </div>
+            <Form form={form} name="horizontal_login" onFinish={onFinish} layout='vertical'>
                 <Row wrap gutter={[24, 24]}>
                     <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                        <Form.Item label='Action Item'>
-                            {new Array(5).fill(null).map((_, i) => (
-                                <Form.Item name={`action_item${i}`} key={i}>
-                                    <Input.TextArea placeholder='Enter action item' />
-                                </Form.Item>
-                            ))}
+                        <Form.Item label="Reference No." name='reference_no'>
+                            <Input placeholder="Enter reference no." disabled />
                         </Form.Item>
                     </Col>
-                    <Col xs={12} sm={6} md={6} lg={6} xl={6}>
-                        <Form.Item label='Action Owner' >
-                            {new Array(5).fill(null).map((_, i) => (
-                                <Form.Item name={`action_owner${i}`} key={i} style={{ marginBottom: 14, }}>
-                                    <Select placeholder='Select owner' style={{ height: 50 }}>
-                                        {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
-                                    </Select>
-                                </Form.Item>
-                            ))}
-                        </Form.Item>
-                    </Col>
-                    <Col xs={12} sm={6} md={6} lg={6} xl={6}>
-                        <Form.Item label='Due Date' >
-                            {new Array(5).fill(null).map((_, i) => (
-                                <Form.Item name={`due_date${i}`} key={i} style={{ marginBottom: 14 }}>
-                                    <DatePicker format='YYYY/MM/DD' style={{ height: 50, width: '100%' }} />
-                                </Form.Item>
-                            ))}
+                    <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                        <Form.Item label="Date Raised (yyyy/dd/mm)" name='date_raised' rules={[{ required: true, message: '' }]}>
+                            <DatePicker style={{ width: '100%' }} format='YYYY/DD/MM' />
                         </Form.Item>
                     </Col>
                 </Row>
-            ) : null}
-            <hr />
-            <BootstrapRow className="mb-3">
-                <BootstrapForm.Group as={Col} controlId="formGridOtherRemarks">
-                    <BootstrapForm.Label>Other Remarks</BootstrapForm.Label>
-                    <BootstrapForm.Group as={Col} xs={10} controlId="formGridOtherRemarks">
-                        <BootstrapForm.Label>Upload Documents</BootstrapForm.Label>
-                        <FileUpload
-                            files={files}
-                            setFiles={setFiles}
-                        />
+                <Row wrap gutter={[24, 24]}>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                        <Form.Item label="Equipment" name='equipment_tag'>
+                            <Input disabled />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                        <FormItemThreatOwner name='threat_owner' />
+                    </Col>
+                </Row>
+                <Row wrap gutter={[24, 24]}>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                        <FormItemStatuses name='status_id' />
+                    </Col>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                        <Form.Item label="Classification" name='is_longterm' rules={[{ required: true, message: '' }]}>
+                            <Select placeholder='Select classification' value={classification} onChange={setClassification} optionFilterProp="children">
+                                <Select.Option value="0">Short Term</Select.Option>
+                                <Select.Option value="1">Long Term</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row wrap gutter={[24, 24]}>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                        <FormItemAvailability name='availability_id' />
+                    </Col>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                        <FormItemIntegrity name='integrity_id' />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                        <Form.Item label='Vulnerability Title' name='vulnerability_title'>
+                            <Input.TextArea placeholder='Enter vulnerability title' />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                        <Form.Item label='Vulnerability Description' name='vulnerability_description'>
+                            <Input.TextArea placeholder='Enter vulnerability description' />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                        <Form.Item label='Risk Description' name='risk_description'>
+                            <Input.TextArea placeholder='Enter risk description' />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                        <Form.Item label='Due Date (yyyy/dd/mm)' name='due_date' >
+                            <DatePicker format='YYYY/DD/MM' style={{ width: '100%' }} />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <hr />
+                {classification == '0' ? (
+                    <Row wrap gutter={[24, 24]}>
+                        <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                            <Form.Item label='Action Item'>
+                                {new Array(5).fill(null).map((_, i) => (
+                                    <Form.Item name={`action_item${i + 1}`} key={i}>
+                                        <Input.TextArea placeholder='Enter action item' />
+                                    </Form.Item>
+                                ))}
+                            </Form.Item>
+                        </Col>
+                        <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+                            <Form.Item label='Action Owner' >
+                                {new Array(5).fill(null).map((_, i) => (
+                                    <Form.Item name={`action_owner${i + 1}`} key={i + 1} style={{ marginBottom: 14, }}>
+                                        <Select placeholder='Select owner' style={{ height: 50 }}>
+                                            {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
+                                        </Select>
+                                    </Form.Item>
+                                ))}
+                            </Form.Item>
+                        </Col>
+                        <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+                            <Form.Item label='Due Date' >
+                                {new Array(5).fill(null).map((_, i) => (
+                                    <Form.Item name={`due_date${i + 1}`} key={i} style={{ marginBottom: 14 }}>
+                                        <DatePicker format='YYYY/MM/DD' style={{ height: 50, width: '100%' }} />
+                                    </Form.Item>
+                                ))}
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                ) : null}
+                <hr />
+                <BootstrapRow className="mb-3">
+                    <BootstrapForm.Group as={Col} controlId="formGridOtherRemarks">
+                        <BootstrapForm.Label>Other Remarks</BootstrapForm.Label>
+                        <BootstrapForm.Group as={Col} xs={10} controlId="formGridOtherRemarks">
+                            <BootstrapForm.Label>Upload Documents</BootstrapForm.Label>
+                            <FileUpload
+                                files={files}
+                                setFiles={setFiles}
+                            />
+                        </BootstrapForm.Group>
                     </BootstrapForm.Group>
-                </BootstrapForm.Group>
-            </BootstrapRow>
-            <Row className="mb-3">
-                <FormUrl url={url} setUrls={setUrls} />
-            </Row>
-            <Row justify='end'>
-                <Space>
-                    <Button variant='danger' title='Cancel' onClick={() => navigate(-1)}>
-                        Cancel
-                    </Button>
-                    <Button type="submit" variant='primary' title='Create' >
-                        Submit
-                    </Button>
-                </Space>
-            </Row>
-        </Form >
-    </>
+                </BootstrapRow>
+                <Row className="mb-3">
+                    <FormUrl url={url} setUrls={setUrls} />
+                </Row>
+                <Row justify='end'>
+                    <Space>
+                        <Button variant='danger' title='Cancel' onClick={() => navigate(-1)}>
+                            Cancel
+                        </Button>
+                        <Button type="submit" variant='primary' title='Create' >
+                            Submit
+                        </Button>
+                    </Space>
+                </Row>
+            </Form >
+        </>
 }
 
 function FormItemStatuses({ name }: { name: string }) {
@@ -416,7 +425,7 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
                     <tr key={idx}>
                         <td>{idx + 1}</td>
                         <td>
-                            <Link to={d.url}>{d.url}</Link>
+                            <Link to={d.url} target="_blank" rel="noopener noreferrer">{d.url}</Link>
                         </td>
                         <td >
                             <Button variant='primary' onClick={() => {

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Modal, Form, Space, Row, Col, Tag } from 'antd'
+import { Modal, Form, Space, Row, Col, Tag, Skeleton } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Table, Button, ButtonActions, ListViewHeader } from '../components'
 import { ColumnsType } from 'antd/es/table'
-
-import { GET, DELETE } from '../../shared/utils/fetch'
 import dayjs, { Dayjs } from 'dayjs'
+import { Table, Button, ButtonActions, ListViewHeader } from '../components'
+import { GET, DELETE } from '../../shared/utils/fetch'
+
 export default function OgpView() {
     const { equipmentId } = useParams()
     const navigate = useNavigate()
@@ -43,8 +43,11 @@ export default function OgpView() {
         setIsModalShow(false)
     }
 
-    return (
+    return loading ? <Skeleton /> : (
         <>
+            <Row className='mb-4'>
+                <h3>OGP</h3>
+            </Row>
             <ListViewHeader
                 handleCreate={() => navigate(`/ogp/${equipmentId}/form`)}
             />

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Row } from 'antd'
 import { DataLists } from '../components'
 import { GET } from '../../shared/utils/fetch'
@@ -26,9 +27,15 @@ export default function SwpLists() {
             setLoading(false)
         }
     }
+    const { pathname } = useLocation()
     return (
-        <Row className='card-list'>
-            <DataLists dataList={dataSource} to='/swp' loading={loading} />
-        </Row>
+        <>
+            {!pathname.includes('dashboard') && (
+                <h3 className="mb-3">SWP</h3>
+            )}
+            <Row className='card-list'>
+                <DataLists dataList={dataSource} to='/swp' loading={loading} />
+            </Row>
+        </>
     )
 }

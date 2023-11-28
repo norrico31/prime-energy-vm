@@ -1,5 +1,5 @@
 import { Suspense, lazy, ReactNode } from "react"
-import { Navigate, createBrowserRouter } from "react-router-dom"
+import { Navigate, createBrowserRouter, Outlet } from "react-router-dom"
 import { Layout } from "./pages/components"
 
 const Login = lazy(() => import('./pages/Login'))
@@ -10,19 +10,15 @@ const Profile = lazy(() => import('./pages/Profile'))
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
 const Form = lazy(() => import('./pages/Form'))
 
-const Swp = lazy(() => import('./pages/Swp'))
 const SwpLists = lazy(() => import('./pages/features/SwpLists'))
 const SwpView = lazy(() => import('./pages/features/SwpView'))
 
-const Ogp = lazy(() => import('./pages/Ogp'))
 const OgpLists = lazy(() => import('./pages/features/OgpLists'))
 const OgpView = lazy(() => import('./pages/features/OgpView'))
 
-const Pipelines = lazy(() => import('./pages/Pipelines'))
 const PipelineView = lazy(() => import('./pages/features/PipelineView'))
 const PipelineLists = lazy(() => import('./pages/features/PipelineLists'))
 
-const CriticalEquipments = lazy(() => import('./pages/CriticalEquipment'))
 const CriticalEquipmentView = lazy(() => import('./pages/features/CriticalEquipmentView'))
 const CriticalEquipmentList = lazy(() => import('./pages/features/CriticalEquipmentList'))
 
@@ -95,7 +91,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/swp',
-                element: <AsyncComponent><Swp /></AsyncComponent>,
+                element: <AsyncComponent><Outlet /></AsyncComponent>,
                 children: [
                     {
                         path: '',
@@ -127,7 +123,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/ogp',
-                element: <AsyncComponent><Ogp /></AsyncComponent>,
+                element: <AsyncComponent><Outlet /></AsyncComponent>,
                 children: [
                     {
                         path: '',
@@ -158,7 +154,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/pipelines',
-                element: <AsyncComponent><Pipelines /></AsyncComponent>,
+                element: <AsyncComponent><Outlet /></AsyncComponent>,
                 children: [
                     {
                         path: '',
@@ -189,7 +185,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/critical-equipment',
-                element: <AsyncComponent><CriticalEquipments /></AsyncComponent>,
+                element: <AsyncComponent><Outlet /></AsyncComponent>,
                 children: [
                     {
                         path: '',

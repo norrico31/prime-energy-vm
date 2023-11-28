@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Modal, Form, Row, Col } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Table, Button, ListViewHeader } from '../components'
-
-import { GET, DELETE } from '../../shared/utils/fetch'
-import { renderColumns } from './OgpView'
 import { Dayjs } from 'dayjs'
+import { Table, Button, ListViewHeader } from '../components'
+import { renderColumns } from './OgpView'
+import { GET, DELETE } from '../../shared/utils/fetch'
 
 export default function SwpView() {
     const { equipmentId } = useParams()
@@ -17,10 +16,9 @@ export default function SwpView() {
 
     useEffect(() => {
         const controller = new AbortController();
-        if (!equipmentId) return
         fetchData(controller.signal)
         return () => controller.abort()
-    }, [equipmentId])
+    }, [])
 
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
@@ -35,7 +33,6 @@ export default function SwpView() {
         }
     }
 
-
     const deleteData = (id: string) => DELETE('/swp/' + id).finally((fetchData))
     const editNavigate = (id: string) => navigate(`/swp/${equipmentId}/edit/${id}`)
 
@@ -49,6 +46,9 @@ export default function SwpView() {
 
     return (
         <>
+            <Row className='mb-4'>
+                <h3>SWP</h3>
+            </Row>
             <ListViewHeader
                 handleCreate={() => navigate(`/swp/${equipmentId}/form`)}
             />
