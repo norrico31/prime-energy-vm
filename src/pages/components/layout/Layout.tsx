@@ -79,6 +79,7 @@ function Sidebar({ handleSelect }: { handleSelect: () => void }) {
         const location = pathname.split('/').filter(s => s !== '')[0]
         const paths: Record<string, string> = {
             'dashboard': '/dashboard',
+            'owner-dashboard': '/owner-dashboard',
             'swp': '/swp',
             'ogp': '/ogp',
             'pipelines': '/pipelines',
@@ -143,6 +144,15 @@ const links = [
             Dashboard
         </Link>,
         '/dashboard',
+        <MdOutlineDashboard />,
+        undefined,
+        true
+    ),
+    getItemLinks(
+        <Link className={`text-decoration-none`} to='/owner-dashboard'>
+            Owner Dashoard
+        </Link>,
+        '/owner-dashboard',
         <MdOutlineDashboard />,
         undefined,
         true

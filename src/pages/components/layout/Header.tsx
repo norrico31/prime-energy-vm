@@ -58,8 +58,14 @@ function UserSettings() {
                     const data = await GET<ApiData<TUser>>(`/auth_user`, controller.signal)
                     setUser(data?.data)
                     return data
-                } catch (error) {
-                    return error
+                } catch (err) {
+                    const error = err as ApiError
+                    if (error?.message === 'Unauthorized') {
+                        setUser(undefined)
+                        setToken(null)
+                        localStorage.clear()
+                    }
+                    return err
                 }
             })()
         }

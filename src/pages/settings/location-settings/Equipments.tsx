@@ -77,8 +77,8 @@ export default function Equipments() {
             title: 'Disable',
             dataIndex: 'is_active',
             key: 'is_active',
-            render: (_, rec) => rec.is_active === '0' ? 'No' : 'Yes',
             align: 'center',
+            render: (_, rec) => rec.is_active === '0' ? 'No' : 'Yes'
             // width: 120
         },
         {

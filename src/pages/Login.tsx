@@ -35,7 +35,11 @@ function Login() {
             }
         } catch (err) {
             const error = err as ApiError
-            setErrors(error?.errors.invalid_user_name_or_password as Array<string>)
+            if (error.message) {
+                setErrors([error?.message])
+            } else {
+                setErrors(error?.errors.invalid_user_name_or_password as Array<string>)
+            }
             return err
         }
     }
@@ -47,7 +51,7 @@ function Login() {
                     <img src={Logo} alt='brand-logo' style={{ width: 60 }} />
                     <h5 className='m-3'>Vulnerability Monitoring System</h5>
                     <h4 style={{ margin: 0 }}>{isChangePassword ? 'Forgot Password' : 'Login'}</h4>
-                    <span className='error-text'>{errors[0]}</span>
+                    <span className='error-text'>{errors?.[0]}</span>
                     {!isChangePassword ? (
                         <>
                             <Form.Item

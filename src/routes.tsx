@@ -4,6 +4,7 @@ import { Layout } from "./pages/components"
 
 const Login = lazy(() => import('./pages/Login'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
+const OwnerDashboard = lazy(() => import('./pages/OwnerDashboard'))
 const Profile = lazy(() => import('./pages/Profile'))
 
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
@@ -83,6 +84,10 @@ export const routes = createBrowserRouter([
             {
                 path: '',
                 element: <Navigate to='dashboard' />
+            },
+            {
+                path: '/owner-dashboard',
+                element: <AsyncComponent><OwnerDashboard /></AsyncComponent>
             },
             {
                 path: '/profile',
