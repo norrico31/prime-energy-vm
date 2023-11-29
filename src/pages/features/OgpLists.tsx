@@ -18,7 +18,6 @@ export default function OgpLists() {
         setLoading(true)
         try {
             const res = await GET<ApiData<TSystems[]>>('/systems/dashboard?site=OGP', signal!, params)
-            console.log('OGP res: ', res.data)
             setDataSource(res.data)
             return res
         } catch (error) {

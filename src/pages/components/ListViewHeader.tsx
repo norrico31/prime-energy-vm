@@ -13,14 +13,12 @@ type Props = Partial<ListViewColEndProps> & {
 export default function ListViewHeader(props: Props) {
     const params = useParams()
     const [equipment, setequipment] = useState<TEquipment | undefined>(undefined);
-    console.log(equipment)
 
     useEffect(() => {
         const controller = new AbortController();
         (async () => {
             try {
                 const res = await GET<ApiData<TEquipment>>('/equipments/' + params?.equipmentId, controller.signal)
-                console.log('specific equipment: ', res.data)
                 setequipment(res.data)
             } catch (error) {
                 return error
@@ -28,7 +26,7 @@ export default function ListViewHeader(props: Props) {
         })()
 
         return () => {
-
+            controller.abort()
         }
     }, []);
 

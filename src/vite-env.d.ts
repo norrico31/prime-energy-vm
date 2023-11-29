@@ -229,11 +229,16 @@ type TTransaction<D> = {
     action_item3: null
     action_item4: null
     action_item5: null
-    action_owner1: null
-    action_owner2: null
-    action_owner3: null
-    action_owner4: null
-    action_owner5: null
+    action_owner1: TUserOptions | null
+    action_owner2: TUserOptions | null
+    action_owner3: TUserOptions | null
+    action_owner4: TUserOptions | null
+    action_owner5: TUserOptions | null
+    action_due_date1: D | null
+    action_due_date2: D | null
+    action_due_date3: D | null
+    action_due_date4: D | null
+    action_due_date5: D | null
     availability: TAvailability
     date_raised: string | D
     due_date: string | D

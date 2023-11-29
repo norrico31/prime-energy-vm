@@ -10,21 +10,21 @@ import { GET, POST, PUT } from '../shared/utils/fetch'
 const { useForm } = Form
 
 type Payload = {
-    action_due_date1: string | null
-    action_due_date2: string | null
-    action_due_date3: string | null
-    action_due_date4: string | null
-    action_due_date5: string | null
+    action_due_date1: Dayjs | null
+    action_due_date2: Dayjs | null
+    action_due_date3: Dayjs | null
+    action_due_date4: Dayjs | null
+    action_due_date5: Dayjs | null
     action_item1: string | null
     action_item2: string | null
     action_item3: string | null
     action_item4: string | null
     action_item5: string | null
-    action_owner1: string | null
-    action_owner2: string | null
-    action_owner3: string | null
-    action_owner4: string | null
-    action_owner5: string | null
+    action_owner1: TUserOptions | null
+    action_owner2: TUserOptions | null
+    action_owner3: TUserOptions | null
+    action_owner4: TUserOptions | null
+    action_owner5: TUserOptions | null
     availability: TAvailability
     classification: string
     date_raised: string
@@ -62,6 +62,7 @@ function Forms() {
             (async () => {
                 try {
                     const res = await GET<ApiData<TTransaction<Dayjs>>>('/transactions/' + params?.transactionId, controller.signal)
+                    console.log(res)
                     form.setFieldsValue({
                         ...res.data,
                         reference_no: res.data?.ref_no,
@@ -71,8 +72,18 @@ function Forms() {
                         integrity_id: res.data?.integrity.id,
                         date_raised: dayjs(res.data?.date_raised, 'YYYY/MM/DD'),
                         due_date: dayjs(res.data?.due_date, 'YYYY/MM/DD'),
-                        equipment_tag: res.data?.equipment.name, // MUST CHANGE TO equipment_tag
-                        threat_owner: user?.id
+                        equipment_tag: res.data?.equipment.name,
+                        threat_owner: user?.id,
+                        action_owner1: res?.data?.action_owner1?.id,
+                        action_owner2: res?.data?.action_owner2?.id,
+                        action_owner3: res?.data?.action_owner3?.id,
+                        action_owner4: res?.data?.action_owner4?.id,
+                        action_owner5: res?.data?.action_owner5?.id,
+                        action_due_date1: res?.data?.action_due_date1 ? dayjs(res?.data?.action_due_date1, 'YYYY/MM/DD') : null,
+                        action_due_date2: res?.data?.action_due_date2 ? dayjs(res?.data?.action_due_date2, 'YYYY/MM/DD') : null,
+                        action_due_date3: res?.data?.action_due_date3 ? dayjs(res?.data?.action_due_date3, 'YYYY/MM/DD') : null,
+                        action_due_date4: res?.data?.action_due_date4 ? dayjs(res?.data?.action_due_date4, 'YYYY/MM/DD') : null,
+                        action_due_date5: res?.data?.action_due_date5 ? dayjs(res?.data?.action_due_date5, 'YYYY/MM/DD') : null,
                     })
                     setTitle(res?.data?.equipment?.name)
                     setUrls(res.data?.url)
@@ -89,6 +100,8 @@ function Forms() {
                     setTitle(res?.data?.system?.name)
                     form.setFieldsValue({
                         ...res.data,
+                        classification: '0',
+                        threat_owner: user?.id
                     })
                 } catch (error) {
                     return error
@@ -96,11 +109,11 @@ function Forms() {
                     setLoading(false)
                 }
             })()
-            form.setFieldsValue({
-                ...form.getFieldsValue(),
-                classification: '0',
-                threat_owner: user?.id
-            })
+            // form.setFieldsValue({
+            //     ...form.getFieldsValue(),
+            //     classification: '0',
+            //     threat_owner: user?.id
+            // })
         }
         return () => controller.abort()
     }, [form])
@@ -108,12 +121,27 @@ function Forms() {
     const onFinish = async (values: Record<string, string | number>) => {
         //* edit create endpoint
         const formData = new FormData()
-        const objPayload = { ...values, id: params?.transactionId, equipment_id: params?.equipmentId, url: url.map((u) => ({ url: u.url, id: '' })), threat_owner: user?.id, date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'), due_date: dayjs(values?.due_date).format('MM-DD-YYYY') }
+        const objPayload = {
+            ...values,
+            id: params?.transactionId,
+            equipment_id:
+                params?.equipmentId,
+            url: url.map((u) => ({ url: u.url, id: '' })),
+            threat_owner: user?.id,
+            date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'),
+            due_date: dayjs(values?.due_date).format('MM-DD-YYYY'),
+            action_due_date1: values?.action_due_date1 ? dayjs(values?.action_due_date1).format('MM-DD-YYYY') : null,
+            action_due_date2: values?.action_due_date2 ? dayjs(values?.action_due_date2).format('MM-DD-YYYY') : null,
+            action_due_date3: values?.action_due_date3 ? dayjs(values?.action_due_date3).format('MM-DD-YYYY') : null,
+            action_due_date4: values?.action_due_date4 ? dayjs(values?.action_due_date4).format('MM-DD-YYYY') : null,
+            action_due_date5: values?.action_due_date5 ? dayjs(values?.action_due_date5).format('MM-DD-YYYY') : null,
+        }
         if (files.length > 0) {
             for (const k in values) {
                 const val = values[k]
                 formData.append(k, val !== undefined ? (val + '') : '')
             }
+            // TODO: action_due_dates for FormData
             const blobFile = new Blob(files)
             formData.append('id', params?.equipmentId + '')
             formData.append('file', blobFile)
@@ -125,7 +153,6 @@ function Forms() {
             const data = await res
             navigate(-1)
             return data
-            return res
         } catch (error) {
             return error
         }
@@ -157,7 +184,7 @@ function Forms() {
                         </Form.Item>
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                        <FormItemThreatOwner name='threat_owner' />
+                        <FormItemThreatOwner name='threat_owner' label='Threat Owner' isDisabled />
                     </Col>
                 </Row>
                 <Row wrap gutter={[24, 24]}>
@@ -222,20 +249,21 @@ function Forms() {
                             </Form.Item>
                         </Col>
                         <Col xs={12} sm={6} md={6} lg={6} xl={6}>
-                            <Form.Item label='Action Owner' >
+                            <Form.Item label='Action Owner'>
                                 {new Array(5).fill(null).map((_, i) => (
-                                    <Form.Item name={`action_owner${i + 1}`} key={i + 1} style={{ marginBottom: 14, }}>
-                                        <Select placeholder='Select owner' style={{ height: 50 }}>
-                                            {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
-                                        </Select>
-                                    </Form.Item>
+                                    // <Form.Item name={`action_owner${i + 1}`} key={i + 1} style={{ marginBottom: 14, }}>
+                                    //     <Select placeholder='Select owner' style={{ height: 50 }}>
+                                    //         {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
+                                    //     </Select>
+                                    // </Form.Item>
+                                    <FormItemThreatOwner label='Threat Owner' name={`action_owner${i + 1}`} key={i} />
                                 ))}
                             </Form.Item>
                         </Col>
                         <Col xs={12} sm={6} md={6} lg={6} xl={6}>
                             <Form.Item label='Due Date' >
                                 {new Array(5).fill(null).map((_, i) => (
-                                    <Form.Item name={`due_date${i + 1}`} key={i} style={{ marginBottom: 14 }}>
+                                    <Form.Item name={`action_due_date${i + 1}`} key={i} style={{ marginBottom: 14 }}>
                                         <DatePicker format='YYYY/MM/DD' style={{ height: 50, width: '100%' }} />
                                     </Form.Item>
                                 ))}
@@ -261,7 +289,10 @@ function Forms() {
                 </Row>
                 <Row justify='end'>
                     <Space>
-                        <Button variant='danger' title='Cancel' onClick={() => navigate(-1)}>
+                        <Button variant='danger' title='Cancel' onClick={() => {
+                            form.setFieldsValue(undefined)
+                            navigate(-1)
+                        }}>
                             Cancel
                         </Button>
                         <Button type="submit" variant='primary' title='Create' >
@@ -291,7 +322,7 @@ function FormItemStatuses({ name }: { name: string }) {
     }, [])
 
     return <Form.Item label="Status" name={name} rules={[{ required: true, message: '' }]}>
-        <Select placeholder='Select Status' optionFilterProp="children" showSearch allowClear>
+        <Select placeholder='Select Status' optionFilterProp="children" showSearch allowClear >
             {statuses.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>
                     {stat.name}
@@ -301,7 +332,7 @@ function FormItemStatuses({ name }: { name: string }) {
     </Form.Item>
 }
 
-function FormItemThreatOwner({ name }: { name: string }) {
+function FormItemThreatOwner({ name, label, isDisabled }: { name: string; label: string; isDisabled?: boolean }) {
     const [statuses, setStatuses] = useState<TUserOptions[]>([]);
 
     useEffect(() => {
@@ -317,8 +348,8 @@ function FormItemThreatOwner({ name }: { name: string }) {
         return () => controller.abort()
     }, [])
 
-    return <Form.Item label="Threat Owner" name={name}>
-        <Select placeholder='Select Threat Owner' optionFilterProp="children" showSearch allowClear disabled>
+    return <Form.Item label={isDisabled ? label : undefined} name={name} style={{ marginBottom: !isDisabled ? 14 : undefined, }}>
+        <Select placeholder={`Select ${label}`} optionFilterProp="children" showSearch allowClear disabled={isDisabled} style={{ height: !isDisabled ? 50 : undefined }}>
             {statuses.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>
                     {stat?.label}
