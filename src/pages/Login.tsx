@@ -3,6 +3,7 @@ import { Button, Input, Form, Col } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Container } from 'react-bootstrap';
 import Logo from '../shared/assets/logo.png'
+import PrimeBg from '../shared/assets/prime-bg.png'
 import { useAuthToken } from '../shared/contexts/AuthToken';
 import { Navigate } from 'react-router-dom';
 
@@ -117,8 +118,8 @@ function Login() {
                 </Col>
             </Form>
             <div className='login-bg-container'>
-                <p>Welcome to Prime Energy</p>
-                <h5>Building the infrastructure for a better future</h5>
+                <h4 className='m-0'>Welcome to Prime Energy</h4>
+                <img src={PrimeBg} alt="bg" height='150' />
             </div>
         </Container >
     )

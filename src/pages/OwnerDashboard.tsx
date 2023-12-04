@@ -1,24 +1,25 @@
 import { useEffect, useState } from 'react'
-import { Skeleton } from 'antd';
-// import { useLocation } from 'react-router-dom';
-// import { Row } from 'react-bootstrap'
-// import { DataLists } from '../components'
+import { Col, Input, Row } from 'antd';
+import { useDebounceSearch } from '../shared/hooks/useDebounceSearch';
 import { GET } from '../shared/utils/fetch'
+import { DataLists } from './components';
 
 export default function OwnerDashboard() {
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TSystems[]>([])
+    const [search, searchVal, inputChange] = useDebounceSearch()
 
     useEffect(() => {
         const controller = new AbortController();
-        fetchData(controller.signal)
+        fetchData({ signal: controller.signal, search })
         return () => controller.abort()
-    }, [])
+    }, [search])
 
-    async function fetchData(signal?: AbortSignal, params?: ApiParams) {
+    async function fetchData(args?: ApiParams) {
         setLoading(true)
+        const { signal, ...restArgs } = args ?? {};
         try {
-            const res = await GET<ApiData<TSystems[]>>('/systems/dashboard?site=owner', signal!, params)
+            const res = await GET<ApiData<TSystems[]>>('/systems/dashboard?site=owner', signal!, restArgs)
             setDataSource(res.data)
             return res
         } catch (error) {
@@ -28,17 +29,21 @@ export default function OwnerDashboard() {
         }
     }
 
-    // const { pathname } = useLocation()
-    console.log('owner Dashboard result: ', dataSource)
-    return loading ? <Skeleton /> : (
+    return (
         <>
-            {/* {!pathname.includes('dashboard') && (
-                <h3 className="mb-3">Critical Equipment</h3>
-            )}
-            <Row className='card-list'>
-                <DataLists dataList={dataSource} to='/critical-equipment' loading={loading} />
-            </Row> */}
-            OwnerDashboard
+            <Row className='justify-content-between gap-2 align-items-center'>
+                <Col>
+                    <h3>Owner Dashboard</h3>
+                </Col>
+            </Row>
+            <Row justify='end'>
+                <Col>
+                    <Input.Search placeholder='Search...' value={searchVal} onChange={inputChange} />
+                </Col>
+            </Row>
+            <Row className='card-list mt-3'>
+                <DataLists dataList={dataSource} to='/#' loading={loading} />
+            </Row>
         </>
     )
 }

@@ -62,7 +62,6 @@ function Forms() {
             (async () => {
                 try {
                     const res = await GET<ApiData<TTransaction<Dayjs>>>('/transactions/' + params?.transactionId, controller.signal)
-                    console.log(res)
                     form.setFieldsValue({
                         ...res.data,
                         reference_no: res.data?.ref_no,
@@ -73,7 +72,7 @@ function Forms() {
                         date_raised: dayjs(res.data?.date_raised, 'YYYY/MM/DD'),
                         due_date: dayjs(res.data?.due_date, 'YYYY/MM/DD'),
                         equipment_tag: res.data?.equipment.name,
-                        threat_owner: user?.id,
+                        threat_owner: res?.data?.threat_owner?.id,
                         action_owner1: res?.data?.action_owner1?.id,
                         action_owner2: res?.data?.action_owner2?.id,
                         action_owner3: res?.data?.action_owner3?.id,
@@ -119,7 +118,6 @@ function Forms() {
     }, [form])
 
     const onFinish = async (values: Record<string, string | number>) => {
-        //* edit create endpoint
         const formData = new FormData()
         const objPayload = {
             ...values,
@@ -141,7 +139,6 @@ function Forms() {
                 const val = values[k]
                 formData.append(k, val !== undefined ? (val + '') : '')
             }
-            // TODO: action_due_dates for FormData
             const blobFile = new Blob(files)
             formData.append('id', params?.equipmentId + '')
             formData.append('file', blobFile)
@@ -456,7 +453,8 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
                     <tr key={idx}>
                         <td>{idx + 1}</td>
                         <td>
-                            <Link to={d.url} target="_blank" rel="noopener noreferrer">{d.url}</Link>
+
+                            <Link target="_blank" to={'https://' + d.url} >{d.url}</Link>
                         </td>
                         <td >
                             <Button variant='primary' onClick={() => {

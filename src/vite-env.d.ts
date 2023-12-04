@@ -133,18 +133,16 @@ type Common = {
 }
 
 type TUser = {
-    // activity_logs:[{…}]
-    department: string | null
+    id: string
     email: string
     first_name: string
-    full_name: string
-    id: string
-    is_active: string
-    is_admin: true
-    job_level: string | null
-    last_name: string
     middle_name: string
-    position: null
+    last_name: string
+    full_name: string
+    position: string | null,
+    job_level: string | null,
+    is_active: string
+    department: string | null,
     role: TRole
 }
 
