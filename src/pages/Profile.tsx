@@ -77,17 +77,19 @@ export default function Profile() {
             </Row>
             <hr />
             <Row justify="space-between">
-                <Col xs={24} sm={24} md={13} lg={8} xl={7}>
+                <Col xs={24} sm={24} md={13} lg={10} xl={10}>
                     <Item label="Current Password" name="current_password">
                         <Input type="password" placeholder="Current password" />
                     </Item>
                 </Col>
-                <Col xs={24} sm={24} md={13} lg={8} xl={7}>
+            </Row>
+            <Row justify="space-between">
+                <Col xs={24} sm={24} md={13} lg={10} xl={10}>
                     <Item label="New Password" name="password">
                         <Input type="password" placeholder="New password" />
                     </Item>
                 </Col>
-                <Col xs={24} sm={24} md={13} lg={8} xl={7}>
+                <Col xs={24} sm={24} md={13} lg={10} xl={10}>
                     <Item label="Confirm Password" name="password_confirmation">
                         <Input type="password" placeholder="Confirm password" />
                     </Item>

@@ -40,6 +40,8 @@ const Roles = lazy(() => import('./pages/settings/admin-settings/Roles'))
 const Permission = lazy(() => import('./pages/settings/admin-settings/Permission'))
 const AuditLogs = lazy(() => import('./pages/settings/admin-settings/AuditLogs'))
 
+const PrintReport = lazy(() => import('./pages/features/PrintReport'))
+
 function AsyncComponent({ children }: { children: ReactNode }) {
     return <Suspense fallback={<div />}>
         {children}
@@ -96,6 +98,10 @@ export const routes = createBrowserRouter([
                     {
                         path: '',
                         element: <AsyncComponent><SwpLists /></AsyncComponent>,
+                    },
+                    {
+                        path: 'print-report',
+                        element: <AsyncComponent><PrintReport title='SWP' /></AsyncComponent>,
                     },
                     {
                         path: ':equipmentId',

@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { Row } from 'antd'
-import { DataLists } from '../components'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Row, Col } from 'antd'
+import { Button, DataLists } from '../components'
 import { GET } from '../../shared/utils/fetch'
 
 // TODO: FETCH DATA HERE
 export default function SwpLists() {
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TSystems[]>([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         const controller = new AbortController();
@@ -31,7 +32,14 @@ export default function SwpLists() {
     return (
         <>
             {!pathname.includes('dashboard') && (
-                <h3 className="mb-3">SWP</h3>
+                <Row justify='space-between' wrap>
+                    <Col>
+                        <h3 className="mb-3">SWP</h3>
+                    </Col>
+                    <Col>
+                        <Button variant='primary' onClick={() => navigate('/swp/print-report')}>Print Report</Button>
+                    </Col>
+                </Row>
             )}
             <Row className='card-list'>
                 <DataLists dataList={dataSource} to='/swp' loading={loading} />

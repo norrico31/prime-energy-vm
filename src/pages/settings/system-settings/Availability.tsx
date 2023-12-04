@@ -71,7 +71,7 @@ export default function Availability() {
                             setIsModalShow(true)
                             setSelectedData(record)
                         }}
-                        deleteData={() => DELETE('/availabiliity/' + record.id).finally((fetchData))}
+                        deleteData={() => DELETE('/availability/' + record.id).finally((fetchData))}
                         dataTitle={record.name}
                         dataDescription={record.description!}
                     />

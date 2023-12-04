@@ -95,8 +95,8 @@ function ListViewColEnd(props: ListViewColEndProps) {
     const navigate = useNavigate()
     const { width } = useWindowSize()
     return <Col xs={width > 768 ? 4 : 10} className={`d-flex justify-content-end  align-items-end ${width > 768 ? 'flex-column' : ''} gap-3`}>
-        <Button variant='primary' onClick={() => navigate(-1)}>Close</Button>
-        <Button variant='primary' onClick={props.handlePrint}>Print</Button>
-        <Button variant='primary' onClick={props.handleCreate}>Add New</Button>
+        <Button variant='primary' onClick={() => navigate(-1)} className='w-50'>Close</Button>
+        <Button variant='primary' onClick={props.handlePrint} className='w-50'>Print</Button>
+        <Button variant='primary' onClick={props.handleCreate} className='w-50'>Add New</Button>
     </Col>
 }

@@ -453,7 +453,6 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
                     <tr key={idx}>
                         <td>{idx + 1}</td>
                         <td>
-
                             <Link target="_blank" to={'https://' + d.url} >{d.url}</Link>
                         </td>
                         <td >
