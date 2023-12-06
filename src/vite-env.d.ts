@@ -252,6 +252,18 @@ type TTransaction<D> = {
     vulnerability_description: string | null
     vulnerability_title: string | null
 } & Common
+type TPrintReport = {
+    availability: string
+    date_raised: string
+    equipment: string
+    integrity: string
+    is_critical: string
+    is_longterm: string
+    ref_no: string
+    status: string
+    threat_owner: string
+    vulnerability_title: string
+}
 // SYSTEM SETTINGS
 type TPhase = {
     is_active: string

@@ -34,6 +34,7 @@ export default function CriticalEquipmentView() {
     const deleteData = (id: string) => DELETE('/critical_equipments/' + id).finally((fetchData))
     const editNavigate = (id: string) => navigate(`/critical-equipment/${equipmentId}/edit/${id}`)
 
+
     const columns = renderColumns({ loading, deleteData, navigate: editNavigate })
 
     return loading ? <Skeleton /> : (
@@ -44,6 +45,7 @@ export default function CriticalEquipmentView() {
             </Row>
             <ListViewHeader
                 handleCreate={() => navigate(`/critical-equipment/${equipmentId}/form`)}
+                equipmentId={equipmentId!}
             />
             <Table<TTransaction<Dayjs>> loading={false} columns={columns} dataSource={dataSource} isSizeChanger />
         </>

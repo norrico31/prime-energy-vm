@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react"
 import { Col, Container, Row, Form } from "react-bootstrap"
 import { useNavigate, useParams } from "react-router-dom"
+import dayjs from 'dayjs'
 import useWindowSize from "../../shared/hooks/useWindowResize"
 import { Button } from "."
 
-import { GET } from '../../shared/utils/fetch'
+import { GET, POST } from '../../shared/utils/fetch'
 
 type Props = Partial<ListViewColEndProps> & {
     data?: null
+    equipmentId: string
 }
-// TODO: REFACTOR STYLES TO ANTD
+
+
 export default function ListViewHeader(props: Props) {
     const params = useParams()
     const [equipment, setequipment] = useState<TEquipment | undefined>(undefined);
@@ -29,6 +32,29 @@ export default function ListViewHeader(props: Props) {
             controller.abort()
         }
     }, []);
+
+    const exportTransaction = () => POST(`/download/transaction/equipment?equipment_id=` + props?.equipmentId).then((res: unknown) => {
+        const result = res as Response
+        if (!result.ok) {
+            throw new Error(`HTTP error! Status: ${result.status}`);
+        }
+
+        return result.blob() as unknown as Promise<Blob>;
+    })
+        .then((data: Blob) => {
+            // Alert.success('Download Success', 'Team Tasks Download Successfully!')
+            const url = window.URL.createObjectURL(data);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `Critical Equipment - ${dayjs().format('YYYY-MM-DD')} - ${dayjs().format('YYYY-MM-DD')}.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+        })
+        .catch((error: unknown) => {
+            console.error('Error exporting transaction:', error);
+            // Handle error here
+        });
+
 
     return <Container>
         <Row>
@@ -69,7 +95,7 @@ export default function ListViewHeader(props: Props) {
                 </Form.Group>
             </Col>
             <ListViewColEnd
-                handlePrint={props?.handlePrint ?? (() => null)}
+                handlePrint={exportTransaction}
                 handleCreate={props?.handleCreate ?? (() => null)}
             />
             <Form.Group className="mb-3 d-flex gap-3 align-items-center" controlId="formPlaintextEqupmentname" style={{ padding: 0 }}>

@@ -42,6 +42,7 @@ export default function SwpView() {
         </Row>
         <ListViewHeader
             handleCreate={() => navigate(`/swp/${equipmentId}/form`)}
+            equipmentId={equipmentId!}
         />
         <Table<TTransaction<Dayjs>> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
     </>

@@ -1,5 +1,5 @@
 import { Suspense, lazy, ReactNode } from "react"
-import { Navigate, createBrowserRouter, Outlet } from "react-router-dom"
+import { Navigate, createBrowserRouter, Outlet, useNavigate } from "react-router-dom"
 import { Layout } from "./pages/components"
 
 const Login = lazy(() => import('./pages/Login'))
@@ -10,6 +10,7 @@ const Profile = lazy(() => import('./pages/Profile'))
 const Vulnerabilities = lazy(() => import('./pages/Vulnerabilities'))
 const Form = lazy(() => import('./pages/Form'))
 
+const Lists = lazy(() => import('./pages/features/Lists'))
 const SwpLists = lazy(() => import('./pages/features/SwpLists'))
 const SwpView = lazy(() => import('./pages/features/SwpView'))
 
@@ -63,19 +64,19 @@ export const routes = createBrowserRouter([
                     },
                     {
                         path: 'swp',
-                        element: <AsyncComponent><SwpLists /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="swp" navigate='/swp/print-report' /></AsyncComponent>,
                     },
                     {
                         path: 'ogp',
-                        element: <AsyncComponent><OgpLists /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="ogp" navigate='/ogp/print-report' /></AsyncComponent>,
                     },
                     {
                         path: 'pipelines',
-                        element: <AsyncComponent><PipelineLists /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="pipelines" navigate='/ogp/print-report' /></AsyncComponent>,
                     },
                     {
                         path: 'critical-equipment',
-                        element: <AsyncComponent><CriticalEquipmentList /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="critical" navigate='/ogp/print-report' /></AsyncComponent>,
                     },
                 ]
             },
@@ -97,7 +98,7 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         path: '',
-                        element: <AsyncComponent><SwpLists /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="swp" /></AsyncComponent>,
                     },
                     {
                         path: 'print-report',
@@ -133,7 +134,11 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         path: '',
-                        element: <AsyncComponent><OgpLists /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="ogp" navigate='/ogp/print-report' /></AsyncComponent>,
+                    },
+                    {
+                        path: 'print-report',
+                        element: <AsyncComponent><PrintReport title='OGP' /></AsyncComponent>,
                     },
                     {
                         path: ':equipmentId',
@@ -164,7 +169,11 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         path: '',
-                        element: <AsyncComponent><PipelineLists /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="pipelines" navigate='/pipelines/print-report' /></AsyncComponent>,
+                    },
+                    {
+                        path: 'print-report',
+                        element: <AsyncComponent><PrintReport title='Pipelines' /></AsyncComponent>,
                     },
                     {
                         path: ':equipmentId',
@@ -195,7 +204,11 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         path: '',
-                        element: <AsyncComponent><CriticalEquipmentList /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="critical" navigate='/critical-equipment/print-report' /></AsyncComponent>,
+                    },
+                    {
+                        path: 'print-report',
+                        element: <AsyncComponent><PrintReport title='Critical' /></AsyncComponent>,
                     },
                     {
                         path: ':equipmentId',

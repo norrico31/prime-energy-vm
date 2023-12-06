@@ -42,6 +42,7 @@ export default function PipelinesView() {
             </Row>
             <ListViewHeader
                 handleCreate={() => navigate(`/pipelines/${equipmentId}/form`)}
+                equipmentId={equipmentId!}
             />
             <Table<TTransaction<Dayjs>> loading={false} columns={columns} dataSource={dataSource} isSizeChanger />
         </>

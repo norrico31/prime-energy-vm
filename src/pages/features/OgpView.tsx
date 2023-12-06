@@ -43,6 +43,7 @@ export default function OgpView() {
             </Row>
             <ListViewHeader
                 handleCreate={() => navigate(`/ogp/${equipmentId}/form`)}
+                equipmentId={equipmentId!}
             />
             <Table<TTransaction<Dayjs>> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger />
         </>
@@ -106,7 +107,7 @@ export function renderColumns({ loading, navigate, deleteData }: { loading: bool
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (_, rec) => rec?.status.name
+            render: (_, rec) => rec?.status?.name
             // width: 200,
         },
         {

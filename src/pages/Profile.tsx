@@ -29,7 +29,6 @@ export default function Profile() {
         setLoading(true)
         try {
             const res = await POST<Payload, ApiData<TUser>>('/profile', val)
-            console.log(res)
             setUser(res.data)
             return res
         } catch (error) {

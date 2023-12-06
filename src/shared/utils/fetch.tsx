@@ -8,10 +8,11 @@ const GET = async <D,>(path: string, signal: AbortSignal, params?: TableParams<T
     }
 }
 
-const POST = async <D, R>(path: string, data: D, headers?: RequestInit) => {
+const POST = async <D, R>(path: string, data?: D, headers?: RequestInit) => {
     try {
         const res = await crudApi<R>(path, { method: 'POST', body: data instanceof FormData ? data : JSON.stringify(data), ...headers })
         const message = (res as { message?: string })?.message
+        if (typeof res === 'object') return Promise.resolve(res)
         if (message === 'Logout Successful' || message === 'Login Successful') return Promise.resolve(res)
         else {
             notification.open({
@@ -78,7 +79,7 @@ function appUrl(path: string, baseUrl: 'CORE' | 'DOWNLOAD' = 'CORE'): string {
     const APP_VERSION = 'v1'
     const APP_URL: Record<string, string> = {
         'CORE': `https://vms.redcoresolutions.com/passthru/api/${APP_VERSION}`,
-        'DOWNLOAD': `https://hrportal.redcoresolutions.com/passthru/api/backend`
+        'DOWNLOAD': `https://vms.redcoresolutions.com/core/api/v1`
     }
     return APP_URL[baseUrl] + path
 }

@@ -42,7 +42,7 @@ export default function OwnerDashboard() {
                 </Col>
             </Row>
             <Row className='card-list mt-3'>
-                <DataLists dataList={dataSource} to='/#' loading={loading} />
+                <DataLists dataList={dataSource} to='/owner-dashboard' loading={loading} />
             </Row>
         </>
     )

@@ -125,7 +125,6 @@ function Forms() {
             equipment_id:
                 params?.equipmentId,
             url: url.map((u) => ({ url: u.url, id: '' })),
-            threat_owner: user?.id,
             date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'),
             due_date: dayjs(values?.due_date).format('MM-DD-YYYY'),
             action_due_date1: values?.action_due_date1 ? dayjs(values?.action_due_date1).format('MM-DD-YYYY') : null,
@@ -158,9 +157,6 @@ function Forms() {
     return loading ? <Skeleton /> :
         <>
             <PageHeading title={title} onClick={() => alert('print report critical')} />
-            <div className={`d-flex justify-content-between`}>
-                <Button variant='outline-primary' title='Back to lists' className='mb-4 text-decoration-none' onClick={() => navigate(-1)}>Back to lists</Button>
-            </div>
             <Form form={form} name="horizontal_login" onFinish={onFinish} layout='vertical'>
                 <Row wrap gutter={[24, 24]}>
                     <Col xs={24} sm={12} md={12} lg={12} xl={12}>
@@ -284,13 +280,13 @@ function Forms() {
                 <Row className="mb-3">
                     <FormUrl url={url} setUrls={setUrls} />
                 </Row>
-                <Row justify='end'>
+                <Row justify='center'>
                     <Space>
-                        <Button variant='danger' title='Cancel' onClick={() => {
+                        <Button variant='danger' title='Close' onClick={() => {
                             form.setFieldsValue(undefined)
                             navigate(-1)
                         }}>
-                            Cancel
+                            Close
                         </Button>
                         <Button type="submit" variant='primary' title='Create' >
                             Submit
