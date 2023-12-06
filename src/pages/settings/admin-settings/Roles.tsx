@@ -58,6 +58,8 @@ export default function Roles() {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
+            width: 200,
+            ellipsis: true
         },
         {
             title: 'Action',

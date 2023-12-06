@@ -85,7 +85,8 @@ export default function Equipments() {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
-            // width: 200,
+            width: 200,
+            ellipsis: true
         },
         {
             title: 'Action',

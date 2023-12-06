@@ -56,7 +56,8 @@ export default function Integrity() {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
-            // width: 200,
+            width: 200,
+            ellipsis: true
         },
         {
             title: 'Action',
