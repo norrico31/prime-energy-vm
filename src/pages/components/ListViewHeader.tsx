@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Col, Container, Row, Form } from "react-bootstrap"
-import { useNavigate, useParams } from "react-router-dom"
-import dayjs from 'dayjs'
+import { useNavigate } from "react-router-dom"
+// import dayjs from 'dayjs'
 import useWindowSize from "../../shared/hooks/useWindowResize"
 import { Button } from "."
 
@@ -14,14 +14,13 @@ type Props = Partial<ListViewColEndProps> & {
 
 
 export default function ListViewHeader(props: Props) {
-    const params = useParams()
     const [equipment, setequipment] = useState<TEquipment | undefined>(undefined);
 
     useEffect(() => {
         const controller = new AbortController();
         (async () => {
             try {
-                const res = await GET<ApiData<TEquipment>>('/equipments/' + params?.equipmentId, controller.signal)
+                const res = await GET<ApiData<TEquipment>>('/equipments/' + props?.equipmentId, controller.signal)
                 setequipment(res.data)
             } catch (error) {
                 return error
@@ -33,27 +32,43 @@ export default function ListViewHeader(props: Props) {
         }
     }, []);
 
-    const exportTransaction = () => POST(`/download/transaction/equipment?equipment_id=` + props?.equipmentId).then((res: unknown) => {
-        const result = res as Response
-        if (!result.ok) {
-            throw new Error(`HTTP error! Status: ${result.status}`);
+    const exportTransaction = async () => {
+        try {
+            const result = await POST(`/download/transaction/equipment?equipment_id=${props?.equipmentId}`, JSON.stringify(null), {
+                headers: {
+                    responseType: 'arraybuffer',
+                    "Content-Type": "application/json",
+                    'Content-Disposition': "attachment;",
+                }
+            })
+            console.log('download reulst: ', result)
+        } catch (error) {
+            console.error('Error exporting transaction:', error);
         }
 
-        return result.blob() as unknown as Promise<Blob>;
-    })
-        .then((data: Blob) => {
-            // Alert.success('Download Success', 'Team Tasks Download Successfully!')
-            const url = window.URL.createObjectURL(data);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `Critical Equipment - ${dayjs().format('YYYY-MM-DD')} - ${dayjs().format('YYYY-MM-DD')}.xlsx`);
-            document.body.appendChild(link);
-            link.click();
-        })
-        .catch((error: unknown) => {
-            console.error('Error exporting transaction:', error);
-            // Handle error here
-        });
+    }
+    // .then((res: unknown) => {
+    //     const result = res as Response
+    //     console.log('download result: ', result)
+    //     if (!result.ok) {
+    //         throw new Error(`HTTP error! Status: ${result.status}`);
+    //     }
+
+    //     return result.blob() as unknown as Promise<Blob>;
+    // })
+    //     .then((data: Blob) => {
+    //         console.log('download data: ', data)
+    //         // Alert.success('Download Success', 'Team Tasks Download Successfully!')
+    //         const url = window.URL.createObjectURL(data);
+    //         const link = document.createElement('a');
+    //         link.href = url;
+    //         link.setAttribute('download', `Critical Equipment - ${dayjs().format('YYYY-MM-DD')} - ${dayjs().format('YYYY-MM-DD')}.xlsx`);
+    //         document.body.appendChild(link);
+    //         link.click();
+    //     })
+    //     .catch((error: unknown) => {
+    //         // Handle error here
+    //     });
 
 
     return <Container>
@@ -103,7 +118,7 @@ export default function ListViewHeader(props: Props) {
                     Description
                 </Form.Label>
                 <Col xs="7">
-                    <Form.Control plaintext readOnly style={{ border: '1px solid #000', padding: '3px 11px' }} value={equipment?.description} />
+                    <Form.Control plaintext as='textarea' readOnly style={{ border: '1px solid #000', padding: '3px 11px' }} value={equipment?.description} />
                 </Col>
             </Form.Group>
             {/* xs={2 && 10} */}

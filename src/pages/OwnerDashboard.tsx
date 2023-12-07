@@ -28,7 +28,6 @@ export default function OwnerDashboard() {
             setLoading(false)
         }
     }
-
     return (
         <>
             <Row className='justify-content-between gap-2 align-items-center'>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Form as BootstrapForm, Modal, FloatingLabel, Table as BootstrapTable, CloseButton, Col as BootstrapCol, Row as BootstrapRow } from 'react-bootstrap'
 import { Row, Col, Form, Input, DatePicker, Select, Space, Skeleton } from 'antd'
@@ -10,21 +10,6 @@ import { GET, POST, PUT } from '../shared/utils/fetch'
 const { useForm } = Form
 
 type Payload = {
-    action_due_date1: Dayjs | null
-    action_due_date2: Dayjs | null
-    action_due_date3: Dayjs | null
-    action_due_date4: Dayjs | null
-    action_due_date5: Dayjs | null
-    action_item1: string | null
-    action_item2: string | null
-    action_item3: string | null
-    action_item4: string | null
-    action_item5: string | null
-    action_owner1: TUserOptions | null
-    action_owner2: TUserOptions | null
-    action_owner3: TUserOptions | null
-    action_owner4: TUserOptions | null
-    action_owner5: TUserOptions | null
     availability: TAvailability
     classification: string
     date_raised: string
@@ -38,10 +23,22 @@ type Payload = {
     risk_description: string
     status: TStatus
     threat_owner: TUserOptions
-    url: { id: string; url: string }[]
     vulnerability_description: string
     vulnerability_title: string
+    actions: Actions
+    url: TTransactionUrls
 }
+
+type Actions = { id: string; action_owner: string; action_due_date: Dayjs | string; action_item: string }[]
+
+const initActionsState: Actions = [
+    {
+        id: '',
+        action_owner: '',
+        action_due_date: '',
+        action_item: ''
+    }
+]
 
 function Forms() {
     const params = useParams()
@@ -51,11 +48,11 @@ function Forms() {
     const [classification, setClassification] = useState<string>('0');
     const [url, setUrls] = useState<typeof initDataRowState>([]);
     const [files, setFiles] = useState<Array<File>>([]);
+    const [actions, setActions] = useState<Actions>(initActionsState)
     const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // if (id === 'create') return
         setLoading(true);
         const controller = new AbortController();
         if (params?.transactionId) {
@@ -73,19 +70,12 @@ function Forms() {
                         due_date: dayjs(res.data?.due_date, 'YYYY/MM/DD'),
                         equipment_tag: res.data?.equipment.name,
                         threat_owner: res?.data?.threat_owner?.id,
-                        action_owner1: res?.data?.action_owner1?.id,
-                        action_owner2: res?.data?.action_owner2?.id,
-                        action_owner3: res?.data?.action_owner3?.id,
-                        action_owner4: res?.data?.action_owner4?.id,
-                        action_owner5: res?.data?.action_owner5?.id,
-                        action_due_date1: res?.data?.action_due_date1 ? dayjs(res?.data?.action_due_date1, 'YYYY/MM/DD') : null,
-                        action_due_date2: res?.data?.action_due_date2 ? dayjs(res?.data?.action_due_date2, 'YYYY/MM/DD') : null,
-                        action_due_date3: res?.data?.action_due_date3 ? dayjs(res?.data?.action_due_date3, 'YYYY/MM/DD') : null,
-                        action_due_date4: res?.data?.action_due_date4 ? dayjs(res?.data?.action_due_date4, 'YYYY/MM/DD') : null,
-                        action_due_date5: res?.data?.action_due_date5 ? dayjs(res?.data?.action_due_date5, 'YYYY/MM/DD') : null,
                     })
                     setTitle(res?.data?.equipment?.name)
                     setUrls(res.data?.url)
+                    setClassification(res?.data?.is_longterm)
+                    const actionsFromServer = res?.data.actions.map((a) => ({ ...a, action_owner: a.action_owner.id })) as Actions
+                    setActions(actionsFromServer)
                 } catch (error) {
                     return error
                 } finally {
@@ -99,23 +89,42 @@ function Forms() {
                     setTitle(res?.data?.system?.name)
                     form.setFieldsValue({
                         ...res.data,
-                        classification: '0',
+                        is_longterm: '0',
                         threat_owner: user?.id
                     })
+                    setClassification('0')
                 } catch (error) {
                     return error
                 } finally {
                     setLoading(false)
                 }
             })()
-            // form.setFieldsValue({
-            //     ...form.getFieldsValue(),
-            //     classification: '0',
-            //     threat_owner: user?.id
-            // })
         }
         return () => controller.abort()
     }, [form])
+
+
+    const addRowActionItem = () => {
+        setActions([...actions, { ...initActionsState[0], id: Math.floor(Math.random() * 9999) + '' }])
+    }
+
+    const actionThreaOwnerChange = (id: string, v: string) => {
+        if (!v) return
+        const updatedActionOwner = actions.map(a => a.id === id ? { ...a, action_owner: v } : a)
+        setActions(updatedActionOwner)
+    }
+
+    const actionItemChange = (id: string, v: string) => {
+        if (!v) return
+        const updatedActionOwner = actions.map(a => a.id === id ? { ...a, action_item: v } : a)
+        setActions(updatedActionOwner)
+    }
+
+    const actionDueDateChange = (id: string, v: string) => {
+        if (!v) return
+        const updatedActionOwner = actions.map(a => a.id === id ? { ...a, action_due_date: v } : a)
+        setActions(updatedActionOwner)
+    }
 
     const onFinish = async (values: Record<string, string | number>) => {
         const formData = new FormData()
@@ -124,14 +133,15 @@ function Forms() {
             id: params?.transactionId,
             equipment_id:
                 params?.equipmentId,
-            url: url.map((u) => ({ url: u.url, id: '' })),
+            url: url.map((u) => ({ ...u, id: params?.transactionId ? u.id : '' })),
             date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'),
             due_date: dayjs(values?.due_date).format('MM-DD-YYYY'),
-            action_due_date1: values?.action_due_date1 ? dayjs(values?.action_due_date1).format('MM-DD-YYYY') : null,
-            action_due_date2: values?.action_due_date2 ? dayjs(values?.action_due_date2).format('MM-DD-YYYY') : null,
-            action_due_date3: values?.action_due_date3 ? dayjs(values?.action_due_date3).format('MM-DD-YYYY') : null,
-            action_due_date4: values?.action_due_date4 ? dayjs(values?.action_due_date4).format('MM-DD-YYYY') : null,
-            action_due_date5: values?.action_due_date5 ? dayjs(values?.action_due_date5).format('MM-DD-YYYY') : null,
+            actions: actions.map((a) => ({ ...a, id: params?.transactionId ? a.id : '' })),
+            // action_due_date1: values?.action_due_date1 ? dayjs(values?.action_due_date1).format('MM-DD-YYYY') : null,
+            // action_due_date2: values?.action_due_date2 ? dayjs(values?.action_due_date2).format('MM-DD-YYYY') : null,
+            // action_due_date3: values?.action_due_date3 ? dayjs(values?.action_due_date3).format('MM-DD-YYYY') : null,
+            // action_due_date4: values?.action_due_date4 ? dayjs(values?.action_due_date4).format('MM-DD-YYYY') : null,
+            // action_due_date5: values?.action_due_date5 ? dayjs(values?.action_due_date5).format('MM-DD-YYYY') : null,
         }
         if (files.length > 0) {
             for (const k in values) {
@@ -142,6 +152,7 @@ function Forms() {
             formData.append('id', params?.equipmentId + '')
             formData.append('file', blobFile)
             formData.append('equipment_id', params?.equipmentId + '')
+            formData.append('_method', 'PUT')
         }
         const payload = files.length > 0 ? formData : objPayload;
         try {
@@ -231,38 +242,38 @@ function Forms() {
                 </Row>
                 <hr />
                 {classification == '0' ? (
-                    <Row wrap gutter={[24, 24]}>
-                        <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                            <Form.Item label='Action Item'>
-                                {new Array(5).fill(null).map((_, i) => (
-                                    <Form.Item name={`action_item${i + 1}`} key={i}>
-                                        <Input.TextArea placeholder='Enter action item' />
+                    actions.map((a, idx) => (
+                        <Fragment key={idx}>
+                            <Row wrap gutter={[24, 24]}>
+                                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                                    <Form.Item label='Action Item'>
+                                        <Form.Item >
+                                            <Input.TextArea placeholder='Enter action item' value={actions[idx].action_item!} onChange={e => actionItemChange(a.id!, e.target.value)} />
+                                        </Form.Item>
+                                        {/* {new Array(5).fill(null).map((_, i) => (
+                                    ))} */}
                                     </Form.Item>
-                                ))}
-                            </Form.Item>
-                        </Col>
-                        <Col xs={12} sm={6} md={6} lg={6} xl={6}>
-                            <Form.Item label='Action Owner'>
-                                {new Array(5).fill(null).map((_, i) => (
-                                    // <Form.Item name={`action_owner${i + 1}`} key={i + 1} style={{ marginBottom: 14, }}>
-                                    //     <Select placeholder='Select owner' style={{ height: 50 }}>
-                                    //         {/* <Select.Option value="demo">Threat Owner</Select.Option> */}
-                                    //     </Select>
-                                    // </Form.Item>
-                                    <FormItemThreatOwner label='Threat Owner' name={`action_owner${i + 1}`} key={i} />
-                                ))}
-                            </Form.Item>
-                        </Col>
-                        <Col xs={12} sm={6} md={6} lg={6} xl={6}>
-                            <Form.Item label='Due Date' >
-                                {new Array(5).fill(null).map((_, i) => (
-                                    <Form.Item name={`action_due_date${i + 1}`} key={i} style={{ marginBottom: 14 }}>
-                                        <DatePicker format='YYYY/MM/DD' style={{ height: 50, width: '100%' }} />
+                                </Col>
+                                <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+                                    <ActionThreatOwner value={actions[idx].action_owner!} onChange={v => actionThreaOwnerChange(a.id!, v)} />
+                                </Col>
+                                <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+                                    <Form.Item label='Due Date' >
+                                        <Form.Item style={{ marginBottom: 14 }}>
+                                            <DatePicker format='YYYY/MM/DD' style={{ height: 50, width: '100%' }}
+                                                value={actions[idx].action_due_date ? dayjs(actions[idx].action_due_date) : null}
+                                                onChange={v => actionDueDateChange(a.id!, dayjs(v).format('YYYY/MM/DD'))}
+                                            />
+                                        </Form.Item>
                                     </Form.Item>
-                                ))}
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                                </Col>
+                            </Row>
+                            {idx === (actions.length - 1) && (
+                                <Button variant='primary' onClick={addRowActionItem}>Add Action Item</Button>
+                            )}
+
+                        </Fragment>
+                    ))
                 ) : null}
                 <hr />
                 <BootstrapRow className="mb-3">
@@ -319,6 +330,33 @@ function FormItemStatuses({ name }: { name: string }) {
             {statuses.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>
                     {stat.name}
+                </Select.Option>
+            ))}
+        </Select>
+    </Form.Item>
+}
+
+function ActionThreatOwner({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+    const [statuses, setStatuses] = useState<TUserOptions[]>([]);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiData<TUserOptions[]>>('/users/options', controller.signal)
+                setStatuses(res.data ?? [])
+            } catch (error) {
+                return error
+            }
+        })();
+        return () => controller.abort()
+    }, [])
+
+    return <Form.Item label='Threat Owner' style={{ marginBottom: 14 }}>
+        <Select placeholder='Select Threat Owner' optionFilterProp="children" showSearch allowClear style={{ height: 50 }} value={value} onChange={onChange}>
+            {statuses.map((stat) => (
+                <Select.Option value={stat.id} key={stat.id}>
+                    {stat?.label}
                 </Select.Option>
             ))}
         </Select>
@@ -384,7 +422,6 @@ function FormItemIntegrity({ name }: { name: string }) {
     const [integrities, setIntegrities] = useState<TIntegrity[]>([]);
 
     useEffect(() => {
-        // if (id === 'create') return
         const controller = new AbortController();
         (async () => {
             try {
@@ -410,7 +447,7 @@ function FormItemIntegrity({ name }: { name: string }) {
 
 export default Forms;
 
-function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: React.Dispatch<React.SetStateAction<{ id: string; url: string; }[]>> }) {
+function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: React.Dispatch<React.SetStateAction<{ id: string; url: string; description: string; }[]>> }) {
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [urlList, setUrlList] = useState<typeof initDataRowState>(initDataRowState)
 
@@ -440,18 +477,22 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
             <thead>
                 <tr>
                     <th scope="col"></th>
+                    <th scope="col">Description</th>
                     <th scope="col">URL</th>
-                    <th scope="col">Action</th>
+                    <th scope="col" colSpan={0}>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {url?.map((d, idx) => (
                     <tr key={idx}>
                         <td>{idx + 1}</td>
+                        <td style={{ width: 400 }}>
+                            {d.description}
+                        </td>
                         <td>
                             <Link target="_blank" to={'https://' + d.url} >{d.url}</Link>
                         </td>
-                        <td >
+                        <td>
                             <Button variant='primary' onClick={() => {
                                 const filteredUrls = url.filter(u => u.id !== d.id)
                                 setUrls([...filteredUrls])
@@ -466,6 +507,7 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
             show={isModalVisible}
             onHide={onHide}
             centered
+            size='lg'
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
@@ -474,14 +516,26 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
             </Modal.Header>
             <Modal.Body>
                 <Button variant='primary' className='mb-3' onClick={addRow}>Add Entry</Button>
-                {urlList.map((url, idx) => <Row className='d-flex align-items-center px-3' key={idx}>
+                {urlList.map((url, idx) => <Row className='d-flex align-items-center p-0 gap-1' key={idx}>
                     <BootstrapForm.Group as={BootstrapCol} controlId="formGridOtherRemarks">
                         <FloatingLabel
                             controlId="floatingInput"
-                            label="Add Link"
+                            label="Enter Description"
                             className="mb-2"
                         >
-                            <BootstrapForm.Control type="text" placeholder="name@example.com" value={urlList[idx].url} onChange={(e) => {
+                            <BootstrapForm.Control type="text" as='textarea' style={{ height: 100 }} placeholder="name@example.com" value={urlList[idx].description} onChange={(e) => {
+                                const urls = urlList.map((u) => u.id === url.id ? { ...url, description: e.target.value } : u)
+                                setUrlList(urls)
+                            }} />
+                        </FloatingLabel>
+                    </BootstrapForm.Group>
+                    <BootstrapForm.Group as={BootstrapCol} controlId="formGridOtherRemarks">
+                        <FloatingLabel
+                            controlId="floatingInput"
+                            label="Enter Link"
+                            className="mb-2"
+                        >
+                            <BootstrapForm.Control type="text" placeholder="name@example.com" style={{ height: 100 }} value={urlList[idx].url} onChange={(e) => {
                                 const urls = urlList.map((u) => u.id === url.id ? { ...url, url: e.target.value } : u)
                                 setUrlList(urls)
                             }} />
@@ -510,6 +564,7 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
 const initDataRowState = [
     {
         id: Math.floor(Math.random() * 99999) + '',
+        description: '',
         url: ''
     }
 ]

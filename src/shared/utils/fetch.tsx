@@ -1,6 +1,6 @@
 import { TablePaginationConfig, notification } from "antd"
 
-const GET = async <D,>(path: string, signal: AbortSignal, params?: TableParams<TablePaginationConfig>): Promise<D> => {
+const GET = async <D,>(path: string, signal?: AbortSignal, params?: TableParams<TablePaginationConfig>): Promise<D> => {
     try {
         return Promise.resolve(await crudApi(path, { method: 'GET', signal }, params))
     } catch (error) {

@@ -222,21 +222,6 @@ type TEquipment = {
     }
 } & Common
 type TTransaction<D> = {
-    action_item1: null
-    action_item2: null
-    action_item3: null
-    action_item4: null
-    action_item5: null
-    action_owner1: TUserOptions | null
-    action_owner2: TUserOptions | null
-    action_owner3: TUserOptions | null
-    action_owner4: TUserOptions | null
-    action_owner5: TUserOptions | null
-    action_due_date1: D | null
-    action_due_date2: D | null
-    action_due_date3: D | null
-    action_due_date4: D | null
-    action_due_date5: D | null
     availability: TAvailability
     date_raised: string | D
     due_date: string | D
@@ -248,10 +233,20 @@ type TTransaction<D> = {
     risk_description: string
     status: TStatus
     threat_owner: TUserOptions
-    url: { id: string; url: string }[]
+    actions: TTransactionActions
+    url: TTransactionUrls
     vulnerability_description: string | null
     vulnerability_title: string | null
 } & Common
+type TTransactionUrls = {
+    id: string; url: string; description: string
+}[]
+type TTransactionActions = {
+    id: string | null
+    action_item: string | null
+    action_owner: TUserOptions
+    action_due_date: D | null
+}[]
 type TPrintReport = {
     availability: string
     date_raised: string

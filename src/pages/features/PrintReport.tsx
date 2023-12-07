@@ -3,12 +3,11 @@ import { Button } from '../components'
 import { Table } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
-import { POST } from '../../shared/utils/fetch'
+import { GET } from '../../shared/utils/fetch'
 
 type Props = {
     title: string
 }
-// /download/transaction/site?site=SWP&preview=true
 
 const obj: Record<string, string> = {
     'swp': 'SWP',
@@ -30,7 +29,7 @@ export default function PrintReport({ title }: Props) {
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
         try {
-            const data = await POST<unknown, TPrintReport[]>(`/download/transaction/site?site=${obj[title?.toLowerCase()].toLowerCase()}&preview=true`, {}, params)
+            const data = await GET<TPrintReport[]>(`/download/transaction/preview?site=${obj[title?.toLowerCase()].toLowerCase()}`, signal!, params)
             setDataSource(data)
         } catch (error) {
             return error
@@ -39,13 +38,23 @@ export default function PrintReport({ title }: Props) {
         }
     }
 
+    const exportPrintReport = async () => {
+        try {
+            const result = await GET(`/download/transaction/site?site=${obj[title?.toLowerCase()]}`)
+            console.log('download reulst: ', result)
+        } catch (error) {
+            console.error('Error exporting transaction:', error);
+        }
+
+    }
+
     return (
         <>
             <h3>{title} Print Reports</h3>
             <hr />
             <Row justify='end'>
                 <Col>
-                    <Button variant='primary'>Export SWP Print Report</Button>
+                    <Button variant='primary' onClick={exportPrintReport}>Export SWP Print Report</Button>
                 </Col>
             </Row>
             <div className='mt-3'>

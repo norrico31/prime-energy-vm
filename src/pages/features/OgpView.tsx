@@ -76,7 +76,7 @@ export function renderColumns({ loading, navigate, deleteData }: { loading: bool
             dataIndex: 'availability',
             key: 'availability',
             align: 'center',
-            render: (_, rec) => <Tag bordered={false} style={{ borderRadius: 0, color: '#fff', background: rec?.availability.name.toLocaleLowerCase() === 'green' ? '#009c15' : rec?.availability.name.toLocaleLowerCase() === 'yellow' ? '#ebfc05' : 'red', width: 60, textAlign: 'center' }}>{rec?.availability?.name}</Tag>,
+            render: (_, rec) => <Tag bordered={false} style={{ borderRadius: 0, color: '#fff', background: rec?.availability.name.toLocaleLowerCase() === 'green' ? '#009c15' : rec?.availability.name.toLocaleLowerCase() === 'yellow' ? '#f69a22' : 'red', width: 60, textAlign: 'center' }}>{rec?.availability?.name}</Tag>,
             // width: 200,
         },
         {
@@ -84,7 +84,7 @@ export function renderColumns({ loading, navigate, deleteData }: { loading: bool
             dataIndex: 'integrity',
             key: 'integrity',
             align: 'center',
-            render: (_, rec) => <Tag bordered={false} style={{ borderRadius: 0, color: '#fff', background: rec?.integrity.name.toLocaleLowerCase() === 'green' ? '#009c15' : rec?.integrity.name.toLocaleLowerCase() === 'yellow' ? '#ebfc05' : 'red', width: 60, textAlign: 'center' }}>{rec?.integrity?.name}</Tag>,
+            render: (_, rec) => <Tag bordered={false} style={{ borderRadius: 0, color: '#fff', background: rec?.integrity.name.toLocaleLowerCase() === 'green' ? '#009c15' : rec?.integrity.name.toLocaleLowerCase() === 'yellow' ? '#f69a22' : 'red', width: 60, textAlign: 'center' }}>{rec?.integrity?.name}</Tag>,
             // width: 200,
         },
         {
