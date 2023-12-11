@@ -105,7 +105,7 @@ function Forms() {
     }, [form])
 
     const addRowActionItem = () => {
-        setActions([...actions, { ...initActionsState[0], id: Math.floor(Math.random() * 9999) + '' }])
+        setActions([...actions, { ...initActionsState[0], id: '' }])
     }
 
     const actionThreaOwnerChange = (id: string, v: string) => {
@@ -136,8 +136,9 @@ function Forms() {
             url: url.map((u) => ({ ...u, id: params?.transactionId ? u.id : '' })),
             date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'),
             due_date: dayjs(values?.due_date).format('MM-DD-YYYY'),
-            actions: actions.map((a) => ({ ...a, id: params?.transactionId ? a.id : '' })),
+            actions,
         }
+        console.log(actions)
         if (files.length > 0) {
             for (const k in values) {
                 const val = values[k]
@@ -456,7 +457,7 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
         }
     }, [isModalVisible, url])
 
-    const addRow = () => setUrlList(prevUrl => [...prevUrl, { ...initDataRowState[0], id: Math.floor(Math.random() * 99999) + '', }])
+    const addRow = () => setUrlList(prevUrl => [...prevUrl, { ...initDataRowState[0], id: '', }])
 
     const removeRow = (id: string) => {
         const updatedRows = urlList.filter((url) => id !== url.id)
@@ -657,7 +658,7 @@ function HistoryLogs({ transactionId }: { transactionId: string }) {
 
 const initDataRowState = [
     {
-        id: Math.floor(Math.random() * 99999) + '',
+        id: '',
         description: '',
         url: ''
     }
