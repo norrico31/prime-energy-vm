@@ -247,6 +247,17 @@ type TTransactionActions = {
     action_owner: TUserOptions
     action_due_date: D | null
 }[]
+type TTransactionHistory = {
+    action: string
+    actor: TUserOptions
+    date: string
+    id: string
+    properties: {
+        attributes: Record<string, string | Record<string, string> | Record<string, string>[]>
+        old?: Record<string, string | Record<string, string> | Record<string, string>[]>
+    }
+    transaction: Record<string, string>
+}
 type TPrintReport = {
     availability: string
     date_raised: string

@@ -1,12 +1,13 @@
 import { Fragment, useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Form as BootstrapForm, Modal, FloatingLabel, Table as BootstrapTable, CloseButton, Col as BootstrapCol, Row as BootstrapRow } from 'react-bootstrap'
-import { Row, Col, Form, Input, DatePicker, Select, Space, Skeleton } from 'antd'
+import { Row, Col, Form, Input, DatePicker, Select, Space, Skeleton, Collapse, CollapseProps } from 'antd'
 import { useAuthUser } from '../shared/contexts/AuthUser'
 import dayjs, { Dayjs } from 'dayjs'
 import { Button, FileUpload, PageHeading } from './components'
 
 import { GET, POST, PUT } from '../shared/utils/fetch'
+import { firstLetterCapitalize } from '../shared/utils'
 const { useForm } = Form
 
 type Payload = {
@@ -103,7 +104,6 @@ function Forms() {
         return () => controller.abort()
     }, [form])
 
-
     const addRowActionItem = () => {
         setActions([...actions, { ...initActionsState[0], id: Math.floor(Math.random() * 9999) + '' }])
     }
@@ -137,11 +137,6 @@ function Forms() {
             date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'),
             due_date: dayjs(values?.due_date).format('MM-DD-YYYY'),
             actions: actions.map((a) => ({ ...a, id: params?.transactionId ? a.id : '' })),
-            // action_due_date1: values?.action_due_date1 ? dayjs(values?.action_due_date1).format('MM-DD-YYYY') : null,
-            // action_due_date2: values?.action_due_date2 ? dayjs(values?.action_due_date2).format('MM-DD-YYYY') : null,
-            // action_due_date3: values?.action_due_date3 ? dayjs(values?.action_due_date3).format('MM-DD-YYYY') : null,
-            // action_due_date4: values?.action_due_date4 ? dayjs(values?.action_due_date4).format('MM-DD-YYYY') : null,
-            // action_due_date5: values?.action_due_date5 ? dayjs(values?.action_due_date5).format('MM-DD-YYYY') : null,
         }
         if (files.length > 0) {
             for (const k in values) {
@@ -250,8 +245,6 @@ function Forms() {
                                         <Form.Item >
                                             <Input.TextArea placeholder='Enter action item' value={actions[idx].action_item!} onChange={e => actionItemChange(a.id!, e.target.value)} />
                                         </Form.Item>
-                                        {/* {new Array(5).fill(null).map((_, i) => (
-                                    ))} */}
                                     </Form.Item>
                                 </Col>
                                 <Col xs={12} sm={6} md={6} lg={6} xl={6}>
@@ -269,13 +262,15 @@ function Forms() {
                                 </Col>
                             </Row>
                             {idx === (actions.length - 1) && (
-                                <Button variant='primary' onClick={addRowActionItem}>Add Action Item</Button>
-                            )}
+                                <>
+                                    <Button variant='primary' onClick={addRowActionItem}>Add Action Item</Button>
+                                    <hr />
+                                </>
 
+                            )}
                         </Fragment>
                     ))
                 ) : null}
-                <hr />
                 <BootstrapRow className="mb-3">
                     <BootstrapForm.Group as={Col} controlId="formGridOtherRemarks">
                         <BootstrapForm.Label>Other Remarks</BootstrapForm.Label>
@@ -291,7 +286,7 @@ function Forms() {
                 <Row className="mb-3">
                     <FormUrl url={url} setUrls={setUrls} />
                 </Row>
-                <Row justify='center'>
+                <Row justify='center' className='mb-3'>
                     <Space>
                         <Button variant='danger' title='Close' onClick={() => {
                             form.setFieldsValue(undefined)
@@ -305,6 +300,9 @@ function Forms() {
                     </Space>
                 </Row>
             </Form >
+            {params.transactionId && (
+                <HistoryLogs transactionId={params.transactionId!} />
+            )}
         </>
 }
 
@@ -394,7 +392,6 @@ function FormItemAvailability({ name }: { name: string }) {
     const [availabilities, setAvailabilities] = useState<TAvailability[]>([]);
 
     useEffect(() => {
-        // if (id === 'create') return
         const controller = new AbortController();
         (async () => {
             try {
@@ -559,6 +556,103 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
             </Modal.Footer>
         </Modal>
     </BootstrapForm.Group >
+}
+
+function HistoryLogs({ transactionId }: { transactionId: string }) {
+    const [histories, setHistories] = useState<TTransactionHistory[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setLoading(true);
+        if (!transactionId) return;
+        const controller = new AbortController();
+        (async () => {
+            try {
+                const res = await GET<ApiSuccess<TTransactionHistory[]>>('/transactions/history?transaction_id=' + transactionId, controller.signal)
+                setHistories(res.data.data)
+            } catch (error) {
+                return error
+            } finally {
+                setLoading(false)
+            }
+        })()
+
+        return () => {
+            controller.abort()
+        }
+    }, [transactionId]);
+    const items: CollapseProps['items'] = [
+        {
+            key: '1',
+            label: 'History Logs',
+            children: <BootstrapTable bordered striped hover className='text-center'>
+                <thead>
+                    <tr>
+                        <th scope="col">Ref No.</th>
+                        <th scope="col">Actor</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">Properties</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {(histories ?? []).map((history) => (
+                        <tr key={history?.id}>
+                            <td>{history?.transaction.ref_no}</td>
+                            <td>{history?.actor.label}</td>
+                            <td>{history?.action}</td>
+                            <td>{(history?.properties?.attributes && typeof history?.properties?.attributes === 'object') ? Object?.entries?.(history?.properties?.attributes)?.map?.(([k, v], idx) => {
+                                if (k === 'id' || k === 'is_longterm' || [
+                                    'action_item1',
+                                    'action_item2',
+                                    'action_item3',
+                                    'action_item4',
+                                    'action_item5',
+                                    'action_owner1',
+                                    'action_owner2',
+                                    'action_owner3',
+                                    'action_owner4',
+                                    'action_owner5',
+                                    'action_due_date1',
+                                    'action_due_date2',
+                                    'action_due_date3',
+                                    'action_due_date4',
+                                    'action_due_date5',
+                                ]?.includes(k)) return
+                                const el = Array.isArray(v) ? v?.map(Object.entries).map(([arrK, arrV], index) => {
+                                    const key = firstLetterCapitalize(arrK as unknown as string)
+                                    return (
+                                        <div key={index}>
+                                            <b>{key}</b> - {arrV === null ? 'N/A' : arrV}
+                                        </div>
+                                    )
+                                }) : (v !== null && typeof v === 'object') ? Object?.entries?.(v)?.map?.(([objK, objV], i) => {
+                                    if (objK === 'id') return
+                                    return (
+                                        <div key={i}>
+                                            <b>{firstLetterCapitalize(objK)}</b> - {objV === null ? 'N/A' : objV}
+                                        </div>
+                                    )
+                                }) : (
+                                    <div>
+                                        <b>{firstLetterCapitalize(k.split('_').join(' '))}</b> - {v === null ? 'N/A' : v}
+                                    </div>
+                                );
+                                return (
+                                    <div key={idx}>
+                                        {el}
+                                    </div>
+                                )
+                            }) : null}</td>
+                            <td>{history?.date}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </BootstrapTable>,
+        },
+    ];
+
+    return loading ? <Skeleton /> : <Collapse accordion items={items} />;
 }
 
 const initDataRowState = [
