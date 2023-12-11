@@ -60,7 +60,6 @@ async function crudApi<T>(reqPath: string, requestInit?: RequestInit, params?: T
     const url = urlParams(reqPath, params)
     const res = await fetch(url, { ...requestInit, headers: { ...requestInit?.headers } })
     // TODO
-    console.log('fetch result:', res)
     if (!res.ok) return Promise.reject(res.json()) as T
     return Promise.resolve(res.json())
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Input, Form, Col } from 'antd'
+import { Button, Input, Form, Col, notification } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Container } from 'react-bootstrap';
 import Logo from '../shared/assets/logo.png'
@@ -25,13 +25,17 @@ function Login() {
     const onFinish = async (values: Form) => {
         setErrors([])
         try {
-            const path = isChangePassword ? '/change-password' : '/login'
+            const path = isChangePassword ? '/forgot-password' : '/login'
             const data = await POST<Form, TCredentials>(path, values)
             if (!isChangePassword) {
                 localStorage.setItem('token', JSON.stringify(data.data.token))
                 setToken(data.data.token)
                 return data
             } else {
+                notification.open({
+                    message: 'Update Successfully',
+                    description: data.message,
+                });
                 setIsChangePassword(false)
             }
         } catch (err) {
