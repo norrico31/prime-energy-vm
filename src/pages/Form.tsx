@@ -30,9 +30,9 @@ type Payload = {
     url: TTransactionUrls
 }
 
-type Actions = { id: string; action_owner: string; action_due_date: Dayjs | string; action_item: string }[]
+type Actions = { id: string; action_owner: string; action_due_date: Dayjs | string; action_item: string }
 
-const initActionsState: Actions = [
+const initActionsState: Actions[] = [
     {
         id: '',
         action_owner: '',
@@ -49,7 +49,7 @@ function Forms() {
     const [classification, setClassification] = useState<string>('0');
     const [url, setUrls] = useState<typeof initDataRowState>([]);
     const [files, setFiles] = useState<Array<File>>([]);
-    const [actions, setActions] = useState<Actions>(initActionsState)
+    const [actions, setActions] = useState<Actions[]>(initActionsState)
     const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(true);
 
@@ -75,7 +75,7 @@ function Forms() {
                     setTitle(res?.data?.equipment?.name)
                     setUrls(res.data?.url)
                     setClassification(res?.data?.is_longterm)
-                    const actionsFromServer = res?.data.actions.map((a) => ({ ...a, action_owner: a.action_owner.id })) as Actions
+                    const actionsFromServer = res?.data.actions.map((a) => ({ ...a, action_owner: a.action_owner.id })) as Actions[]
                     setActions(actionsFromServer)
                 } catch (error) {
                     return error
@@ -108,22 +108,10 @@ function Forms() {
         setActions([...actions, { ...initActionsState[0], id: '' }])
     }
 
-    const actionThreaOwnerChange = (id: string, v: string) => {
-        if (!v) return
-        const updatedActionOwner = actions.map(a => a.id === id ? { ...a, action_owner: v } : a)
-        setActions(updatedActionOwner)
-    }
-
-    const actionItemChange = (id: string, v: string) => {
-        if (!v) return
-        const updatedActionOwner = actions.map(a => a.id === id ? { ...a, action_item: v } : a)
-        setActions(updatedActionOwner)
-    }
-
-    const actionDueDateChange = (id: string, v: string) => {
-        if (!v) return
-        const updatedActionOwner = actions.map(a => a.id === id ? { ...a, action_due_date: v } : a)
-        setActions(updatedActionOwner)
+    const actionRowChange = (data: Actions) => {
+        if (!data) return
+        const newDataCols = actions.map((d) => d.id === data.id ? { ...data } : d)
+        setActions(newDataCols)
     }
 
     const onFinish = async (values: Record<string, string | number>) => {
@@ -238,39 +226,7 @@ function Forms() {
                 </Row>
                 <hr />
                 {classification == '0' ? (
-                    actions.map((a, idx) => (
-                        <Fragment key={idx}>
-                            <Row wrap gutter={[24, 24]}>
-                                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                                    <Form.Item label='Action Item'>
-                                        <Form.Item >
-                                            <Input.TextArea placeholder='Enter action item' value={actions[idx].action_item!} onChange={e => actionItemChange(a.id!, e.target.value)} />
-                                        </Form.Item>
-                                    </Form.Item>
-                                </Col>
-                                <Col xs={12} sm={6} md={6} lg={6} xl={6}>
-                                    <ActionThreatOwner value={actions[idx].action_owner!} onChange={v => actionThreaOwnerChange(a.id!, v)} />
-                                </Col>
-                                <Col xs={12} sm={6} md={6} lg={6} xl={6}>
-                                    <Form.Item label='Due Date' >
-                                        <Form.Item style={{ marginBottom: 14 }}>
-                                            <DatePicker format='YYYY/MM/DD' style={{ height: 50, width: '100%' }}
-                                                value={actions[idx].action_due_date ? dayjs(actions[idx].action_due_date) : null}
-                                                onChange={v => actionDueDateChange(a.id!, dayjs(v).format('YYYY/MM/DD'))}
-                                            />
-                                        </Form.Item>
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                            {idx === (actions.length - 1) && (
-                                <>
-                                    <Button variant='primary' onClick={addRowActionItem}>Add Action Item</Button>
-                                    <hr />
-                                </>
-
-                            )}
-                        </Fragment>
-                    ))
+                    actions.map((a, idx) => <ActionItem key={idx} action={a} actionRowChange={actionRowChange} isShowActionAddItem={idx === actions.length - 1} addRowActionItem={addRowActionItem} />)
                 ) : null}
                 <BootstrapRow className="mb-3">
                     <BootstrapForm.Group as={Col} controlId="formGridOtherRemarks">
@@ -305,6 +261,42 @@ function Forms() {
                 <HistoryLogs transactionId={params.transactionId!} />
             )}
         </>
+}
+
+function ActionItem({ action, actionRowChange, isShowActionAddItem, addRowActionItem }: { action: Actions; actionRowChange: (d: Actions) => void; isShowActionAddItem: boolean; addRowActionItem: () => void }) {
+    const [actionItem, setActionItem] = useState(action)
+    useEffect(() => actionRowChange(actionItem), [actionItem])
+    return <Fragment>
+        <Row wrap gutter={[24, 24]}>
+            <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                <Form.Item label='Action Item'>
+                    <Form.Item >
+                        <Input.TextArea placeholder='Enter action item' value={actionItem.action_item!} onChange={e => setActionItem({ ...actionItem, action_item: e.target.value })} />
+                    </Form.Item>
+                </Form.Item>
+            </Col>
+            <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+                <ActionThreatOwner value={actionItem.action_owner!} onChange={v => setActionItem({ ...actionItem, action_owner: v })} />
+            </Col>
+            <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+                <Form.Item label='Due Date' >
+                    <Form.Item style={{ marginBottom: 14 }}>
+                        <DatePicker format='YYYY/MM/DD' style={{ height: 50, width: '100%' }}
+                            value={actionItem.action_due_date ? dayjs(actionItem.action_due_date) : null}
+                            onChange={v => setActionItem({ ...actionItem, action_due_date: dayjs(v).format('YYYY/MM/DD') })!}
+                        />
+                    </Form.Item>
+                </Form.Item>
+            </Col>
+        </Row>
+        {isShowActionAddItem && (
+            <>
+                <Button variant='primary' onClick={addRowActionItem}>Add Action Item</Button>
+                <hr />
+            </>
+
+        )}
+    </Fragment>
 }
 
 function FormItemStatuses({ name }: { name: string }) {
@@ -450,18 +442,21 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
     const [urlList, setUrlList] = useState<typeof initDataRowState>(initDataRowState)
 
     useEffect(() => {
-        if (isModalVisible && url.length) {
-            setUrlList(url)
-        } else {
-            setTimeout(() => setUrlList(initDataRowState), 200)
-        }
-    }, [isModalVisible, url])
+        setUrlList(url.length ? url : initDataRowState)
+    }, [url])
 
-    const addRow = () => setUrlList(prevUrl => [...prevUrl, { ...initDataRowState[0], id: '', }])
+    const addRow = () => setUrlList([...urlList, { ...initDataRowState[0], id: '' }])
 
-    const removeRow = (id: string) => {
-        const updatedRows = urlList.filter((url) => id !== url.id)
-        setUrlList(updatedRows)
+    const removeRowInModal = (idx: number) => {
+        const filteredUrls = [...urlList]
+        filteredUrls.splice(idx, 1)
+        setUrlList([...filteredUrls])
+    }
+
+    const dataUrlChange = (d: typeof initDataRowState[0], idx: number) => {
+        if (!d && !idx) return
+        const updatedUrls = urlList.map((data, i) => i === idx ? { ...d } : data)
+        setUrlList(updatedUrls)
     }
 
     const onHide = () => setIsModalVisible(false)
@@ -491,9 +486,12 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
                             <Link target="_blank" to={'https://' + d.url} >{d.url}</Link>
                         </td>
                         <td>
-                            <Button variant='primary' onClick={() => {
-                                const filteredUrls = url.filter(u => u.id !== d.id)
-                                setUrls([...filteredUrls])
+                            <Button variant='primary' onClick={(e) => {
+                                e.stopPropagation()
+                                const filteredUrls = [...urlList]
+                                filteredUrls.splice(idx, 1)
+                                setUrls(filteredUrls)
+                                setUrlList(filteredUrls)
                             }}>Remove</Button>
                         </td>
                     </tr>
@@ -514,33 +512,7 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
             </Modal.Header>
             <Modal.Body>
                 <Button variant='primary' className='mb-3' onClick={addRow}>Add Entry</Button>
-                {urlList.map((url, idx) => <Row className='d-flex align-items-center p-0 gap-1' key={idx}>
-                    <BootstrapForm.Group as={BootstrapCol} controlId="formGridOtherRemarks">
-                        <FloatingLabel
-                            controlId="floatingInput"
-                            label="Enter Description"
-                            className="mb-2"
-                        >
-                            <BootstrapForm.Control type="text" as='textarea' style={{ height: 100 }} placeholder="name@example.com" value={urlList[idx].description} onChange={(e) => {
-                                const urls = urlList.map((u) => u.id === url.id ? { ...url, description: e.target.value } : u)
-                                setUrlList(urls)
-                            }} />
-                        </FloatingLabel>
-                    </BootstrapForm.Group>
-                    <BootstrapForm.Group as={BootstrapCol} controlId="formGridOtherRemarks">
-                        <FloatingLabel
-                            controlId="floatingInput"
-                            label="Enter Link"
-                            className="mb-2"
-                        >
-                            <BootstrapForm.Control type="text" placeholder="name@example.com" style={{ height: 100 }} value={urlList[idx].url} onChange={(e) => {
-                                const urls = urlList.map((u) => u.id === url.id ? { ...url, url: e.target.value } : u)
-                                setUrlList(urls)
-                            }} />
-                        </FloatingLabel>
-                    </BootstrapForm.Group>
-                    <CloseButton style={{ marginLeft: 10 }} onClick={() => removeRow(url.id)} disabled={urlList.length === 1} />
-                </Row>
+                {urlList.map((url, idx) => <ModalBodyUrl key={idx} url={url} isDisabledRemoveBtn={urlList.length === 1} removeRowInModal={() => removeRowInModal(idx)} dataUrlChange={(d) => dataUrlChange(d, idx)} />
                 )}
             </Modal.Body>
             <Modal.Footer>
@@ -549,7 +521,7 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
                 }}>Cancel</Button>
                 <Button
                     variant='primary'
-                    disabled={Object.values(urlList).map(Object.values).flat().some(u => u === '')}
+                    disabled={Object.values(urlList).map(({ id: _, ...restProps }) => Object.values(restProps)).flat().some(u => u === '')}
                     onClick={() => {
                         onHide()
                         setTimeout(() => setUrls(urlList), 300)
@@ -557,6 +529,35 @@ function FormUrl({ url, setUrls }: { url: typeof initDataRowState; setUrls: Reac
             </Modal.Footer>
         </Modal>
     </BootstrapForm.Group >
+}
+
+function ModalBodyUrl({ url, isDisabledRemoveBtn, removeRowInModal, dataUrlChange }: { url: typeof initDataRowState[0]; isDisabledRemoveBtn: boolean; removeRowInModal: () => void; dataUrlChange: (d: typeof initDataRowState[0]) => void }) {
+    const [dataUrl, setDataUrl] = useState(url);
+    useEffect(() => dataUrlChange(dataUrl), [dataUrl]);
+    return <Row className='d-flex align-items-center p-0 gap-1'>
+        <BootstrapForm.Group as={BootstrapCol} controlId="formGridOtherRemarks">
+            <FloatingLabel
+                controlId="floatingInput"
+                label="Enter Description"
+                className="mb-2"
+            >
+                <BootstrapForm.Control type="text" as='textarea' style={{ height: 100 }} placeholder="name@example.com" value={dataUrl.description} onChange={(e) => setDataUrl({ ...dataUrl, description: e.target.value })} />
+            </FloatingLabel>
+        </BootstrapForm.Group>
+        <BootstrapForm.Group as={BootstrapCol} controlId="formGridOtherRemarks">
+            <FloatingLabel
+                controlId="floatingInput"
+                label="Enter Link"
+                className="mb-2"
+            >
+                <BootstrapForm.Control type="text" placeholder="name@example.com" style={{ height: 100 }} value={dataUrl.url} onChange={(e) => setDataUrl({ ...dataUrl, url: e.target.value })} />
+            </FloatingLabel>
+        </BootstrapForm.Group>
+        <CloseButton style={{ marginLeft: 10 }} onClick={(e) => {
+            e.stopPropagation()
+            removeRowInModal()
+        }} disabled={isDisabledRemoveBtn} />
+    </Row>
 }
 
 function HistoryLogs({ transactionId }: { transactionId: string }) {
