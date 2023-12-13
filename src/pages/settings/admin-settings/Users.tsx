@@ -132,7 +132,7 @@ type Payload = {
     last_name: string | null
     email: string | null
     password: string | null
-    confirm_password: string | null
+    password_confirmation: string | null
     is_active: number;
 } & Partial<{ id: string }>
 
@@ -152,7 +152,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
     }, [selectedData, open])
 
     const onFinish = (v: Payload) => {
-        if (v.password !== v.confirm_password) {
+        if (v.password !== v.password_confirmation) {
             setError('Password do not match!')
             setLoading(false)
             return
@@ -204,7 +204,7 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
                     />
                     <InputPassword
                         label='Confirm Password'
-                        name='confirm_password'
+                        name='password_confirmation'
                         required={selectedData ? false : true}
                         placeholder='Enter confirm password'
                     />

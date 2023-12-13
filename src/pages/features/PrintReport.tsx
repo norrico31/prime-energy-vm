@@ -4,6 +4,8 @@ import { Table } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { GET } from '../../shared/utils/fetch'
+import axios from 'axios'
+import { useAuthToken } from '../../shared/contexts/AuthToken'
 
 type Props = {
     title: string
@@ -19,7 +21,7 @@ const obj: Record<string, string> = {
 export default function PrintReport({ title }: Props) {
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TPrintReport[]>([])
-
+    const { token } = useAuthToken()
     useEffect(() => {
         const controller = new AbortController();
         fetchData(controller.signal)
@@ -40,12 +42,23 @@ export default function PrintReport({ title }: Props) {
 
     const exportPrintReport = async () => {
         try {
-            const result = await GET(`/download/transaction/site?site=${obj[title?.toLowerCase()]}`)
-            console.log('download reulst: ', result)
+            const result = await axios.get(`https://vms.redcoresolutions.com/core/api/v1/download/transaction/site?site=${obj[title?.toLowerCase()].toLowerCase()}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    'Content-Disposition': "attachment;",
+                    'Authorization': `Bearer ${token}`
+                },
+                responseType: 'arraybuffer',
+            })
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `${title} - ${dayjs().format('YYYY-MM-DD')} - ${dayjs().format('YYYY-MM-DD')}.csv`);
+            document.body.appendChild(link);
+            link.click();
         } catch (error) {
             console.error('Error exporting transaction:', error);
         }
-
     }
 
     return (

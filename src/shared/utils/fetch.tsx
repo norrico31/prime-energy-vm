@@ -26,9 +26,9 @@ const POST = async <D, R>(path: string, data?: D, headers?: RequestInit) => {
     }
 }
 
-const PUT = async <D extends Partial<{ id: string }>>(path: string, data: D, headers?: RequestInit) => {
+const PUT = async <D,>(path: string, data: D, headers?: RequestInit) => {
     try {
-        const res = await crudApi(path + data.id, { method: 'PUT', body: JSON.stringify(data), ...headers })
+        const res = await crudApi(path, { method: 'PUT', body: data instanceof FormData ? data : JSON.stringify(data), ...headers })
         const message = (res as { message?: string })?.message
         notification.open({
             message: 'Update Successfully',

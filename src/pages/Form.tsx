@@ -2,33 +2,14 @@ import { Fragment, useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Form as BootstrapForm, Modal, FloatingLabel, Table as BootstrapTable, CloseButton, Col as BootstrapCol, Row as BootstrapRow } from 'react-bootstrap'
 import { Row, Col, Form, Input, DatePicker, Select, Space, Skeleton, Collapse, CollapseProps } from 'antd'
-import { useAuthUser } from '../shared/contexts/AuthUser'
 import dayjs, { Dayjs } from 'dayjs'
+import { useAuthUser } from '../shared/contexts/AuthUser'
 import { Button, FileUpload, PageHeading } from './components'
-
-import { GET, POST, PUT } from '../shared/utils/fetch'
+import axios from 'axios'
+import { GET } from '../shared/utils/fetch'
 import { firstLetterCapitalize } from '../shared/utils'
+import { useAuthToken } from '../shared/contexts/AuthToken'
 const { useForm } = Form
-
-type Payload = {
-    availability: TAvailability
-    classification: string
-    date_raised: string
-    due_date: string
-    equipment: TEquipment
-    name: string
-    id: string
-    integrity: TIntegrity
-    is_longterm: string
-    reference_no: string
-    risk_description: string
-    status: TStatus
-    threat_owner: TUserOptions
-    vulnerability_description: string
-    vulnerability_title: string
-    actions: Actions
-    url: TTransactionUrls
-}
 
 type Actions = { id: string; action_owner: string; action_due_date: Dayjs | string; action_item: string }
 
@@ -44,6 +25,7 @@ const initActionsState: Actions[] = [
 function Forms() {
     const params = useParams()
     const { user } = useAuthUser()
+    const { token } = useAuthToken()
     const navigate = useNavigate()
     const [form] = useForm()
     const [classification, setClassification] = useState<string>('0');
@@ -52,6 +34,8 @@ function Forms() {
     const [actions, setActions] = useState<Actions[]>(initActionsState)
     const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(true);
+
+    console.log(files)
 
     useEffect(() => {
         setLoading(true);
@@ -116,31 +100,42 @@ function Forms() {
 
     const onFinish = async (values: Record<string, string | number>) => {
         const formData = new FormData()
-        const objPayload = {
+        const objPayload: Record<string, unknown> = {
             ...values,
             id: params?.transactionId,
-            equipment_id:
-                params?.equipmentId,
-            url: url.map((u) => ({ ...u, id: params?.transactionId ? u.id : '' })),
+            equipment_id: params?.equipmentId,
             date_raised: dayjs(values?.date_raised).format('MM-DD-YYYY'),
             due_date: dayjs(values?.due_date).format('MM-DD-YYYY'),
-            actions,
         }
-        console.log(actions)
-        if (files.length > 0) {
-            for (const k in values) {
-                const val = values[k]
-                formData.append(k, val !== undefined ? (val + '') : '')
+        for (const k in objPayload) {
+            const val = objPayload[k]
+            formData.append(k, val !== undefined ? (val + '') : '')
+            if (k === 'files') {
+                continue
             }
-            const blobFile = new Blob(files)
-            formData.append('id', params?.equipmentId + '')
-            formData.append('file', blobFile)
-            formData.append('equipment_id', params?.equipmentId + '')
-            formData.append('_method', 'PUT')
         }
-        const payload = files.length > 0 ? formData : objPayload;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i]
+            formData.append(`files[${i}][file]`, file)
+            formData.append(`files[${i}][id]`, '')
+        }
+        for (let i = 0; i < url.length; i++) {
+            const d = url[i]
+            formData.append(`url[${i}][url]`, d.url)
+            formData.append(`url[${i}][description]`, d.description)
+            formData.append(`url[${i}][id]`, '')
+        }
+        for (let i = 0; i < actions.length; i++) {
+            const action = actions[i]
+            formData.append(`actions[${i}][action_owner]`, action.action_owner + '')
+            formData.append(`actions[${i}][action_due_date]`, action.action_due_date + '')
+            formData.append(`actions[${i}][action_item]`, action.action_item)
+        }
+        if (params?.transactionId) formData.append('_method', 'PUT')
+        const id = params?.transactionId ? params?.transactionId : params?.equipmentId
+        const payload = files.length ? formData : { ...objPayload, actions, url: url.map((u) => ({ ...u, id: params?.transactionId ? u.id : '' })) }
         try {
-            const res = params?.transactionId ? PUT<Payload & FormData>('/transactions/', payload as Payload & FormData, { ...(files.length > 0 ? { headers: { enctype: 'multipart/form-data' } } : {}) }) : POST('/transactions', payload, { ...(files.length > 0 ? { headers: { enctype: 'multipart/form-data' } } : {}) })
+            const res = params?.transactionId ? axios.put('https://vms.redcoresolutions.com/passthru/api/v1/transactions/' + id, payload as typeof payload, { headers: { 'Authorization': 'Bearer ' + token } }) : axios.post('https://vms.redcoresolutions.com/passthru/api/v1/transactions/', payload, { headers: { 'Authorization': 'Bearer ' + token } })
             const data = await res
             navigate(-1)
             return data

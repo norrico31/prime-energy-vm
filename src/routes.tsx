@@ -154,7 +154,7 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         path: '',
-                        element: <AsyncComponent><Lists title="ogp" navigate='/ogp/print-report' /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="ogp" /></AsyncComponent>,
                     },
                     {
                         path: 'print-report',
@@ -189,7 +189,7 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         path: '',
-                        element: <AsyncComponent><Lists title="pipelines" navigate='/pipelines/print-report' /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="pipelines" /></AsyncComponent>,
                     },
                     {
                         path: 'print-report',
@@ -224,7 +224,7 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         path: '',
-                        element: <AsyncComponent><Lists title="critical" navigate='/critical-equipment/print-report' /></AsyncComponent>,
+                        element: <AsyncComponent><Lists title="critical" /></AsyncComponent>,
                     },
                     {
                         path: 'print-report',

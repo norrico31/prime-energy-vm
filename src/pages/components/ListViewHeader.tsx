@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
 import { Col, Container, Row, Form } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
-// import dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import useWindowSize from "../../shared/hooks/useWindowResize"
 import { Button } from "."
+import axios from "axios"
 
-import { GET, POST } from '../../shared/utils/fetch'
+import { GET } from '../../shared/utils/fetch'
+import { useAuthToken } from "../../shared/contexts/AuthToken"
 
 type Props = Partial<ListViewColEndProps> & {
     data?: null
@@ -15,7 +17,7 @@ type Props = Partial<ListViewColEndProps> & {
 
 export default function ListViewHeader(props: Props) {
     const [equipment, setequipment] = useState<TEquipment | undefined>(undefined);
-
+    const { token } = useAuthToken()
     useEffect(() => {
         const controller = new AbortController();
         (async () => {
@@ -34,42 +36,24 @@ export default function ListViewHeader(props: Props) {
 
     const exportTransaction = async () => {
         try {
-            const result = await POST(`/download/transaction/equipment?equipment_id=${props?.equipmentId}`, JSON.stringify(null), {
+            const result = await axios.get(`https://vms.redcoresolutions.com/core/api/v1/download/transaction/equipment?equipment_id=${props?.equipmentId}`, {
                 headers: {
-                    responseType: 'arraybuffer',
                     "Content-Type": "application/json",
                     'Content-Disposition': "attachment;",
-                }
+                    'Authorization': `Bearer ${token}`
+                },
+                responseType: 'arraybuffer',
             })
-            console.log('download reulst: ', result)
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `${equipment?.system.name} - ${dayjs().format('YYYY-MM-DD')} - ${dayjs().format('YYYY-MM-DD')}.csv`);
+            document.body.appendChild(link);
+            link.click();
         } catch (error) {
             console.error('Error exporting transaction:', error);
         }
-
     }
-    // .then((res: unknown) => {
-    //     const result = res as Response
-    //     console.log('download result: ', result)
-    //     if (!result.ok) {
-    //         throw new Error(`HTTP error! Status: ${result.status}`);
-    //     }
-
-    //     return result.blob() as unknown as Promise<Blob>;
-    // })
-    //     .then((data: Blob) => {
-    //         console.log('download data: ', data)
-    //         // Alert.success('Download Success', 'Team Tasks Download Successfully!')
-    //         const url = window.URL.createObjectURL(data);
-    //         const link = document.createElement('a');
-    //         link.href = url;
-    //         link.setAttribute('download', `Critical Equipment - ${dayjs().format('YYYY-MM-DD')} - ${dayjs().format('YYYY-MM-DD')}.xlsx`);
-    //         document.body.appendChild(link);
-    //         link.click();
-    //     })
-    //     .catch((error: unknown) => {
-    //         // Handle error here
-    //     });
-
 
     return <Container>
         <Row>
