@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Fragment, useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Form as BootstrapForm, Modal, FloatingLabel, Table as BootstrapTable, CloseButton, Col as BootstrapCol, Row as BootstrapRow } from 'react-bootstrap'
@@ -11,7 +12,7 @@ import { firstLetterCapitalize } from '../shared/utils'
 import { useAuthToken } from '../shared/contexts/AuthToken'
 const { useForm } = Form
 
-type Actions = { id: string; action_owner: string; action_due_date: Dayjs | string; action_item: string }
+type Actions = { id: string; action_owner: string; action_due_date?: Dayjs | string; action_item: string }
 
 const initActionsState: Actions[] = [
     {
@@ -34,12 +35,12 @@ function Forms() {
     const [actions, setActions] = useState<Actions[]>(initActionsState)
     const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(true);
-
-    console.log(files)
+    const isDisabledAddActionItmBtn = actions.map(({ id, ...restProps }) => Object.values(restProps)).flat().some((v) => v === '' || v === undefined)
 
     useEffect(() => {
         setLoading(true);
         const controller = new AbortController();
+        if (!user) return
         if (params?.transactionId) {
             (async () => {
                 try {
@@ -86,15 +87,15 @@ function Forms() {
             })()
         }
         return () => controller.abort()
-    }, [form])
+    }, [form, user])
 
     const addRowActionItem = () => {
         setActions([...actions, { ...initActionsState[0], id: '' }])
     }
 
-    const actionRowChange = (data: Actions) => {
+    const actionRowChange = (data: Actions, idx: number) => {
         if (!data) return
-        const newDataCols = actions.map((d) => d.id === data.id ? { ...data } : d)
+        const newDataCols = actions.map((d, i) => idx === i ? { ...data } : d)
         setActions(newDataCols)
     }
 
@@ -114,22 +115,28 @@ function Forms() {
                 continue
             }
         }
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i]
-            formData.append(`files[${i}][file]`, file)
-            formData.append(`files[${i}][id]`, '')
+        if (files.length) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i]
+                formData.append(`files[${i}][file]`, file)
+                formData.append(`files[${i}][id]`, '')
+            }
         }
-        for (let i = 0; i < url.length; i++) {
-            const d = url[i]
-            formData.append(`url[${i}][url]`, d.url)
-            formData.append(`url[${i}][description]`, d.description)
-            formData.append(`url[${i}][id]`, '')
+        if (url.length) {
+            for (let i = 0; i < url.length; i++) {
+                const d = url[i]
+                formData.append(`url[${i}][url]`, d.url)
+                formData.append(`url[${i}][description]`, d.description)
+                formData.append(`url[${i}][id]`, '')
+            }
         }
-        for (let i = 0; i < actions.length; i++) {
-            const action = actions[i]
-            formData.append(`actions[${i}][action_owner]`, action.action_owner + '')
-            formData.append(`actions[${i}][action_due_date]`, action.action_due_date + '')
-            formData.append(`actions[${i}][action_item]`, action.action_item)
+        if (actions.map(({ id: _, ...restProps }) => Object.values(restProps))[0].some((d) => d !== '' || d !== undefined)) {
+            for (let i = 0; i < actions.length; i++) {
+                const action = actions[i]
+                formData.append(`actions[${i}][action_owner]`, action.action_owner + '')
+                formData.append(`actions[${i}][action_due_date]`, action.action_due_date + '')
+                formData.append(`actions[${i}][action_item]`, action.action_item)
+            }
         }
         if (params?.transactionId) formData.append('_method', 'PUT')
         const id = params?.transactionId ? params?.transactionId : params?.equipmentId
@@ -143,7 +150,6 @@ function Forms() {
             return error
         }
     }
-
     return loading ? <Skeleton /> :
         <>
             <PageHeading title={title} onClick={() => alert('print report critical')} />
@@ -221,7 +227,14 @@ function Forms() {
                 </Row>
                 <hr />
                 {classification == '0' ? (
-                    actions.map((a, idx) => <ActionItem key={idx} action={a} actionRowChange={actionRowChange} isShowActionAddItem={idx === actions.length - 1} addRowActionItem={addRowActionItem} />)
+                    actions.map((a, idx) => <ActionItem
+                        key={idx}
+                        action={a}
+                        actionRowChange={(v) => actionRowChange(v, idx)}
+                        isShowActionAddItem={idx === actions.length - 1}
+                        addRowActionItem={addRowActionItem}
+                        isDisabledAddActionItmBtn={isDisabledAddActionItmBtn}
+                    />)
                 ) : null}
                 <BootstrapRow className="mb-3">
                     <BootstrapForm.Group as={Col} controlId="formGridOtherRemarks">
@@ -258,7 +271,7 @@ function Forms() {
         </>
 }
 
-function ActionItem({ action, actionRowChange, isShowActionAddItem, addRowActionItem }: { action: Actions; actionRowChange: (d: Actions) => void; isShowActionAddItem: boolean; addRowActionItem: () => void }) {
+function ActionItem({ action, actionRowChange, isShowActionAddItem, addRowActionItem, isDisabledAddActionItmBtn }: { action: Actions; actionRowChange: (d: Actions) => void; isShowActionAddItem: boolean; addRowActionItem: () => void; isDisabledAddActionItmBtn: boolean }) {
     const [actionItem, setActionItem] = useState(action)
     useEffect(() => actionRowChange(actionItem), [actionItem])
     return <Fragment>
@@ -277,8 +290,8 @@ function ActionItem({ action, actionRowChange, isShowActionAddItem, addRowAction
                 <Form.Item label='Due Date' >
                     <Form.Item style={{ marginBottom: 14 }}>
                         <DatePicker format='YYYY/MM/DD' style={{ height: 50, width: '100%' }}
-                            value={actionItem.action_due_date ? dayjs(actionItem.action_due_date) : null}
-                            onChange={v => setActionItem({ ...actionItem, action_due_date: dayjs(v).format('YYYY/MM/DD') })!}
+                            value={actionItem.action_due_date ? dayjs(actionItem.action_due_date) : undefined}
+                            onChange={v => setActionItem({ ...actionItem, action_due_date: !v ? undefined : dayjs(v).format('YYYY/MM/DD') })!}
                         />
                     </Form.Item>
                 </Form.Item>
@@ -286,7 +299,7 @@ function ActionItem({ action, actionRowChange, isShowActionAddItem, addRowAction
         </Row>
         {isShowActionAddItem && (
             <>
-                <Button variant='primary' onClick={addRowActionItem}>Add Action Item</Button>
+                <Button variant='primary' disabled={isDisabledAddActionItmBtn} onClick={addRowActionItem}>Add Action Item</Button>
                 <hr />
             </>
 
@@ -298,7 +311,6 @@ function FormItemStatuses({ name }: { name: string }) {
     const [statuses, setStatuses] = useState<TStatus[]>([]);
 
     useEffect(() => {
-        // if (id === 'create') return
         const controller = new AbortController();
         (async () => {
             try {
