@@ -111,9 +111,7 @@ function Forms() {
         for (const k in objPayload) {
             const val = objPayload[k]
             formData.append(k, val !== undefined ? (val + '') : '')
-            if (k === 'files') {
-                continue
-            }
+            if (k === 'files') continue
         }
         if (files.length) {
             for (let i = 0; i < files.length; i++) {

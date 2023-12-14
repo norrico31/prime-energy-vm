@@ -53,7 +53,7 @@ export default function PrintReport({ title }: Props) {
             const url = window.URL.createObjectURL(new Blob([result.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `${title} - ${dayjs().format('YYYY-MM-DD')} - ${dayjs().format('YYYY-MM-DD')}.csv`);
+            link.setAttribute('download', `${title} - ${dayjs().format('YYYY-MM-DD')} - ${dayjs().format('YYYY-MM-DD')}.xlsx`);
             document.body.appendChild(link);
             link.click();
         } catch (error) {

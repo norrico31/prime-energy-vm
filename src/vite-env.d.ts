@@ -319,7 +319,43 @@ type TRoles = {
     name: string
     updated_at: string
     description: string | null
+    permissions: TPermisssion[]
 } & Common
+type TPermissions = {
+    'Activity log Management': TPermisssion[]
+    'Availability Management': TPermisssion[]
+    'Dashboards Management': TPermisssion[]
+    'DownloadTransactionEquipment Management': TPermisssion[]
+    'DownloadTransactionPreview Management': TPermisssion[]
+    'DownloadTransactionSite Management': TPermisssion[]
+    'Equipments Management': TPermisssion[]
+    'Integrity Management': TPermisssion[]
+    'Permissions Management': TPermisssion[]
+    'Profile Management': TPermisssion[]
+    'Roles Management': TPermisssion[]
+    'Roles Permissions Management': TPermisssion[]
+    'Sites Management': TPermisssion[]
+    'SsoLogin Management': TPermisssion[]
+    'Status Management': TPermisssion[]
+    'Statuses Management': TPermisssion[]
+    'Systems Management': TPermisssion[]
+    'Transactions Management': TPermisssion[]
+    'Uploads Management': TPermisssion[]
+    'Users Management': TPermisssion[]
+    'Workflows Management': TPermisssion[]
+}
+type TPermission = {
+    created_at: string
+    deleted_at: string | null
+    description: string
+    id: string
+    name: string
+    permission_group: { id: string, name: string, description: string }
+    permission_group_id: string
+    route: string
+    slug: string
+    updated_at: string
+}
 // ================================
 // ================================
 

@@ -47,7 +47,7 @@ export default function ListViewHeader(props: Props) {
             const url = window.URL.createObjectURL(new Blob([result.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `${equipment?.system.name} - ${dayjs().format('YYYY-MM-DD')} - ${dayjs().format('YYYY-MM-DD')}.csv`);
+            link.setAttribute('download', `${equipment?.system.name} - ${dayjs().format('YYYY-MM-DD')} - ${dayjs().format('YYYY-MM-DD')}.xlsx`);
             document.body.appendChild(link);
             link.click();
         } catch (error) {
