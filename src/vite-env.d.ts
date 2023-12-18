@@ -133,19 +133,33 @@ type Common = {
 }
 
 type TUser = {
-    id: string
-    email: string
-    first_name: string
-    middle_name: string
-    last_name: string
-    full_name: string
-    position: string | null,
-    job_level: string | null,
-    is_active: string
-    department: string | null,
-    role: TRole
+    activity_logs: TActivityLogs[]
+    department: string | null
+    email: "admin@example.com"
+    first_name: "System"
+    full_name: "System Administrator"
+    id: "9955FFDE-C38C-449A-9A27-3EBAC65D405C"
+    is_active: "1"
+    is_admin: true
+    job_level: null
+    last_name: "Administrator"
+    middle_name: "SA"
+    position: string | null
+    role: TRoles
 }
-
+type TActivityLogs = {
+    causer: string
+    created_at: string
+    description: string
+    event: string
+    id: number
+    log_name: string
+    name: string | null
+    properties: string
+    remarks: string | null
+    status: string | null
+    timestamp: string
+}
 type TUserOptions = {
     id: string
     label: string

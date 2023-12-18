@@ -1,8 +1,11 @@
 import { Row, Col } from "react-bootstrap";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Button } from './components'
+import { useAuthUser } from "../shared/contexts/AuthUser";
 
 export default function Dashboard() {
+    // const { mapPermission } = useAuthUser()
+    // console.log(mapPermission)
     return <>
         <Main />
         <Outlet />

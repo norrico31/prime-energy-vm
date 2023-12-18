@@ -11,6 +11,7 @@ import { FaUser } from "react-icons/fa";
 import Header from './Header';
 import VMLogo from '../../../shared/assets/logo_horizontal.svg'
 import Logo from '../../../shared/assets/logo.png'
+import { useAuthUser } from '../../../shared/contexts/AuthUser';
 
 const { Sider, Content } = Layout;
 
@@ -74,6 +75,7 @@ const App: React.FC = () => {
 export default App;
 
 function Sidebar({ handleSelect }: { handleSelect: () => void }) {
+    const { mapPermission } = useAuthUser()
     const { pathname } = useLocation()
     const [locationKey] = useState(() => {
         const location = pathname.split('/').filter(s => s !== '')[0]
@@ -97,7 +99,7 @@ function Sidebar({ handleSelect }: { handleSelect: () => void }) {
         activeKey={pathname}
         defaultSelectedKeys={[locationKey]}
         onSelect={handleSelect}
-        items={links}
+        items={renderLinks(mapPermission)}
     />
 }
 
@@ -138,112 +140,132 @@ function getItemLinks(
     } as MenuItem : null;
 }
 
-const links = [
-    getItemLinks(
-        <Link className={`text-decoration-none`} to='/dashboard'>
-            Dashboard
-        </Link>,
-        '/dashboard',
-        <MdOutlineDashboard />,
-        undefined,
-        true
-    ),
-    getItemLinks(
-        <Link className={`text-decoration-none`} to='/owner-dashboard'>
-            Owner Dashoard
-        </Link>,
-        '/owner-dashboard',
-        <MdOutlineDashboard />,
-        undefined,
-        true
-    ),
-    getItemLinks(
-        <Link className={`text-decoration-none`} to='/swp'>
-            SWP
-        </Link>,
-        '/swp',
-        <AiOutlineFolder />,
-        undefined,
-        true
-    ),
-    getItemLinks(
-        <Link className={`text-decoration-none`} to='/ogp'>
-            OGP
-        </Link>,
-        '/ogp',
-        <AiOutlineFileText />,
-        undefined,
-        true
-    ),
-    getItemLinks(
-        <Link className={`text-decoration-none`} to='/pipelines'>
-            Pipelines
-        </Link>,
-        '/pipelines',
-        <AiOutlineLineChart />,
-        undefined,
-        true
-    ),
-    getItemLinks(
-        <Link className={`text-decoration-none`} to='/critical-equipment'>
-            Critical Equipment
-        </Link>,
-        '/critical-equipment',
-        <GiBrokenAxe />,
-        undefined,
-        true
-    ),
-    getItemLinks(
-        'Location Settings',
-        '/location-settings',
-        <MdLocationOn />,
-        [
-            getItemLinks(
-                <Link className={`text-decoration-none`} to='/location-settings/systems'>
-                    Systems
-                </Link>,
-                '/location-settings/systems',
-                <MdSystemUpdateAlt />,
-                undefined,
-                true
-            ),
-            getItemLinks(
-                <Link className={`text-decoration-none`} to='/location-settings/equipments'>
-                    Equipment
-                </Link>,
-                '/location-settings/equipments',
-                <TbSettingsCog />,
-                undefined,
-                true
-            ),
-        ],
-        true
-    ),
-    getItemLinks(
-        <Link className={`text-decoration-none`} to='/system-settings/availability'>
-            System Settings
-        </Link>,
-        '/system-settings',
-        <FiSettings />,
-        undefined,
-        true
-    ),
-    getItemLinks(
-        <Link className={`text-decoration-none`} to='/admin-settings/location'>
-            Admin Settings
-        </Link>,
-        '/admin-settings',
-        <MdAdminPanelSettings />,
-        undefined,
-        true
-    ),
-    getItemLinks(
-        <Link className={`text-decoration-none`} to='/profile'>
-            Profile
-        </Link>,
-        '/profile',
-        <FaUser />,
-        undefined,
-        true
-    ),
-]
+const renderLinks = (permissions: Map<string, TPermission>) => {
+    const hasSystemsLocationSettings = permissions.has('Systems Management - view list')
+    const hasEquipmentsLocationSettings = permissions.has('Equipments Management - view list')
+
+    const hasAvailabilitySystemSettings = permissions.has('Availability Management - view list')
+    const hasIntegritySystemSettings = permissions.has('Integrity Management - view list')
+    const hasStatusSystemSettings = permissions.has('Status Management - view list')
+
+    // Locations (Admin Settings missing)
+    const hasUsersAdminSettings = permissions.has('Users Management - view list')
+    const hasRolesAdminSettings = permissions.has('Roles Management - view list')
+    const hasPermissionsAdminSettings = permissions.has('Permissions Management - option')
+    const hasAuditAdminSettings = permissions.has('Audit Management - view list')
+    console.log(permissions.keys())
+    return [
+        getItemLinks(
+            <Link className={`text-decoration-none`} to='/dashboard'>
+                Dashboard
+            </Link>,
+            '/dashboard',
+            <MdOutlineDashboard />,
+            undefined,
+            true
+        ),
+        getItemLinks(
+            <Link className={`text-decoration-none`} to='/owner-dashboard'>
+                Owner Dashoard
+            </Link>,
+            '/owner-dashboard',
+            <MdOutlineDashboard />,
+            undefined,
+            true
+        ),
+        getItemLinks(
+            <Link className={`text-decoration-none`} to='/swp'>
+                SWP
+            </Link>,
+            '/swp',
+            <AiOutlineFolder />,
+            undefined,
+            true
+        ),
+        getItemLinks(
+            <Link className={`text-decoration-none`} to='/ogp'>
+                OGP
+            </Link>,
+            '/ogp',
+            <AiOutlineFileText />,
+            undefined,
+            true
+        ),
+        getItemLinks(
+            <Link className={`text-decoration-none`} to='/pipelines'>
+                Pipelines
+            </Link>,
+            '/pipelines',
+            <AiOutlineLineChart />,
+            undefined,
+            true
+        ),
+        getItemLinks(
+            <Link className={`text-decoration-none`} to='/critical-equipment'>
+                Critical Equipment
+            </Link>,
+            '/critical-equipment',
+            <GiBrokenAxe />,
+            undefined,
+            true
+        ),
+        getItemLinks(
+            'Location Settings',
+            '/location-settings',
+            <MdLocationOn />,
+            [
+                getItemLinks(
+                    <Link className={`text-decoration-none`} to='/location-settings/systems'>
+                        Systems
+                    </Link>,
+                    '/location-settings/systems',
+                    <MdSystemUpdateAlt />,
+                    undefined,
+                    hasSystemsLocationSettings
+                ),
+                getItemLinks(
+                    <Link className={`text-decoration-none`} to='/location-settings/equipments'>
+                        Equipment
+                    </Link>,
+                    '/location-settings/equipments',
+                    <TbSettingsCog />,
+                    undefined,
+                    hasEquipmentsLocationSettings
+                ),
+            ],
+            hasSystemsLocationSettings || hasEquipmentsLocationSettings
+        ),
+        getItemLinks(
+            <Link className={`text-decoration-none`} to='/system-settings/availability'>
+                System Settings
+            </Link>,
+            '/system-settings',
+            <FiSettings />,
+            undefined,
+            hasAvailabilitySystemSettings ||
+            hasIntegritySystemSettings ||
+            hasStatusSystemSettings
+        ),
+        getItemLinks(
+            <Link className={`text-decoration-none`} to='/admin-settings/location'>
+                Admin Settings
+            </Link>,
+            '/admin-settings',
+            <MdAdminPanelSettings />,
+            undefined,
+            hasUsersAdminSettings ||
+            hasRolesAdminSettings ||
+            hasPermissionsAdminSettings ||
+            hasAuditAdminSettings
+        ),
+        getItemLinks(
+            <Link className={`text-decoration-none`} to='/profile'>
+                Profile
+            </Link>,
+            '/profile',
+            <FaUser />,
+            undefined,
+            true
+        ),
+    ]
+}
