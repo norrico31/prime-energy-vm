@@ -5,8 +5,12 @@ import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
+import { useAuthUser } from '../../../shared/contexts/AuthUser';
+import { useNavigate } from 'react-router-dom';
 
 export default function Systems() {
+    const { mapPermission } = useAuthUser()
+    const navigate = useNavigate()
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [isModalShow, setIsModalShow] = useState(false);
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
@@ -14,11 +18,18 @@ export default function Systems() {
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TSystems[]>([])
 
+    const hasSystemsLocationSettings = mapPermission.has('Systems Management - view list')
+
     useEffect(() => {
         const controller = new AbortController();
         fetchData({ signal: controller.signal, search, page: tableParams?.pagination?.current, limit: tableParams?.pagination?.pageSize })
         return () => controller.abort()
     }, [search])
+
+    if (!loading && !hasSystemsLocationSettings) {
+        navigate(-1)
+        return null
+    }
 
     async function fetchData(args?: ApiParams) {
         setLoading(true)

@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Button, Input, Form, Col, notification } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { useAuthUser } from '../shared/contexts/AuthUser';
 import { Container } from 'react-bootstrap';
 import Logo from '../shared/assets/logo.png'
 import PrimeBg from '../shared/assets/prime-bg.png'
-import { useAuthToken } from '../shared/contexts/AuthToken';
 import { Navigate } from 'react-router-dom';
 
 type Form = {
@@ -17,7 +17,7 @@ const { useForm } = Form
 function Login() {
     const [form] = useForm<Form>()
     const [errors, setErrors] = useState<Array<string>>([])
-    const { token, setToken } = useAuthToken()
+    const { token, setToken } = useAuthUser()
     const [isChangePassword, setIsChangePassword] = useState(false);
 
     if (token) return <Navigate to='/dashboard/critical-equipment' />

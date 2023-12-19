@@ -10,6 +10,7 @@ import axios from 'axios'
 import { GET } from '../shared/utils/fetch'
 import { firstLetterCapitalize } from '../shared/utils'
 import { useAuthToken } from '../shared/contexts/AuthToken'
+
 const { useForm } = Form
 
 type Actions = { id: string; action_owner: string; action_due_date?: Dayjs | string; action_item: string }
@@ -25,7 +26,7 @@ const initActionsState: Actions[] = [
 
 function Forms() {
     const params = useParams()
-    const { user } = useAuthUser()
+    const { user, mapPermission } = useAuthUser()
     const { token } = useAuthToken()
     const navigate = useNavigate()
     const [form] = useForm()
@@ -36,6 +37,8 @@ function Forms() {
     const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(true);
     const isDisabledAddActionItmBtn = actions.map(({ id, ...restProps }) => Object.values(restProps)).flat().some((v) => v === '' || v === undefined)
+    const hasUserEdit = mapPermission.has('Transactions Management - edit')
+    // const hasUserCreate = mapPermission.has('Transactions Management - create')
 
     useEffect(() => {
         setLoading(true);
@@ -88,6 +91,7 @@ function Forms() {
         }
         return () => controller.abort()
     }, [form, user])
+
 
     const addRowActionItem = () => {
         setActions([...actions, { ...initActionsState[0], id: '' }])
@@ -148,6 +152,12 @@ function Forms() {
             return error
         }
     }
+
+    if (!loading && !hasUserEdit) {
+        navigate(-1)
+        return null
+    }
+
     return loading ? <Skeleton /> :
         <>
             <PageHeading title={title} onClick={() => alert('print report critical')} />

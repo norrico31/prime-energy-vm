@@ -1,13 +1,10 @@
-import { createElement, useEffect } from 'react'
+import { createElement, useEffect, useState } from 'react'
 import { Layout, Dropdown, Space, MenuProps, Row } from 'antd'
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 import { Link, Navigate } from 'react-router-dom'
 import { IoMdArrowDropdown } from 'react-icons/io'
 import { useAuthUser } from '../../../shared/contexts/AuthUser'
-import { useAuthToken } from '../../../shared/contexts/AuthToken'
-
-import { GET, POST } from '../../../shared/utils/fetch'
 
 const { Header: AntDHeader } = Layout
 
@@ -47,34 +44,17 @@ export default function Header({ collapsed, setCollapsed }: Props) {
 }
 
 function UserSettings() {
-    const { token, setToken } = useAuthToken()
-    const { user, setUser } = useAuthUser()
+    const { user, token, fetchUserData, logout } = useAuthUser()
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const controller = new AbortController();
-        if (!user && token) {
-            (async () => {
-                try {
-                    const data = await GET<ApiData<TUser>>(`/auth_user`, controller.signal)
-                    setUser(data?.data)
-                    return data
-                } catch (err) {
-                    const error = err as ApiError
-                    if (error?.message === 'Unauthorized') {
-                        setUser(undefined)
-                        setToken(null)
-                        localStorage.clear()
-                    }
-                    return err
-                }
-            })()
-        }
-        return () => {
-            controller.abort()
-        }
-    }, [user, token])
+        fetchUserData(controller.signal)
+        setLoading(false)
+        return () => controller.abort()
+    }, [])
 
-    if (token == null) return <Navigate to='/login' />;
+    if (!loading && !token) return <Navigate to='/login' />;
 
     const items: MenuProps['items'] = [
         {
@@ -90,19 +70,6 @@ function UserSettings() {
             ),
         },
     ]
-
-
-    function logout(evt: React.MouseEvent) {
-        evt.stopPropagation()
-        evt.preventDefault()
-        POST('/logout', {})
-            .finally(() => {
-
-                setUser(undefined)
-                setToken(null)
-                localStorage.clear()
-            })
-    }
 
     return <Dropdown menu={{ items }}>
         <a onClick={e => e.preventDefault()}>

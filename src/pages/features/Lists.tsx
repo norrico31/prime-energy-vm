@@ -27,9 +27,10 @@ export default function Lists(props: Props) {
 
     useEffect(() => {
         const controller = new AbortController();
+        // if (!props.title) return
         fetchData(controller.signal)
         return () => controller.abort()
-    }, [props.title])
+    }, [])
 
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Card, Col, Row, Select, Switch } from 'antd'
+import { useAuthUser } from '../../../shared/contexts/AuthUser';
 
 import { GET, PUT } from '../../../shared/utils/fetch'
 
@@ -49,6 +50,7 @@ function Roles({ selectedRoleId, setSelectedRoleId }: { selectedRoleId?: string;
 
 function PermissionLists({ selectedRoleId }: { selectedRoleId?: string }) {
     const [loading, setLoading] = useState(true)
+    const { fetchUserData } = useAuthUser()
     const [permissions, setDataSource] = useState<TPermissions | undefined>()
     const [roles, setRoles] = useState<TRoles | undefined>(undefined);
     const permissionByRoles = new Map(roles?.permissions?.map((p) => [p.id, p]))
@@ -101,6 +103,7 @@ function PermissionLists({ selectedRoleId }: { selectedRoleId?: string }) {
         } finally {
             setLoading(false)
             fetchRoles(selectedRoleId!)
+            fetchUserData(undefined)
         }
     }
 

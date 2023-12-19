@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Input, Select, Row, Col, Space, Switch, Modal, Form } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { useAuthUser } from '../../../shared/contexts/AuthUser';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { Table, ButtonActions, Button } from '../../components';
 
@@ -8,18 +10,26 @@ import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { FormItemSystem } from './Systems';
 
 export default function Equipments() {
+    const { mapPermission } = useAuthUser()
+    const navigate = useNavigate()
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [isModalShow, setIsModalShow] = useState(false);
     const [selectedData, setSelectedData] = useState<TEquipment | undefined>(undefined);
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TEquipment[]>([])
+    const hasEquipmentsLocationSettings = mapPermission.has('Equipments Management - view list')
 
     useEffect(() => {
         const controller = new AbortController();
         fetchData({ signal: controller.signal, search, page: tableParams?.pagination?.current, limit: tableParams?.pagination?.pageSize })
         return () => controller.abort()
     }, [search])
+
+    if (!hasEquipmentsLocationSettings) {
+        navigate(-1)
+        return null
+    }
 
     async function fetchData(args?: ApiParams) {
         setLoading(true)

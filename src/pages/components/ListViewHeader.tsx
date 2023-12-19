@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 import { Col, Container, Row, Form } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
+import { useAuthUser } from "../../shared/contexts/AuthUser"
 import dayjs from 'dayjs'
 import useWindowSize from "../../shared/hooks/useWindowResize"
 import { Button } from "."
 import axios from "axios"
 
 import { GET } from '../../shared/utils/fetch'
-import { useAuthToken } from "../../shared/contexts/AuthToken"
 
 type Props = Partial<ListViewColEndProps> & {
     data?: null
@@ -17,7 +17,7 @@ type Props = Partial<ListViewColEndProps> & {
 
 export default function ListViewHeader(props: Props) {
     const [equipment, setequipment] = useState<TEquipment | undefined>(undefined);
-    const { token } = useAuthToken()
+    const { token } = useAuthUser()
     useEffect(() => {
         const controller = new AbortController();
         (async () => {
