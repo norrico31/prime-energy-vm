@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Card, Col, Row, Select, Switch } from 'antd'
+import { useNavigate } from 'react-router-dom';
 import { useAuthUser } from '../../../shared/contexts/AuthUser';
 
 import { GET, PUT } from '../../../shared/utils/fetch'
@@ -49,11 +50,13 @@ function Roles({ selectedRoleId, setSelectedRoleId }: { selectedRoleId?: string;
 }
 
 function PermissionLists({ selectedRoleId }: { selectedRoleId?: string }) {
+    const { fetchUserData, mapPermission } = useAuthUser()
+    const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
-    const { fetchUserData } = useAuthUser()
     const [permissions, setDataSource] = useState<TPermissions | undefined>()
     const [roles, setRoles] = useState<TRoles | undefined>(undefined);
     const permissionByRoles = new Map(roles?.permissions?.map((p) => [p.id, p]))
+
 
     useEffect(() => {
         const controller = new AbortController();
@@ -65,6 +68,11 @@ function PermissionLists({ selectedRoleId }: { selectedRoleId?: string }) {
         if (!selectedRoleId) return
         fetchRoles(selectedRoleId)
     }, [selectedRoleId])
+
+    if (!loading && !mapPermission.has('Permissions Management - view list')) {
+        navigate(-1)
+        return null
+    }
 
     async function fetchPermissions(args?: ApiParams) {
         setLoading(true)

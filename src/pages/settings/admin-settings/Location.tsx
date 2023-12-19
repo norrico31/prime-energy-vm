@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react'
 import { Form as AntDForm, Input, Space, Col, Row, Modal } from 'antd'
+import { useNavigate } from 'react-router-dom'
+import { useAuthUser } from '../../../shared/contexts/AuthUser'
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch'
 import { ButtonActions, Button, Table } from '../../components'
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 
 export default function Location() {
+    const { mapPermission } = useAuthUser()
+    const navigate = useNavigate()
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [isModalShow, setIsModalShow] = useState(false);
     const [selectedData, setSelectedData] = useState<TLocation | undefined>(undefined);
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TLocation[]>([])
+    const hasSitesAdminSettings = mapPermission.has('Sites Management - view list')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -41,6 +46,12 @@ export default function Location() {
             setLoading(false)
         }
     }
+
+    if (!loading && !hasSitesAdminSettings) {
+        navigate(-1)
+        return null
+    }
+
     const tableChange = (pagination: TablePaginationConfig) => fetchData({ page: pagination?.current, search, limit: pagination.pageSize! })
 
     const onCancel = () => {

@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useAuthUser } from '../../../shared/contexts/AuthUser';
 import { Row, Col, Form, Modal, Input, Space, Select, Switch } from 'antd'
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { Table, ButtonActions, Button } from '../../components';
@@ -7,13 +9,16 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 
-export default function TUsers() {
+export default function Users() {
+    const { mapPermission } = useAuthUser()
+    const navigate = useNavigate()
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [isModalShow, setIsModalShow] = useState(false);
     const [selectedData, setSelectedData] = useState<TUser | undefined>(undefined);
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TUser[]>([])
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
+    const hasUsersAdminSettings = mapPermission.has('Users Management - view list')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -42,6 +47,11 @@ export default function TUsers() {
         } finally {
             setLoading(false)
         }
+    }
+
+    if (!loading && !hasUsersAdminSettings) {
+        navigate(-1)
+        return null
     }
 
     const tableChange = (pagination: TablePaginationConfig) => fetchData({ page: pagination?.current, search, limit: pagination.pageSize! })
