@@ -11,7 +11,7 @@ import { FaUser } from "react-icons/fa";
 import Header from './Header';
 import VMLogo from '../../../shared/assets/logo_horizontal.svg'
 import Logo from '../../../shared/assets/logo.png'
-import { useAuthUser } from '../../../shared/contexts/AuthUser';
+import { useAuthUser } from '../../../shared/contexts/AuthUser'
 
 const { Sider, Content } = Layout;
 
@@ -44,7 +44,6 @@ const App: React.FC = () => {
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            {/* SIDEBAR */}
             <Sider trigger={null} collapsible collapsed={collapsed} width={280} breakpoint='md' collapsedWidth={collapsedWidth} onBreakpoint={onBreakpoint}>
                 <div style={{ height: 64, padding: '.3rem', background: '#fff', display: 'grid', placeItems: 'center' }}>
                     {collapsed ?
@@ -108,7 +107,6 @@ const MenuContainer = styled(AntdMenu)`
     background-color: #1e9aff;
     color: #fff;
 
-    /* .ant-menu-item:hover, */
     .ant-menu-item-selected,
     .ant-menu-item.ant-menu-item-active {
         border-radius: 0;
@@ -118,9 +116,6 @@ const MenuContainer = styled(AntdMenu)`
     .menu-item-icon {
         color: #00AEEF;
     }
-    /* .ant-menu.ant-menu-sub.ant-menu-inline {
-        background: #9B3423;
-    } */
 `
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -143,7 +138,6 @@ function getItemLinks(
 const renderLinks = (permissions: Map<string, TPermission>) => {
     const hasSystemsLocationSettings = permissions.has('Systems Management - view list')
     const hasEquipmentsLocationSettings = permissions.has('Equipments Management - view list')
-
     const hasAvailabilitySystemSettings = permissions.has('Availability Management - view list')
     const hasIntegritySystemSettings = permissions.has('Integrity Management - view list')
     const hasStatusSystemSettings = permissions.has('Status Management - view list')
@@ -151,8 +145,9 @@ const renderLinks = (permissions: Map<string, TPermission>) => {
     const hasSitesAdminSettings = permissions.has('Sites Management - view list')
     const hasUsersAdminSettings = permissions.has('Users Management - view list')
     const hasRolesAdminSettings = permissions.has('Roles Management - view list')
-    const hasPermissionsAdminSettings = permissions.has('Permissions Management - option')
+    const hasPermissionsAdminSettings = permissions.has('Permissions Management - view list')
     const hasAuditAdminSettings = permissions.has('Audit Management - view list')
+
     return [
         getItemLinks(
             <Link className={`text-decoration-none`} to='/dashboard'>

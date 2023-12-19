@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Row, Col } from 'antd'
+import { useAuthUser } from '../../shared/contexts/AuthUser'
 import { Button, DataLists } from '../components'
 import { GET } from '../../shared/utils/fetch'
-import { useAuthUser } from '../../shared/contexts/AuthUser'
 
 type Props = {
     title: string
@@ -23,6 +23,7 @@ export default function Lists(props: Props) {
     const { pathname } = useLocation()
     const navigate = useNavigate()
     const { mapPermission } = useAuthUser()
+    const hasUserCreatePermission = mapPermission.has('Transactions Management - create')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -42,7 +43,6 @@ export default function Lists(props: Props) {
             setLoading(false)
         }
     }
-    const hasUserCreatePermission = mapPermission.has('Transactions Management - create')
     return (
         <>
             {!pathname.includes('dashboard') && (

@@ -5,17 +5,17 @@ import { AiOutlineEdit, AiOutlineDownload, AiOutlineLock } from 'react-icons/ai'
 
 export default function ButtonActions({ loading, editData, viewData, deleteData, download, disabled, dataTitle, dataDescription }: ButtonActionProps) {
     return <Space>
-        {viewData && (
+        {typeof viewData === 'function' ? (
             <Button variant="info" loading={loading} title='View' onClick={viewData}>
                 <BsEye />
             </Button>
-        )}
-        {editData && (
+        ) : null}
+        {typeof editData === 'function' ? (
             <Button variant="primary" loading={loading} title='Edit' onClick={editData}>
                 <AiOutlineEdit />
             </Button>
-        )}
-        {deleteData && (
+        ) : null}
+        {typeof deleteData === 'function' ? (
             <Popconfirm
                 title={`Delete the ${dataTitle?.toLocaleUpperCase()}`}
                 description={`Are you sure to delete this ${dataDescription}?`}
@@ -27,16 +27,16 @@ export default function ButtonActions({ loading, editData, viewData, deleteData,
                     <BsTrash />
                 </Button>
             </Popconfirm>
-        )}
-        {download && (
+        ) : null}
+        {typeof download === 'function' ? (
             <Button variant="success" loading={loading} title='Download' onClick={download}>
                 <AiOutlineDownload />
             </Button>
-        )}
-        {disabled && (
+        ) : null}
+        {typeof disabled === 'function' ? (
             <Button variant="danger" loading={loading} title='Disabled' onClick={disabled}>
                 <AiOutlineLock />
             </Button>
-        )}
+        ) : null}
     </Space>
 }

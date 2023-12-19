@@ -103,12 +103,12 @@ type CardItem = {
 }
 type ButtonActionProps = {
     loading: boolean
-    editData?: () => void
-    viewData?: () => void
-    download?: () => void
-    disabled?: () => void
+    editData?: boolean | (() => void);
+    viewData?: boolean | (() => void);
+    download?: boolean | (() => void);
+    disabled?: boolean | (() => void);
+    deleteData?: boolean | (() => void);
 } & Partial<{
-    deleteData: () => void
     dataTitle: string
     dataDescription: string
 }>

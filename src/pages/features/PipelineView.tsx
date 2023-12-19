@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Row, Skeleton } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useAuthUser } from '../../shared/contexts/AuthUser'
 import { Dayjs } from 'dayjs'
 import { Table, ListViewHeader } from '../components'
 import { GET, DELETE } from '../../shared/utils/fetch'
@@ -9,8 +10,12 @@ import { renderColumns } from './OgpView'
 export default function PipelinesView() {
     const { equipmentId } = useParams()
     const navigate = useNavigate()
+    const { mapPermission } = useAuthUser()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TTransaction<Dayjs>[]>([])
+
+    const hasUserEdit = mapPermission.has('Transactions Management - edit')
+    const hasUserDelete = mapPermission.has('Transactions Management - delete')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -33,7 +38,8 @@ export default function PipelinesView() {
 
     const deleteData = (id: string) => DELETE('/pipelines/' + id).finally((fetchData))
     const editNavigate = (id: string) => navigate(`/pipelines/${equipmentId}/edit/${id}`)
-    const columns = renderColumns({ loading, deleteData, navigate: editNavigate })
+
+    const columns = renderColumns({ loading, deleteData, navigate: editNavigate, hasUserDelete, hasUserEdit })
 
     return loading ? <Skeleton /> : (
         <>

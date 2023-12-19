@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'antd';
+import { useAuthUser } from '../shared/contexts/AuthUser';
 import { GET } from '../shared/utils/fetch'
 import { DataLists } from './components';
 
 export default function OwnerDashboard() {
+    const { mapPermission } = useAuthUser()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TSystems[]>([])
+    const hasUserCreatePermission = mapPermission.has('Transactions Management - create')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -34,7 +37,7 @@ export default function OwnerDashboard() {
                 </Col>
             </Row>
             <Row className='card-list mt-3'>
-                <DataLists dataList={dataSource} to='/owner-dashboard' loading={loading} />
+                <DataLists dataList={dataSource} to='/owner-dashboard' loading={loading} hasUserCreate={hasUserCreatePermission} />
             </Row>
         </>
     )

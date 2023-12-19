@@ -11,7 +11,7 @@ function NestedCardData(props: TEquipment & { to: string; hasUserCreate?: boolea
             <Link to={`#`} className='text-decoration-none text-color-gray'>
                 <div className='card-head-title'>
                     {/* <OverlayTrigger key='create' offset={[0, 10]} overlay={<Tooltip id='create' className='position-fixed'>Create</Tooltip>} trigger={['hover', 'focus']}> */}
-                    <div className="d-flex card-head-title-ai gap-4" onClick={() => props?.hasUserCreate ? navigate(to + '/form') : undefined} title='Create' style={{ cursor: !props?.hasUserCreate ? 'not-allowed' : 'initial' }}>
+                    <div className="d-flex card-head-title-ai gap-4" onClick={() => props?.hasUserCreate ? navigate(to + '/form') : undefined} title='Create' style={{ cursor: !props?.hasUserCreate ? 'not-allowed' : 'cursor' }}>
                         <div className={`circle avail ${props.extra?.A.toLowerCase()}`} />
                         <div className={`circle avail ${props.extra?.I.toLowerCase()}`} />
                     </div>

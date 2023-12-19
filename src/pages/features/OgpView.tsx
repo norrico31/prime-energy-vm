@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Space, Row, Tag, Skeleton } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useAuthUser } from '../../shared/contexts/AuthUser'
 import { ColumnsType } from 'antd/es/table'
 import dayjs, { Dayjs } from 'dayjs'
 import { Table, ButtonActions, ListViewHeader } from '../components'
@@ -8,9 +9,13 @@ import { GET, DELETE } from '../../shared/utils/fetch'
 
 export default function OgpView() {
     const { equipmentId } = useParams()
+    const { mapPermission } = useAuthUser()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TTransaction<Dayjs>[]>([])
+
+    const hasUserEdit = mapPermission.has('Transactions Management - edit')
+    const hasUserDelete = mapPermission.has('Transactions Management - delete')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -34,7 +39,7 @@ export default function OgpView() {
     const deleteData = (id: string) => DELETE('/ogp/' + id).finally((fetchData))
     const editNavigate = (id: string) => navigate(`/ogp/${equipmentId}/edit/${id}`)
 
-    const columns = renderColumns({ loading, deleteData, navigate: editNavigate })
+    const columns = renderColumns({ loading, deleteData, navigate: editNavigate, hasUserDelete, hasUserEdit })
 
     return loading ? <Skeleton /> : (
         <>
@@ -50,7 +55,7 @@ export default function OgpView() {
     )
 }
 
-export function renderColumns({ loading, navigate, deleteData }: { loading: boolean; navigate: (id: string) => void; deleteData: (id: string) => Promise<unknown> }) {
+export function renderColumns({ loading, navigate, deleteData, hasUserEdit, hasUserDelete }: { loading: boolean; navigate: (id: string) => void; deleteData: (id: string) => Promise<unknown>; hasUserEdit?: boolean; hasUserDelete?: boolean }) {
     const columns: ColumnsType<TTransaction<Dayjs>> = [
         {
             title: 'Ref No.',
@@ -91,9 +96,7 @@ export function renderColumns({ loading, navigate, deleteData }: { loading: bool
             title: 'Threat Classification',
             dataIndex: 'threat_classification',
             key: 'threat_classification',
-            render: (_, rec) => {
-                return (rec.is_longterm === '1' ? 'Long' : 'Short') + ' Term'
-            }
+            render: (_, rec) => (rec.is_longterm === '1' ? 'Long' : 'Short') + ' Term'
             // width: 200,
         },
         {
@@ -110,7 +113,7 @@ export function renderColumns({ loading, navigate, deleteData }: { loading: bool
             render: (_, rec) => rec?.status?.name
             // width: 200,
         },
-        {
+        (hasUserDelete || hasUserEdit ? {
             title: 'Action',
             key: 'action',
             align: 'center',
@@ -119,14 +122,14 @@ export function renderColumns({ loading, navigate, deleteData }: { loading: bool
                     <div></div>
                     <ButtonActions
                         loading={loading}
-                        editData={() => navigate(record.id)}
-                        deleteData={() => deleteData(record?.id)}
-                        dataTitle={record.name}
-                    // dataDescription={record.!}
+                        editData={hasUserEdit ? () => navigate(record.id) : false}
+                        deleteData={hasUserDelete ? () => deleteData(record?.id) : false}
+                        dataTitle={record?.name ?? record.equipment?.name}
+                        dataDescription={record?.risk_description}
                     />
                 </Space>
             ),
-        },
+        } : {}),
     ]
     return columns
 }

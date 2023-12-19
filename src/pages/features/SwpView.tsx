@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Row, } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useAuthUser } from '../../shared/contexts/AuthUser'
 import { Dayjs } from 'dayjs'
 import { ListViewHeader, Table } from '../components'
 import { renderColumns } from './OgpView'
@@ -9,8 +10,11 @@ import { GET, DELETE } from '../../shared/utils/fetch'
 export default function SwpView() {
     const { equipmentId } = useParams()
     const navigate = useNavigate()
+    const { mapPermission } = useAuthUser()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TTransaction<Dayjs>[]>([])
+    const hasUserEdit = mapPermission.has('Transactions Management - edit')
+    const hasUserDelete = mapPermission.has('Transactions Management - delete')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -34,7 +38,7 @@ export default function SwpView() {
     const deleteData = (id: string) => DELETE('/swp/' + id).finally((fetchData))
     const editNavigate = (id: string) => navigate(`/swp/${equipmentId}/edit/${id}`)
 
-    const columns = renderColumns({ loading, deleteData, navigate: editNavigate })
+    const columns = renderColumns({ loading, deleteData, navigate: editNavigate, hasUserEdit, hasUserDelete })
 
     return <>
         <Row className='mb-4'>
