@@ -2,29 +2,7 @@ import { Tabs as AntDTabs } from 'antd'
 import { useLocation, useNavigate, Outlet } from 'react-router-dom'
 import { Row } from 'react-bootstrap'
 import useWindowSize from '../../../shared/hooks/useWindowResize'
-
-const adminTabs = [
-    {
-        key: '/location',
-        label: 'Locations',
-    },
-    {
-        key: '/users',
-        label: 'Users Management',
-    },
-    {
-        key: '/roles',
-        label: 'Roles',
-    },
-    {
-        key: '/permission',
-        label: 'Permissions',
-    },
-    {
-        key: '/audit-logs',
-        label: 'Audit Logs',
-    },
-]
+import { useAuthUser } from '../../../shared/contexts/AuthUser'
 
 export default function AdminSettings() {
     return (
@@ -42,10 +20,40 @@ function Tabs() {
     const navigate = useNavigate()
     pathname = pathname?.split('/')[2]
     const onChange = (k: string) => navigate(`/admin-settings` + k)
-    return <ResponsiveTabs pathname={pathname} items={adminTabs} onChange={onChange} />
+
+    const { mapPermission } = useAuthUser()
+    const hasSitesAdminSettings = mapPermission.has('Sites Management - view list')
+    const hasUsersAdminSettings = mapPermission.has('Users Management - view list')
+    const hasRolesAdminSettings = mapPermission.has('Roles Management - view list')
+    const hasPermissionsAdminSettings = mapPermission.has('Permissions Management - view list')
+    const hasAuditAdminSettings = mapPermission.has('Audit Management - view list')
+    const items = [
+        ...(hasSitesAdminSettings ? [{
+            key: '/location',
+            label: 'Locations',
+        }] : []),
+        ...(hasUsersAdminSettings ? [{
+            key: '/users',
+            label: 'Users Management',
+        }] : []),
+        ...(hasRolesAdminSettings ? [{
+            key: '/roles',
+            label: 'Roles',
+        }] : []),
+        ...(hasPermissionsAdminSettings ? [{
+            key: '/permission',
+            label: 'Permissions',
+        }] : []),
+        ...(hasAuditAdminSettings ? [{
+            key: '/audit-logs',
+            label: 'Audit Logs',
+        }] : []),
+    ]
+
+    return <ResponsiveTabs pathname={pathname} onChange={onChange} items={items} />
 }
 
-export function ResponsiveTabs({ pathname, items, onChange }: { pathname: string; items: typeof adminTabs; onChange: (k: string) => void }) {
+export function ResponsiveTabs({ pathname, items, onChange }: { pathname: string; onChange: (k: string) => void; items: { key: string; label: string }[] }) {
     const { width } = useWindowSize()
     return <AntDTabs
         destroyInactiveTabPane

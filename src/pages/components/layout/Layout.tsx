@@ -148,12 +148,11 @@ const renderLinks = (permissions: Map<string, TPermission>) => {
     const hasIntegritySystemSettings = permissions.has('Integrity Management - view list')
     const hasStatusSystemSettings = permissions.has('Status Management - view list')
 
-    // Locations (Admin Settings missing)
+    const hasSitesAdminSettings = permissions.has('Sites Management - view list')
     const hasUsersAdminSettings = permissions.has('Users Management - view list')
     const hasRolesAdminSettings = permissions.has('Roles Management - view list')
     const hasPermissionsAdminSettings = permissions.has('Permissions Management - option')
     const hasAuditAdminSettings = permissions.has('Audit Management - view list')
-    console.log(permissions.keys())
     return [
         getItemLinks(
             <Link className={`text-decoration-none`} to='/dashboard'>
@@ -253,10 +252,8 @@ const renderLinks = (permissions: Map<string, TPermission>) => {
             '/admin-settings',
             <MdAdminPanelSettings />,
             undefined,
-            hasUsersAdminSettings ||
-            hasRolesAdminSettings ||
-            hasPermissionsAdminSettings ||
-            hasAuditAdminSettings
+            hasUsersAdminSettings || hasRolesAdminSettings ||
+            hasPermissionsAdminSettings || hasAuditAdminSettings || hasSitesAdminSettings
         ),
         getItemLinks(
             <Link className={`text-decoration-none`} to='/profile'>
