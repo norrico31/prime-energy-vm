@@ -26,7 +26,7 @@ export default function Equipments() {
         return () => controller.abort()
     }, [search])
 
-    if (!hasEquipmentsLocationSettings) {
+    if (!loading && !hasEquipmentsLocationSettings) {
         navigate(-1)
         return null
     }

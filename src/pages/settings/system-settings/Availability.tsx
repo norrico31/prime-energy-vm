@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { Input, Row, Col, Space, Modal, Form } from 'antd';
+import { useAuthUser } from '../../../shared/contexts/AuthUser';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { useDebounceSearch } from '../../../shared/hooks/useDebounceSearch';
 import { Table, ButtonActions, Button } from '../../components';
@@ -7,12 +9,15 @@ import { Table, ButtonActions, Button } from '../../components';
 import { GET, POST, PUT, DELETE } from '../../../shared/utils/fetch'
 
 export default function Availability() {
+    const { mapPermission } = useAuthUser()
+    const navigate = useNavigate()
     const [search, searchVal, inputChange] = useDebounceSearch()
     const [isModalShow, setIsModalShow] = useState(false);
     const [selectedData, setSelectedData] = useState<TAvailability | undefined>(undefined);
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TAvailability[]>([])
+    const hasAvailabilitySystemSettings = mapPermission.has('Availability Management - view list')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -41,6 +46,10 @@ export default function Availability() {
         } finally {
             setLoading(false)
         }
+    }
+    if (!loading && !hasAvailabilitySystemSettings) {
+        navigate(-1)
+        return null
     }
 
     const tableChange = (pagination: TablePaginationConfig) => fetchData({ page: pagination?.current, search, limit: pagination.pageSize! })
