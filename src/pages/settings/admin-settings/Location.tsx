@@ -17,6 +17,9 @@ export default function Location() {
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TLocation[]>([])
     const hasSitesAdminSettings = mapPermission.has('Sites Management - view list')
+    const hasUserCreate = mapPermission.has('Sites Management - create')
+    const hasUserEdit = mapPermission.has('Sites Management - edit')
+    const hasUserDelete = mapPermission.has('Sites Management - delete')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -78,11 +81,11 @@ export default function Location() {
             align: 'center',
             render: (_, record) => <ButtonActions
                 loading={loading}
-                editData={() => {
+                editData={hasUserEdit ? () => {
                     setIsModalShow(true)
                     setSelectedData(record)
-                }}
-                deleteData={() => DELETE('/sites/' + record.id).finally((fetchData))}
+                } : false}
+                deleteData={hasUserDelete ? () => DELETE('/sites/' + record.id).finally((fetchData)) : false}
                 dataTitle={record.name}
                 dataDescription={record.description!}
             />,
@@ -97,7 +100,9 @@ export default function Location() {
                     <Input.Search type="text" placeholder="Search..." value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center'>
-                    <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
+                    {hasUserCreate && (
+                        <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
+                    )}
                 </Col>
             </Row>
             <Table<TLocation> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger tableParams={tableParams} onChange={tableChange} />

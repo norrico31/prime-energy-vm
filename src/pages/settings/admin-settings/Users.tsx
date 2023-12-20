@@ -19,6 +19,9 @@ export default function Users() {
     const [dataSource, setDataSource] = useState<TUser[]>([])
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const hasUsersAdminSettings = mapPermission.has('Users Management - view list')
+    const hasUserCreate = mapPermission.has('Users Management - create')
+    const hasUserEdit = mapPermission.has('Users Management - edit')
+    const hasUserDelete = mapPermission.has('Users Management - delete')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -84,30 +87,15 @@ export default function Users() {
             align: 'center',
             render: (_, record) => <ButtonActions
                 loading={loading}
-                editData={() => {
+                editData={hasUserEdit ? () => {
                     setIsModalShow(true)
                     setSelectedData(record)
-                }}
-                deleteData={() => DELETE('/users/' + record.id).finally((fetchData))}
+                } : false}
+                deleteData={hasUserDelete ? () => DELETE('/users/' + record.id).finally((fetchData)) : false}
                 dataTitle={record.full_name}
                 dataDescription={record.email!}
             />,
         },
-        // {
-        //     title: 'Activation',
-        //     key: 'activation',
-        //     align: 'center',
-        //     render: (_, record) => <ButtonActions
-        //         loading={loading}
-        //         editData={() => {
-        //             setIsModalShow(true)
-        //             setSelectedData(record)
-        //         }}
-        //         deleteData={() => DELETE('/users/' + record.id).finally((fetchData))}
-        //         dataTitle={record.full_name}
-        //         dataDescription={record.email!}
-        //     />,
-        // },
     ]
 
     return (
@@ -118,7 +106,9 @@ export default function Users() {
                     <Input.Search type="text" placeholder="Search..." value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center'>
-                    <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
+                    {hasUserCreate && (
+                        <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
+                    )}
                 </Col>
             </Row>
             <Table<TUser> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger tableParams={tableParams} onChange={tableChange} />
@@ -133,7 +123,6 @@ type ModalProps = {
     fetchData(signal?: ApiParams): Promise<unknown>
     selectedData?: TUser
 }
-
 
 type Payload = {
     name: string

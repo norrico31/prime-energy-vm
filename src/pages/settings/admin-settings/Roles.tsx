@@ -17,6 +17,9 @@ export default function Roles() {
     const [dataSource, setDataSource] = useState<TRoles[]>([])
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const hasRolesAdminSettings = mapPermission.has('Roles Management - view list')
+    const hasUserCreate = mapPermission.has('Roles Management - create')
+    const hasUserEdit = mapPermission.has('Roles Management - edit')
+    const hasUserDelete = mapPermission.has('Roles Management - delete')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -78,11 +81,11 @@ export default function Roles() {
             align: 'center',
             render: (_, record) => <ButtonActions
                 loading={loading}
-                editData={() => {
+                editData={hasUserEdit ? () => {
                     setIsModalShow(true)
                     setSelectedData(record)
-                }}
-                deleteData={() => DELETE('/roles/' + record.id).finally((fetchData))}
+                } : false}
+                deleteData={hasUserDelete ? () => DELETE('/roles/' + record.id).finally((fetchData)) : false}
                 dataTitle={record.name}
                 dataDescription={record.description!}
             />,
@@ -97,7 +100,9 @@ export default function Roles() {
                     <Input.Search type="text" placeholder="Search..." value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center'>
-                    <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
+                    {hasUserCreate && (
+                        <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
+                    )}
                 </Col>
             </Row>
             <Table<TRoles> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger tableParams={tableParams} onChange={tableChange} />
