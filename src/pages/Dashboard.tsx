@@ -1,6 +1,7 @@
 import { Row, Col } from "react-bootstrap";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Button } from './components'
+import { useAuthUser } from "../shared/contexts/AuthUser";
 
 export default function Dashboard() {
     return <>
@@ -10,10 +11,12 @@ export default function Dashboard() {
 }
 
 function Main() {
+    const { mapPermission } = useAuthUser()
     let { pathname } = useLocation()
     pathname = pathname.includes('critical') ? 'critical-equipment' : pathname
     const navigate = useNavigate()
     const path = pathname === 'critical-equipment' ? pathname : pathname.includes('swp') ? 'swp' : pathname.includes('ogp') ? 'ogp' : pathname.includes('pipelines') ? 'pipelines' : '';
+    const hasUserPreview = mapPermission.has('DownloadTransactionPreview Management - downloadTransactionPreview')
     return <>
         <Row className='justify-content-between gap-2 align-items-center'>
             <Col>
@@ -23,7 +26,9 @@ function Main() {
         </Row>
         <hr />
         <div className='text-end mb-4'>
-            <Button variant='primary' className='btn-print-report text-end' title={`Print Report - ${heading[shortenPathname(pathname)]}`} onClick={(() => navigate(`/${path}/print-report`))}>Print Report - {heading[shortenPathname(pathname)]}</Button>
+            {hasUserPreview && (
+                <Button variant='primary' className='btn-print-report text-end' title={`Print Report - ${heading[shortenPathname(pathname)]}`} onClick={(() => navigate(`/${path}/print-report`))}>Print Report - {heading[shortenPathname(pathname)]}</Button>
+            )}
         </div>
     </>
 }

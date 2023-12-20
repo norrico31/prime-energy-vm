@@ -14,10 +14,12 @@ type Props = Partial<ListViewColEndProps> & {
     equipmentId: string
 }
 
-
 export default function ListViewHeader(props: Props) {
     const [equipment, setequipment] = useState<TEquipment | undefined>(undefined);
-    const { token } = useAuthUser()
+    const { token, mapPermission } = useAuthUser()
+    const hasUserCreate = mapPermission.has('Transactions Management - create')
+    const hasUserDownload = mapPermission.has('DownloadTransactionEquipment Management - downloadTransactionEquipment')
+
     useEffect(() => {
         const controller = new AbortController();
         (async () => {
@@ -94,6 +96,8 @@ export default function ListViewHeader(props: Props) {
                 </Form.Group>
             </Col>
             <ListViewColEnd
+                hasUserCreate={hasUserCreate}
+                hasUserDownload={hasUserDownload}
                 handlePrint={exportTransaction}
                 handleCreate={props?.handleCreate ?? (() => null)}
             />
@@ -114,6 +118,8 @@ export default function ListViewHeader(props: Props) {
 type ListViewColEndProps = {
     handlePrint: () => void
     handleCreate: () => void
+    hasUserCreate: boolean
+    hasUserDownload: boolean
 }
 
 function ListViewColEnd(props: ListViewColEndProps) {
@@ -121,7 +127,11 @@ function ListViewColEnd(props: ListViewColEndProps) {
     const { width } = useWindowSize()
     return <Col xs={width > 768 ? 4 : 10} className={`d-flex justify-content-end  align-items-end ${width > 768 ? 'flex-column' : ''} gap-3`}>
         <Button variant='primary' onClick={() => navigate(-1)} className='w-50'>Close</Button>
-        <Button variant='primary' onClick={props.handlePrint} className='w-50'>Print</Button>
-        <Button variant='primary' onClick={props.handleCreate} className='w-50'>Add New</Button>
+        {props.hasUserDownload && (
+            <Button variant='primary' onClick={props.handlePrint} className='w-50'>Print</Button>
+        )}
+        {props.hasUserCreate && (
+            <Button variant='primary' onClick={props.handleCreate} className='w-50'>Add New</Button>
+        )}
     </Col>
 }

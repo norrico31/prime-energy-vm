@@ -1,11 +1,12 @@
-import { Row, Col, Skeleton } from 'antd'
-import { Button } from '../components'
-import { Table } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Row, Col, Skeleton } from 'antd'
+import { Table } from 'react-bootstrap'
+import { useAuthUser } from '../../shared/contexts/AuthUser'
+import { Button } from '../components'
 import dayjs from 'dayjs'
 import { GET } from '../../shared/utils/fetch'
 import axios from 'axios'
-import { useAuthToken } from '../../shared/contexts/AuthToken'
 
 type Props = {
     title: string
@@ -19,14 +20,23 @@ const obj: Record<string, string> = {
 }
 
 export default function PrintReport({ title }: Props) {
+    const { mapPermission, token } = useAuthUser()
     const [loading, setLoading] = useState(true)
+    const navigate = useNavigate()
     const [dataSource, setDataSource] = useState<TPrintReport[]>([])
-    const { token } = useAuthToken()
+    const hasUserPreview = mapPermission.has('DownloadTransactionPreview Management - downloadTransactionPreview')
+    const hasUserDownloadSite = mapPermission.has('DownloadTransactionSite Management - downloadTransactionSite')
+
     useEffect(() => {
         const controller = new AbortController();
         fetchData(controller.signal)
         return () => controller.abort()
     }, [title])
+
+    if (!loading && !hasUserPreview) {
+        navigate(-1)
+        return null
+    }
 
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)
@@ -67,7 +77,9 @@ export default function PrintReport({ title }: Props) {
             <hr />
             <Row justify='end'>
                 <Col>
-                    <Button variant='primary' onClick={exportPrintReport}>Export SWP Print Report</Button>
+                    {hasUserDownloadSite && (
+                        <Button variant='primary' onClick={exportPrintReport}>Export SWP Print Report</Button>
+                    )}
                 </Col>
             </Row>
             <div className='mt-3'>
