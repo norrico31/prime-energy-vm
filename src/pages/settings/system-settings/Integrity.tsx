@@ -18,6 +18,9 @@ export default function Integrity() {
     const [dataSource, setDataSource] = useState<TIntegrity[]>([])
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const hasIntegritySystemSettings = mapPermission.has('Integrity Management - view list')
+    const hasUserCreate = mapPermission.has('Integrity Management - create')
+    const hasUserEdit = mapPermission.has('Integrity Management - edit')
+    const hasUserDelete = mapPermission.has('Integrity Management - delete')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -78,11 +81,11 @@ export default function Integrity() {
                     <div></div>
                     <ButtonActions
                         loading={loading}
-                        editData={() => {
+                        editData={hasUserEdit ? () => {
                             setIsModalShow(true)
                             setSelectedData(record)
-                        }}
-                        deleteData={() => DELETE('/integrity/' + record.id).finally((fetchData))}
+                        } : false}
+                        deleteData={hasUserDelete ? () => DELETE('/integrity/' + record.id).finally((fetchData)) : false}
                         dataTitle={record.name}
                         dataDescription={record.description!}
                     />
@@ -104,7 +107,9 @@ export default function Integrity() {
                     <Input.Search type="text" placeholder="Search..." value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center'>
-                    <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
+                    {hasUserCreate && (
+                        <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
+                    )}
                 </Col>
             </Row>
             <Table<TIntegrity> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger tableParams={tableParams} onChange={tableChange} />
