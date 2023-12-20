@@ -19,6 +19,9 @@ export default function Systems() {
     const [dataSource, setDataSource] = useState<TSystems[]>([])
 
     const hasSystemsLocationSettings = mapPermission.has('Systems Management - view list')
+    const hasUserCreate = mapPermission.has('Systems Management - create')
+    const hasUserEdit = mapPermission.has('Systems Management - edit')
+    const hasUserDelete = mapPermission.has('Systems Management - delete')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -101,11 +104,11 @@ export default function Systems() {
                     <div></div>
                     <ButtonActions
                         loading={loading}
-                        editData={() => {
+                        editData={hasUserEdit ? () => {
                             setIsModalShow(true)
                             setSelectedData(record)
-                        }}
-                        deleteData={() => DELETE('/systems/' + record.id).finally((fetchData))}
+                        } : false}
+                        deleteData={hasUserDelete ? () => DELETE('/systems/' + record.id).finally((fetchData)) : false}
                         dataTitle={record.name}
                         dataDescription={record.name}
                     />
@@ -128,7 +131,9 @@ export default function Systems() {
                     <Input.Search type="text" placeholder="Search..." value={searchVal} onChange={inputChange} style={{ borderRadius: 0 }} />
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center'>
-                    <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
+                    {hasUserCreate && (
+                        <Button variant='success' title='Create' onClick={() => setIsModalShow(true)}>Create</Button>
+                    )}
                 </Col>
             </Row>
             <Table<TSystems> loading={loading} columns={columns} dataSource={dataSource} isSizeChanger tableParams={tableParams} onChange={tableChange} />
