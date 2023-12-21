@@ -17,10 +17,10 @@ export default function Status() {
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TStatus[]>([])
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
-    const hasStatusSystemSettings = mapPermission.has('Statuses Management - view list')
-    const hasUserCreate = mapPermission.has('Statuses Management - create')
-    const hasUserEdit = mapPermission.has('Statuses Management - edit')
-    const hasUserDelete = mapPermission.has('Statuses Management - delete')
+    const hasStatusSystemSettings = mapPermission.has('Statuses Management - Allow View List')
+    const hasUserCreate = mapPermission.has('Statuses Management - Allow Create')
+    const hasUserEdit = mapPermission.has('Statuses Management - Allow Edit')
+    const hasUserDelete = mapPermission.has('Statuses Management - Allow Delete')
 
     useEffect(() => {
         const controller = new AbortController();

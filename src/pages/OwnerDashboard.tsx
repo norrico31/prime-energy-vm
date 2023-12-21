@@ -8,7 +8,7 @@ export default function OwnerDashboard() {
     const { mapPermission } = useAuthUser()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TSystems[]>([])
-    const hasUserCreatePermission = mapPermission.has('Transactions Management - create')
+    const hasUserCreatePermission = mapPermission.has('Transactions Management - Allow Create')
 
     useEffect(() => {
         const controller = new AbortController();

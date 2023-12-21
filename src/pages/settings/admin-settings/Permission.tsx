@@ -69,7 +69,7 @@ function PermissionLists({ selectedRoleId }: { selectedRoleId?: string }) {
         fetchRoles(selectedRoleId)
     }, [selectedRoleId])
 
-    if (!loading && !mapPermission.has('Permissions Management - view list')) {
+    if (!loading && !mapPermission.has('Permissions Management - Allow View List')) {
         navigate(-1)
         return null
     }

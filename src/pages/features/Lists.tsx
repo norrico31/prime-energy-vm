@@ -23,14 +23,13 @@ export default function Lists(props: Props) {
     const { pathname } = useLocation()
     const navigate = useNavigate()
     const { mapPermission } = useAuthUser()
-    const hasUserCreatePermission = mapPermission.has('Transactions Management - create')
+    const hasUserCreatePermission = mapPermission.has('Transactions Management - Allow Create')
 
     useEffect(() => {
         const controller = new AbortController();
-        // if (!props.title) return
         fetchData(controller.signal)
         return () => controller.abort()
-    }, [])
+    }, [props.title])
 
     async function fetchData(signal?: AbortSignal, params?: ApiParams) {
         setLoading(true)

@@ -17,10 +17,10 @@ export default function Integrity() {
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TIntegrity[]>([])
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
-    const hasIntegritySystemSettings = mapPermission.has('Integrity Management - view list')
-    const hasUserCreate = mapPermission.has('Integrity Management - create')
-    const hasUserEdit = mapPermission.has('Integrity Management - edit')
-    const hasUserDelete = mapPermission.has('Integrity Management - delete')
+    const hasIntegritySystemSettings = mapPermission.has('Integrity Management - Allow View List')
+    const hasUserCreate = mapPermission.has('Integrity Management - Allow Create')
+    const hasUserEdit = mapPermission.has('Integrity Management - Allow Edit')
+    const hasUserDelete = mapPermission.has('Integrity Management - Allow Delete')
 
     useEffect(() => {
         const controller = new AbortController();

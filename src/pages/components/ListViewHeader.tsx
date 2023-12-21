@@ -17,7 +17,7 @@ type Props = Partial<ListViewColEndProps> & {
 export default function ListViewHeader(props: Props) {
     const [equipment, setequipment] = useState<TEquipment | undefined>(undefined);
     const { token, mapPermission } = useAuthUser()
-    const hasUserCreate = mapPermission.has('Transactions Management - create')
+    const hasUserCreate = mapPermission.has('Transactions Management - Allow Create')
     const hasUserDownload = mapPermission.has('DownloadTransactionEquipment Management - downloadTransactionEquipment')
 
     useEffect(() => {

@@ -17,10 +17,10 @@ export default function Availability() {
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TAvailability[]>([])
-    const hasAvailabilitySystemSettings = mapPermission.has('Availability Management - view list')
-    const hasUserCreate = mapPermission.has('Availability Management - create')
-    const hasUserEdit = mapPermission.has('Availability Management - edit')
-    const hasUserDelete = mapPermission.has('Availability Management - delete')
+    const hasAvailabilitySystemSettings = mapPermission.has('Availability Management - Allow View List')
+    const hasUserCreate = mapPermission.has('Availability Management - Allow Create')
+    const hasUserEdit = mapPermission.has('Availability Management - Allow Edit')
+    const hasUserDelete = mapPermission.has('Availability Management - Allow Delete')
 
     useEffect(() => {
         const controller = new AbortController();

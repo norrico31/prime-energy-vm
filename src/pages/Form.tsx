@@ -9,7 +9,6 @@ import { Button, FileUpload, PageHeading } from './components'
 import axios from 'axios'
 import { GET } from '../shared/utils/fetch'
 import { firstLetterCapitalize } from '../shared/utils'
-import { useAuthToken } from '../shared/contexts/AuthToken'
 
 const { useForm } = Form
 
@@ -26,19 +25,17 @@ const initActionsState: Actions[] = [
 
 function Forms() {
     const params = useParams()
-    const { user, mapPermission } = useAuthUser()
-    const { token } = useAuthToken()
+    const { user, mapPermission, token } = useAuthUser()
     const navigate = useNavigate()
     const [form] = useForm()
     const [classification, setClassification] = useState<string>('0');
     const [url, setUrls] = useState<typeof initDataRowState>([]);
-    const [files, setFiles] = useState<Array<File>>([]);
+    const [files, setFiles] = useState<Array<TTransactionFile>>([]);
     const [actions, setActions] = useState<Actions[]>(initActionsState)
     const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(true);
     const isDisabledAddActionItmBtn = actions.map(({ id, ...restProps }) => Object.values(restProps)).flat().some((v) => v === '' || v === undefined)
-    const hasUserEdit = mapPermission.has('Transactions Management - edit')
-    // const hasUserCreate = mapPermission.has('Transactions Management - create')
+    const hasUserEdit = mapPermission.has('Transactions Management - Allow Edit')
 
     useEffect(() => {
         setLoading(true);
@@ -60,6 +57,7 @@ function Forms() {
                         equipment_tag: res.data?.equipment.name,
                         threat_owner: res?.data?.threat_owner?.id,
                     })
+                    setFiles(res?.data?.files ?? [])
                     setTitle(res?.data?.equipment?.name)
                     setUrls(res.data?.url)
                     setClassification(res?.data?.is_longterm)
@@ -92,7 +90,6 @@ function Forms() {
         return () => controller.abort()
     }, [form, user])
 
-
     const addRowActionItem = () => {
         setActions([...actions, { ...initActionsState[0], id: '' }])
     }
@@ -119,9 +116,13 @@ function Forms() {
         }
         if (files.length) {
             for (let i = 0; i < files.length; i++) {
-                const file = files[i]
-                formData.append(`files[${i}][file]`, file)
-                formData.append(`files[${i}][id]`, '')
+                const file = files[i] as unknown as TTransactionFile
+                if (file?.id) {
+                    formData.append(`files[${i}][id]`, file?.id as string)
+                } else {
+                    formData.append(`files[${i}][id]`, '')
+                }
+                formData.append(`files[${i}][file]`, file as unknown as Blob)
             }
         }
         if (url.length) {
@@ -135,16 +136,17 @@ function Forms() {
         if (actions.map(({ id: _, ...restProps }) => Object.values(restProps))[0].some((d) => d !== '' || d !== undefined)) {
             for (let i = 0; i < actions.length; i++) {
                 const action = actions[i]
+                formData.append(`actions[${i}][id]`, '')
                 formData.append(`actions[${i}][action_owner]`, action.action_owner + '')
                 formData.append(`actions[${i}][action_due_date]`, action.action_due_date + '')
                 formData.append(`actions[${i}][action_item]`, action.action_item)
             }
         }
-        if (params?.transactionId) formData.append('_method', 'PUT')
+        if (params?.transactionId && files.length) formData.append('_method', 'PUT')
         const id = params?.transactionId ? params?.transactionId : params?.equipmentId
         const payload = files.length ? formData : { ...objPayload, actions, url: url.map((u) => ({ ...u, id: params?.transactionId ? u.id : '' })) }
         try {
-            const res = params?.transactionId ? axios.put('https://vms.redcoresolutions.com/passthru/api/v1/transactions/' + id, payload as typeof payload, { headers: { 'Authorization': 'Bearer ' + token } }) : axios.post('https://vms.redcoresolutions.com/passthru/api/v1/transactions/', payload, { headers: { 'Authorization': 'Bearer ' + token } })
+            const res = (params?.transactionId && files.length) ? axios.post('https://vms.redcoresolutions.com/core/api/v1/transactions/' + id, payload as typeof payload, { headers: { 'Authorization': 'Bearer ' + token } }) : params?.transactionId && files.length ? axios.put('https://vms.redcoresolutions.com/core/api/v1/transactions/' + id, payload as typeof payload, { headers: { 'Authorization': 'Bearer ' + token } }) : axios.post('https://vms.redcoresolutions.com/core/api/v1/transactions/', payload, { headers: { 'Authorization': 'Bearer ' + token } })
             const data = await res
             navigate(-1)
             return data
@@ -358,8 +360,8 @@ function ActionThreatOwner({ value, onChange }: { value: string; onChange: (v: s
         return () => controller.abort()
     }, [])
 
-    return <Form.Item label='Threat Owner' style={{ marginBottom: 14 }}>
-        <Select placeholder='Select Threat Owner' optionFilterProp="children" showSearch allowClear style={{ height: 50 }} value={value} onChange={onChange}>
+    return <Form.Item label='Action Owner' style={{ marginBottom: 14 }}>
+        <Select placeholder='Select Action Owner' optionFilterProp="children" showSearch allowClear style={{ height: 50 }} value={value} onChange={onChange}>
             {statuses.map((stat) => (
                 <Select.Option value={stat.id} key={stat.id}>
                     {stat?.label}

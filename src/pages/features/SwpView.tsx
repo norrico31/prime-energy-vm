@@ -13,8 +13,8 @@ export default function SwpView() {
     const { mapPermission } = useAuthUser()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TTransaction<Dayjs>[]>([])
-    const hasUserEdit = mapPermission.has('Transactions Management - edit')
-    const hasUserDelete = mapPermission.has('Transactions Management - delete')
+    const hasUserEdit = mapPermission.has('Transactions Management - Allow Edit')
+    const hasUserDelete = mapPermission.has('Transactions Management - Allow Delete')
 
     useEffect(() => {
         const controller = new AbortController();

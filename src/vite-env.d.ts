@@ -242,6 +242,7 @@ type TTransaction<D> = {
     equipment: TEquipment
     id: string
     integrity: TIntegrity
+    files?: TTransactionFile[]
     is_longterm: string
     ref_no: string
     risk_description: string
@@ -252,6 +253,14 @@ type TTransaction<D> = {
     vulnerability_description: string | null
     vulnerability_title: string | null
 } & Common
+type TTransactionFile = {
+    file: string
+    file_path: string
+    file_type: string
+    name: string
+    type: string
+    id: string
+}
 type TTransactionUrls = {
     id: string; url: string; description: string
 }[]

@@ -22,11 +22,11 @@ function Tabs() {
     const onChange = (k: string) => navigate(`/admin-settings` + k)
 
     const { mapPermission } = useAuthUser()
-    const hasSitesAdminSettings = mapPermission.has('Sites Management - view list')
-    const hasUsersAdminSettings = mapPermission.has('Users Management - view list')
-    const hasRolesAdminSettings = mapPermission.has('Roles Management - view list')
-    const hasPermissionsAdminSettings = mapPermission.has('Permissions Management - view list')
-    const hasAuditAdminSettings = mapPermission.has('Audit Management - view list')
+    const hasSitesAdminSettings = mapPermission.has('Sites Management - Allow View List')
+    const hasUsersAdminSettings = mapPermission.has('Users Management - Allow View List')
+    const hasRolesAdminSettings = mapPermission.has('Roles Management - Allow View List')
+    const hasPermissionsAdminSettings = mapPermission.has('Permissions Management - Allow View List')
+    const hasAuditAdminSettings = mapPermission.has('Audit Management - Allow View List')
     const items = [
         ...(hasSitesAdminSettings ? [{
             key: '/location',

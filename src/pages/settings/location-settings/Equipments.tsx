@@ -18,10 +18,10 @@ export default function Equipments() {
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TEquipment[]>([])
-    const hasEquipmentsLocationSettings = mapPermission.has('Equipments Management - view list')
-    const hasUserCreate = mapPermission.has('Equipments Management - create')
-    const hasUserEdit = mapPermission.has('Equipments Management - edit')
-    const hasUserDelete = mapPermission.has('Equipments Management - delete')
+    const hasEquipmentsLocationSettings = mapPermission.has('Equipments Management - Allow View List')
+    const hasUserCreate = mapPermission.has('Equipments Management - Allow Create')
+    const hasUserEdit = mapPermission.has('Equipments Management - Allow Edit')
+    const hasUserDelete = mapPermission.has('Equipments Management - Allow Delete')
 
     useEffect(() => {
         const controller = new AbortController();

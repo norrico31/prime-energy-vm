@@ -5,8 +5,8 @@ import {
 } from "react-bootstrap";
 
 export interface FileUploadProps {
-    files: Array<File>;
-    setFiles: React.Dispatch<React.SetStateAction<File[]>>
+    files: Array<TTransactionFile>;
+    setFiles: React.Dispatch<React.SetStateAction<TTransactionFile[]>>
 }
 
 const FileUpload: React.FunctionComponent<FileUploadProps> = ({
@@ -20,12 +20,13 @@ const FileUpload: React.FunctionComponent<FileUploadProps> = ({
     };
 
     const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.currentTarget.files as FileList;
-        const newFiles: File[] = []
-        for (let i = 0; i < files.length; i++) {
-            newFiles.push(files[i]);
+        const filesFromUpload = e.currentTarget.files as unknown as TTransactionFile[];
+        const newFiles: TTransactionFile[] = []
+        for (let i = 0; i < filesFromUpload.length; i++) {
+            const file = filesFromUpload[i] as unknown as TTransactionFile
+            newFiles.push(file);
         }
-        setFiles(newFiles);
+        setFiles([...files, ...newFiles]);
         e.target.value = '';
     }
 
@@ -46,11 +47,9 @@ const FileUpload: React.FunctionComponent<FileUploadProps> = ({
                         return (
                             <tr key={i}>
                                 <td key={i + ":#"}>{i + 1}</td>
-                                <td>{item.name.slice(0, 40)}</td>
-                                <td>{item.type}</td>
-                                <td>
-                                    <Button variant='danger' title='Remove' onClick={() => handleDelete(i)}>Delete</Button>
-                                </td>
+                                <td>{item?.name.slice(0, 40) ?? item?.file.slice(0, 40)}</td>
+                                <td>{item?.type ?? item?.file_type}</td>
+                                <td><Button variant='danger' title='Remove' onClick={() => handleDelete(i)}>Delete</Button></td>
                             </tr>
                         );
                     })}

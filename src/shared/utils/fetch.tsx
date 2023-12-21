@@ -59,7 +59,6 @@ export { GET, POST, PUT, DELETE }
 async function crudApi<T>(reqPath: string, requestInit?: RequestInit, params?: TableParams<TablePaginationConfig>): Promise<T> {
     const url = urlParams(reqPath, params)
     const res = await fetch(url, { ...requestInit, headers: { ...requestInit?.headers } })
-    // TODO
     if (!res.ok) return Promise.reject(res.json()) as T
     return Promise.resolve(res.json())
 }

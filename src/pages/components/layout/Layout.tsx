@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { Layout, Menu as AntdMenu, theme, MenuProps } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import styled from 'styled-components';
-import { AiOutlineFolder, AiOutlineFileText, AiOutlineLineChart } from 'react-icons/ai'
+import { useAuthUser } from '../../../shared/contexts/AuthUser'
 import { FiSettings } from 'react-icons/fi'
-import { GiBrokenAxe } from 'react-icons/gi'
 import { TbSettingsCog } from 'react-icons/tb'
 import { MdLocationOn, MdAdminPanelSettings, MdOutlineDashboard, MdSystemUpdateAlt } from 'react-icons/md'
 import { FaUser } from "react-icons/fa";
 import Header from './Header';
 import VMLogo from '../../../shared/assets/logo_horizontal.svg'
 import Logo from '../../../shared/assets/logo.png'
-import { useAuthUser } from '../../../shared/contexts/AuthUser'
+import SwpIconAsPng from '../../../shared/assets/icons/SWP.png'
+import OGPIconAsPng from '../../../shared/assets/icons/OGP.png'
+import PipelinesIconAsPng from '../../../shared/assets/icons/Pipeline.png'
+import CriticalIconAsPng from '../../../shared/assets/icons/equipment.png'
 
 const { Sider, Content } = Layout;
 
@@ -135,19 +137,23 @@ function getItemLinks(
     } as MenuItem : null;
 }
 
+function Icon({ src }: { src: string }) {
+    return <img src={src} alt='swp icon' style={{ width: 24, height: 24, filter: '100%', paddingRight: 10 }} />
+}
+
 const renderLinks = (permissions: Map<string, TPermission>) => {
-    const hasSystemsLocationSettings = permissions.has('Systems Management - view list')
-    const hasEquipmentsLocationSettings = permissions.has('Equipments Management - view list')
-    const hasAvailabilitySystemSettings = permissions.has('Availability Management - view list')
-    const hasIntegritySystemSettings = permissions.has('Integrity Management - view list')
-    const hasStatusSystemSettings = permissions.has('Status Management - view list')
+    const hasSystemsLocationSettings = permissions.has('Systems Management - Allow View List')
+    const hasEquipmentsLocationSettings = permissions.has('Equipments Management - Allow View List')
+    const hasAvailabilitySystemSettings = permissions.has('Availability Management - Allow View List')
+    const hasIntegritySystemSettings = permissions.has('Integrity Management - Allow View List')
+    const hasStatusSystemSettings = permissions.has('Status Management - Allow View List')
 
-    const hasSitesAdminSettings = permissions.has('Sites Management - view list')
-    const hasUsersAdminSettings = permissions.has('Users Management - view list')
-    const hasRolesAdminSettings = permissions.has('Roles Management - view list')
-    const hasPermissionsAdminSettings = permissions.has('Permissions Management - view list')
-    const hasAuditAdminSettings = permissions.has('Audit Management - view list')
-
+    const hasSitesAdminSettings = permissions.has('Sites Management - Allow View List')
+    const hasUsersAdminSettings = permissions.has('Users Management - Allow View List')
+    const hasRolesAdminSettings = permissions.has('Roles Management - Allow View List')
+    const hasPermissionsAdminSettings = permissions.has('Permissions Management - Allow View List')
+    const hasAuditAdminSettings = permissions.has('Audit Management - Allow View List')
+    console.log(permissions.values())
     return [
         getItemLinks(
             <Link className={`text-decoration-none`} to='/dashboard'>
@@ -172,7 +178,7 @@ const renderLinks = (permissions: Map<string, TPermission>) => {
                 SWP
             </Link>,
             '/swp',
-            <AiOutlineFolder />,
+            <Icon src={SwpIconAsPng} />,
             undefined,
             true
         ),
@@ -181,7 +187,7 @@ const renderLinks = (permissions: Map<string, TPermission>) => {
                 OGP
             </Link>,
             '/ogp',
-            <AiOutlineFileText />,
+            <Icon src={OGPIconAsPng} />,
             undefined,
             true
         ),
@@ -190,7 +196,7 @@ const renderLinks = (permissions: Map<string, TPermission>) => {
                 Pipelines
             </Link>,
             '/pipelines',
-            <AiOutlineLineChart />,
+            <Icon src={PipelinesIconAsPng} />,
             undefined,
             true
         ),
@@ -199,7 +205,7 @@ const renderLinks = (permissions: Map<string, TPermission>) => {
                 Critical Equipment
             </Link>,
             '/critical-equipment',
-            <GiBrokenAxe />,
+            <Icon src={CriticalIconAsPng} />,
             undefined,
             true
         ),

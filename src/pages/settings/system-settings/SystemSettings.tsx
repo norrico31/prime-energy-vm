@@ -28,9 +28,9 @@ function Tabs() {
 
 function RenderResponsiveTabs({ pathname, onChange }: { pathname: string; onChange: (k: string) => void }) {
     const { mapPermission } = useAuthUser()
-    const hasAvailabilitySystemSettings = mapPermission.has('Availability Management - view list')
-    const hasIntegritySystemSettings = mapPermission.has('Integrity Management - view list')
-    const hasStatusSystemSettings = mapPermission.has('Statuses Management - view list')
+    const hasAvailabilitySystemSettings = mapPermission.has('Availability Management - Allow View List')
+    const hasIntegritySystemSettings = mapPermission.has('Integrity Management - Allow View List')
+    const hasStatusSystemSettings = mapPermission.has('Statuses Management - Allow View List')
     const items = [
         ...(hasAvailabilitySystemSettings ? [{
             key: '/availability',

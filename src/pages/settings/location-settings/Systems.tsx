@@ -18,10 +18,10 @@ export default function Systems() {
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TSystems[]>([])
 
-    const hasSystemsLocationSettings = mapPermission.has('Systems Management - view list')
-    const hasUserCreate = mapPermission.has('Systems Management - create')
-    const hasUserEdit = mapPermission.has('Systems Management - edit')
-    const hasUserDelete = mapPermission.has('Systems Management - delete')
+    const hasSystemsLocationSettings = mapPermission.has('Systems Management - Allow View List')
+    const hasUserCreate = mapPermission.has('Systems Management - Allow Create')
+    const hasUserEdit = mapPermission.has('Systems Management - Allow Edit')
+    const hasUserDelete = mapPermission.has('Systems Management - Allow Delete')
 
     useEffect(() => {
         const controller = new AbortController();

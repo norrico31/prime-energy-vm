@@ -16,10 +16,10 @@ export default function Roles() {
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TRoles[]>([])
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
-    const hasRolesAdminSettings = mapPermission.has('Roles Management - view list')
-    const hasUserCreate = mapPermission.has('Roles Management - create')
-    const hasUserEdit = mapPermission.has('Roles Management - edit')
-    const hasUserDelete = mapPermission.has('Roles Management - delete')
+    const hasRolesAdminSettings = mapPermission.has('Roles Management - Allow View List')
+    const hasUserCreate = mapPermission.has('Roles Management - Allow Create')
+    const hasUserEdit = mapPermission.has('Roles Management - Allow Edit')
+    const hasUserDelete = mapPermission.has('Roles Management - Allow Delete')
 
     useEffect(() => {
         const controller = new AbortController();

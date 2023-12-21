@@ -18,10 +18,10 @@ export default function Users() {
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TUser[]>([])
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
-    const hasUsersAdminSettings = mapPermission.has('Users Management - view list')
-    const hasUserCreate = mapPermission.has('Users Management - create')
-    const hasUserEdit = mapPermission.has('Users Management - edit')
-    const hasUserDelete = mapPermission.has('Users Management - delete')
+    const hasUsersAdminSettings = mapPermission.has('Users Management - Allow View List')
+    const hasUserCreate = mapPermission.has('Users Management - Allow Create')
+    const hasUserEdit = mapPermission.has('Users Management - Allow Edit')
+    const hasUserDelete = mapPermission.has('Users Management - Allow Delete')
 
     useEffect(() => {
         const controller = new AbortController();
@@ -158,7 +158,8 @@ function ModalInput({ open, onCancel, selectedData, fetchData }: ModalProps) {
         }
         setLoading(true)
         setError(undefined)
-        const result = !selectedData ? POST<Payload, ApiSuccess<TLocation>>('/users/', { ...v, is_active: v.is_active ? 1 : 0 }) : PUT<Payload>('/users/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
+        console.log(v.is_active)
+        const result = !selectedData ? POST<Payload, ApiSuccess<TLocation>>('/users/', { ...v, is_active: 1 }) : PUT<Payload>('/users/' + selectedData.id, { ...v, is_active: v.is_active ? 1 : 0 });
         result
             .then(() => {
                 setError(undefined)

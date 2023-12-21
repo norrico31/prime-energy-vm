@@ -16,10 +16,10 @@ export default function Location() {
     const [tableParams, setTableParams] = useState<TableParams<TablePaginationConfig> | undefined>()
     const [loading, setLoading] = useState(true)
     const [dataSource, setDataSource] = useState<TLocation[]>([])
-    const hasSitesAdminSettings = mapPermission.has('Sites Management - view list')
-    const hasUserCreate = mapPermission.has('Sites Management - create')
-    const hasUserEdit = mapPermission.has('Sites Management - edit')
-    const hasUserDelete = mapPermission.has('Sites Management - delete')
+    const hasSitesAdminSettings = mapPermission.has('Sites Management - Allow View List')
+    const hasUserCreate = mapPermission.has('Sites Management - Allow Create')
+    const hasUserEdit = mapPermission.has('Sites Management - Allow Edit')
+    const hasUserDelete = mapPermission.has('Sites Management - Allow Delete')
 
     useEffect(() => {
         const controller = new AbortController();
