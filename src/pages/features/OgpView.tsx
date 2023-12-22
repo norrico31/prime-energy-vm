@@ -39,7 +39,7 @@ export default function OgpView() {
     const deleteData = (id: string) => DELETE('/ogp/' + id).finally((fetchData))
     const editNavigate = (id: string) => navigate(`/ogp/${equipmentId}/edit/${id}`)
 
-    const columns = renderColumns({ loading, deleteData, navigate: editNavigate, hasUserDelete, hasUserEdit })
+    const columns = renderTableColumns({ loading, deleteData, navigate: editNavigate, hasUserDelete, hasUserEdit })
 
     return loading ? <Skeleton /> : (
         <>
@@ -55,7 +55,7 @@ export default function OgpView() {
     )
 }
 
-export function renderColumns({ loading, navigate, deleteData, hasUserEdit, hasUserDelete }: { loading: boolean; navigate: (id: string) => void; deleteData: (id: string) => Promise<unknown>; hasUserEdit?: boolean; hasUserDelete?: boolean }) {
+export const renderTableColumns = ({ loading, navigate, deleteData, hasUserEdit, hasUserDelete }: { loading: boolean; navigate: (id: string) => void; deleteData: (id: string) => Promise<unknown>; hasUserEdit?: boolean; hasUserDelete?: boolean }) => {
     const columns: ColumnsType<TTransaction<Dayjs>> = [
         {
             title: 'Ref No.',

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAuthUser } from '../../shared/contexts/AuthUser'
 import { Dayjs } from 'dayjs'
 import { Table, ListViewHeader } from '../components'
-import { renderColumns } from './OgpView'
+import { renderTableColumns } from './OgpView'
 import { GET, DELETE } from '../../shared/utils/fetch'
 
 export default function CriticalEquipmentView() {
@@ -40,7 +40,7 @@ export default function CriticalEquipmentView() {
     const editNavigate = (id: string) => navigate(`/critical-equipment/${equipmentId}/edit/${id}`)
 
 
-    const columns = renderColumns({ loading, deleteData, navigate: editNavigate, hasUserDelete, hasUserEdit })
+    const columns = renderTableColumns({ loading, deleteData, navigate: editNavigate, hasUserDelete, hasUserEdit })
 
     return loading ? <Skeleton /> : (
         <>

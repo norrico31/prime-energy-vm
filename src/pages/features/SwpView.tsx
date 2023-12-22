@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAuthUser } from '../../shared/contexts/AuthUser'
 import { Dayjs } from 'dayjs'
 import { ListViewHeader, Table } from '../components'
-import { renderColumns } from './OgpView'
+import { renderTableColumns } from './OgpView'
 import { GET, DELETE } from '../../shared/utils/fetch'
 
 export default function SwpView() {
@@ -38,7 +38,7 @@ export default function SwpView() {
     const deleteData = (id: string) => DELETE('/swp/' + id).finally((fetchData))
     const editNavigate = (id: string) => navigate(`/swp/${equipmentId}/edit/${id}`)
 
-    const columns = renderColumns({ loading, deleteData, navigate: editNavigate, hasUserEdit, hasUserDelete })
+    const columns = renderTableColumns({ loading, deleteData, navigate: editNavigate, hasUserEdit, hasUserDelete })
 
     return <>
         <Row className='mb-4'>

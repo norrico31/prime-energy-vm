@@ -5,7 +5,7 @@ import { useAuthUser } from '../../shared/contexts/AuthUser'
 import { Dayjs } from 'dayjs'
 import { Table, ListViewHeader } from '../components'
 import { GET, DELETE } from '../../shared/utils/fetch'
-import { renderColumns } from './OgpView'
+import { renderTableColumns } from './OgpView'
 
 export default function PipelinesView() {
     const { equipmentId } = useParams()
@@ -39,7 +39,7 @@ export default function PipelinesView() {
     const deleteData = (id: string) => DELETE('/pipelines/' + id).finally((fetchData))
     const editNavigate = (id: string) => navigate(`/pipelines/${equipmentId}/edit/${id}`)
 
-    const columns = renderColumns({ loading, deleteData, navigate: editNavigate, hasUserDelete, hasUserEdit })
+    const columns = renderTableColumns({ loading, deleteData, navigate: editNavigate, hasUserDelete, hasUserEdit })
 
     return loading ? <Skeleton /> : (
         <>
